@@ -1,0 +1,452 @@
+/* ------------------------------------------------------------------
+   Breaking Point — Guesstimate Prep
+   Visual language follows EconGraphs.org, which is built on Tufte CSS:
+   ET Book serif, warm off-white paper (#fffff8), near-black ink (#111),
+   narrow reading column, sidenotes in the right margin.
+   ------------------------------------------------------------------ */
+
+@font-face {
+  font-family: "et-book";
+  src: url("../fonts/et-book-roman-line-figures.woff") format("woff");
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("../fonts/et-book-display-italic-old-style-figures.woff") format("woff");
+  font-weight: normal; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("../fonts/et-book-bold-line-figures.woff") format("woff");
+  font-weight: bold; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "et-book-roman-old-style";
+  src: url("../fonts/et-book-roman-old-style-figures.woff") format("woff");
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+
+:root {
+  --paper: #fffff8;
+  --ink: #111;
+  --muted: #555;
+  --faint: #8a8a80;
+  --rule: #d9d9cc;
+  --panel: #f7f7ea;
+  --accent: #111;            /* Tufte keeps links in ink, underlined */
+  --easy: #2e6b3a;
+  --medium: #8a6a12;
+  --hard: #8e2b2b;
+  --serif: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  --sans: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  --mono: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 15px; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  counter-reset: sidenote-counter;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Header / tabs ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.site-header .inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 12.5%;
+  display: flex;
+  align-items: baseline;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.brand {
+  font-size: 1.9rem;
+  font-style: italic;
+  padding: 1.1rem 0 0.9rem;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.brand small {
+  font-style: normal;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-left: 0.4rem;
+}
+.tabs { display: flex; gap: 1.8rem; margin-left: auto; }
+.tabs a {
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  font-size: 1.35rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 1.1rem 0 0.8rem;
+  border-bottom: 2px solid transparent;
+}
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ---------- Page body (Tufte column) ---------- */
+
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 12.5%;
+}
+article { padding: 3.5rem 0 5rem; }
+section { padding-top: 1rem; }
+.view[hidden] { display: none; }
+
+h1 {
+  font-weight: 400;
+  font-size: 3.2rem;
+  line-height: 1;
+  margin: 1rem 0 1.5rem;
+}
+h2 {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.2rem;
+  line-height: 1;
+  margin: 3rem 0 1.4rem;
+}
+h3 {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1;
+  margin: 2rem 0 1.2rem;
+}
+p.subtitle {
+  font-style: italic;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  margin: -0.5rem 0 2.5rem;
+  color: var(--muted);
+  width: 55%;
+}
+
+p, ol, ul, dl, table.plain { font-size: 1.4rem; line-height: 2rem; }
+p { margin: 1.4rem 0; padding-right: 0; vertical-align: baseline; width: 55%; }
+section > ol, section > ul, .col > ol, .col > ul { width: 50%; padding-left: 5%; }
+li { padding: 0.35rem 0; }
+.col { width: 55%; }
+.col p, .col ol, .col ul { width: 100%; }
+
+a:link, a:visited { color: inherit; }
+a { text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
+
+blockquote { margin: 1.5rem 0 1.5rem 1.5em; }
+blockquote p { width: 55%; margin-right: 40px; font-style: italic; }
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0; width: 55%; }
+
+code, kbd {
+  font-family: var(--mono);
+  font-size: 1.0rem;
+  line-height: 1.42;
+}
+kbd { border: 1px solid var(--rule); padding: 0 0.3em; border-radius: 2px; background: var(--panel); }
+
+.sans { font-family: var(--sans); letter-spacing: 0.03em; }
+.small-caps { font-variant: small-caps; letter-spacing: 0.05em; }
+.muted { color: var(--muted); }
+
+/* ---------- Sidenotes & margin notes (Tufte) ---------- */
+
+.sidenote, .marginnote {
+  float: right;
+  clear: right;
+  margin-right: -60%;
+  width: 50%;
+  margin-top: 0.3rem;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+}
+.sidenote-number { counter-increment: sidenote-counter; }
+.sidenote-number:after, .sidenote:before {
+  font-family: et-book-roman-old-style;
+  position: relative;
+  vertical-align: baseline;
+}
+.sidenote-number:after {
+  content: counter(sidenote-counter);
+  font-size: 1rem;
+  top: -0.5rem;
+  left: 0.1rem;
+}
+.sidenote:before {
+  content: counter(sidenote-counter) " ";
+  font-size: 1rem;
+  top: -0.5rem;
+}
+input.margin-toggle { display: none; }
+label.sidenote-number { display: inline-block; max-height: 2rem; }
+label.margin-toggle:not(.sidenote-number) { display: none; }
+
+/* ---------- Learn: framework steps & worked example ---------- */
+
+.toc { font-size: 1.25rem; line-height: 1.9rem; width: 55%; padding-left: 1.3rem; }
+.toc a { text-decoration: none; border-bottom: 1px solid var(--rule); }
+.toc a:hover { border-bottom-color: var(--ink); }
+
+.steps { counter-reset: step; list-style: none; padding-left: 0 !important; }
+.steps > li { counter-increment: step; position: relative; padding-left: 2.6rem; }
+.steps > li:before {
+  content: counter(step);
+  position: absolute; left: 0; top: 0.35rem;
+  font-family: et-book-roman-old-style;
+  font-size: 1.6rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+table.plain {
+  border-collapse: collapse;
+  width: 55%;
+  margin: 1.5rem 0;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+}
+table.plain th, table.plain td {
+  text-align: left;
+  padding: 0.35rem 0.8rem 0.35rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+table.plain th {
+  font-weight: normal;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--ink);
+}
+table.plain td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.tree {
+  width: 55%;
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  background: var(--panel);
+  border-left: 2px solid var(--ink);
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.callout {
+  width: 55%;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.6rem 0;
+  margin: 2rem 0;
+}
+.callout p { width: 100%; margin: 0.6rem 0; }
+.callout .label { font-variant: small-caps; letter-spacing: 0.06em; color: var(--muted); }
+
+.placeholder {
+  width: 55%;
+  border: 1px dashed var(--faint);
+  padding: 0.4rem 1rem;
+  color: var(--muted);
+  font-style: italic;
+  font-size: 1.15rem;
+}
+
+/* ---------- Question bank ---------- */
+
+.filters {
+  display: grid;
+  grid-template-columns: 2fr repeat(4, 1fr);
+  gap: 1rem 1.4rem;
+  align-items: end;
+  padding: 1rem 0 1.2rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  margin: 1.5rem 0 0.5rem;
+}
+.field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.field label, .field .label {
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+input[type="text"], input[type="search"], input[type="password"], select, textarea {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 0.35rem 0.1rem;
+  width: 100%;
+  outline: none;
+}
+select { cursor: pointer; appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 10px) 55%, calc(100% - 5px) 55%;
+  background-size: 5px 5px; background-repeat: no-repeat; padding-right: 1.4rem; }
+input:focus, select:focus, textarea:focus { border-bottom-width: 2px; }
+textarea { border: 1px solid var(--ink); padding: 0.6rem 0.7rem; resize: vertical; line-height: 1.5; }
+
+.chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.chip {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chip[aria-pressed="true"] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+
+.result-meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 1.15rem; color: var(--muted); margin: 0.8rem 0;
+}
+.linkish {
+  font-family: var(--serif); font-size: 1.15rem; background: none; border: 0;
+  color: var(--ink); text-decoration: underline; text-underline-offset: 0.15em; cursor: pointer; padding: 0;
+}
+
+.qlist { list-style: none; padding: 0; margin: 0; }
+.q {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr auto;
+  gap: 0.2rem 1.2rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.q .qid {
+  font-family: et-book-roman-old-style;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--faint);
+}
+.q .qtitle { font-size: 1.5rem; line-height: 1.35; margin: 0; }
+.q .qmeta { grid-column: 2; font-size: 1.1rem; color: var(--muted); display: flex; gap: 0.9rem; flex-wrap: wrap; }
+.q .qactions { grid-row: 1 / span 2; grid-column: 3; display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end; justify-content: center; }
+.q details { grid-column: 2; margin-top: 0.4rem; }
+.q summary { cursor: pointer; font-size: 1.1rem; color: var(--muted); font-style: italic; }
+.q details p, .q details ul { width: 100%; font-size: 1.2rem; line-height: 1.75rem; margin: 0.5rem 0; }
+
+.diff { font-variant: small-caps; letter-spacing: 0.06em; }
+.diff::before { content: "●"; margin-right: 0.3rem; font-size: 0.8em; }
+.diff.easy { color: var(--easy); }
+.diff.medium { color: var(--medium); }
+.diff.hard { color: var(--hard); }
+
+.btn {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 0.35rem 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.btn:link, a.btn:visited { color: var(--paper); text-decoration: none; }
+.btn:hover { background: #333; }
+.btn.ghost { color: var(--ink); background: transparent; }
+.btn.ghost:hover { background: var(--panel); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.empty { font-style: italic; color: var(--muted); padding: 2rem 0; font-size: 1.3rem; }
+
+/* ---------- AI mode ---------- */
+
+.setup ol { width: 55%; padding-left: 1.4rem; }
+.setup .key-row, .setup .status { width: 55%; }
+.key-row { display: flex; gap: 0.8rem; align-items: flex-end; margin: 1rem 0 0.4rem; flex-wrap: wrap; }
+.key-row .field { flex: 1 1 16rem; }
+.status { font-size: 1.1rem; color: var(--muted); font-style: italic; min-height: 1.5rem; }
+.status.ok { color: var(--easy); }
+.status.err { color: var(--hard); }
+
+.practice { margin-top: 2.5rem; border-top: 1px solid var(--ink); padding-top: 1rem; }
+.picker { display: flex; gap: 0.8rem; align-items: flex-end; width: 55%; flex-wrap: wrap; }
+.picker .field { flex: 1 1 18rem; }
+.case-card { width: 55%; margin: 1.5rem 0 0.5rem; }
+.case-card .qtitle { font-size: 1.7rem; font-style: italic; margin: 0 0 0.3rem; }
+
+.chat {
+  width: 55%;
+  border-top: 1px solid var(--rule);
+  margin-top: 1rem;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding: 0.5rem 0 1rem;
+}
+.msg { margin: 1.2rem 0; }
+.msg .who { font-variant: small-caps; letter-spacing: 0.06em; font-size: 1.05rem; color: var(--muted); }
+.msg .body { font-size: 1.3rem; line-height: 1.85rem; }
+.msg .body p, .msg .body ul, .msg .body ol { width: 100%; font-size: inherit; line-height: inherit; margin: 0.4rem 0; }
+.msg .body ul, .msg .body ol { padding-left: 1.3rem; }
+.msg.user .body { border-left: 2px solid var(--ink); padding-left: 0.9rem; }
+.msg.model .body { padding-left: 0; }
+.msg.pending .body { color: var(--faint); font-style: italic; }
+
+.composer { width: 55%; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
+.composer .row { display: flex; gap: 0.6rem; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.composer .hint { font-size: 1.05rem; color: var(--faint); font-style: italic; }
+
+/* ---------- Footer ---------- */
+
+footer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 12.5% 3rem;
+  border-top: 1px solid var(--rule);
+  color: var(--faint);
+  font-size: 1.05rem;
+}
+
+/* ---------- Responsive (mirrors Tufte's 760px breakpoint) ---------- */
+
+@media (max-width: 760px) {
+  .site-header .inner, main, footer { padding-left: 16px; padding-right: 16px; }
+  .site-header .inner { gap: 0; }
+  .brand { padding-bottom: 0.2rem; font-size: 1.6rem; }
+  .tabs { margin-left: 0; width: 100%; gap: 1.4rem; overflow-x: auto; }
+  .tabs a { font-size: 1.2rem; padding-top: 0.4rem; }
+  h1 { font-size: 2.5rem; }
+  p, p.subtitle, hr, blockquote p, table.plain, .tree, .callout, .placeholder, .toc,
+  .col, .setup ol, .setup .key-row, .setup .status, .picker, .case-card, .chat, .composer { width: 100%; }
+  section > ol, section > ul { width: 90%; }
+  label.margin-toggle:not(.sidenote-number) { display: inline; }
+  .sidenote, .marginnote { display: none; }
+  .margin-toggle:checked + .sidenote, .margin-toggle:checked + .marginnote {
+    display: block; float: left; left: 1rem; clear: both; width: 95%; margin: 1rem 2.5%; position: relative;
+  }
+  label { cursor: pointer; }
+  .filters { grid-template-columns: 1fr 1fr; }
+  .filters .field.search { grid-column: 1 / -1; }
+  .q { grid-template-columns: 2.2rem 1fr; }
+  .q .qactions { grid-row: auto; grid-column: 2; flex-direction: row; justify-content: flex-start; margin-top: 0.4rem; order: 1; }
+  .q details { order: 2; }
+}

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Breaking Point · Guesstimates</title>
+  <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="#learn">Breaking Point <small>guesstimates</small></a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#learn" data-tab="learn">Learn</a>
+      <a href="#bank" data-tab="bank">Question Bank</a>
+      <a href="#ai" data-tab="ai">AI Mode</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================
+     TAB 1 — LEARN
+     ============================================================ -->
+<article id="view-learn" class="view">
+  <h1>How to Solve a Guesstimate</h1>
+  <p class="subtitle">A structured way to size anything, from chai stalls to smartphone sales, in fifteen minutes and out loud.</p>
+
+  <p class="placeholder">Draft content. The final Learn material will replace this text section by section.</p>
+
+  <section>
+    <ol class="toc">
+      <li><a href="#learn/what">What a guesstimate really tests</a></li>
+      <li><a href="#learn/framework">The five-step framework</a></li>
+      <li><a href="#learn/approach">Choosing an approach</a></li>
+      <li><a href="#learn/segment">Segmenting well</a></li>
+      <li><a href="#learn/numbers">Numbers worth remembering</a></li>
+      <li><a href="#learn/example">Worked example: pressure cookers</a></li>
+      <li><a href="#learn/mistakes">Common mistakes</a></li>
+    </ol>
+  </section>
+
+  <section id="learn-what">
+    <h2>What a guesstimate really tests</h2>
+    <p>A guesstimate asks you to estimate a quantity you cannot possibly know: the number of cars sold in India each year, the daily revenue of a petrol pump, the market for diapers in a metro city. The interviewer does not care much whether your final number is close to reality.<label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">A number within roughly 2&times; of the true figure, reached through a clean structure, beats an exact number pulled from memory.</span> They care about <em>how</em> you get there.</p>
+    <p>Specifically, they are watching for four things: whether you <strong>structure</strong> an ambiguous problem logically, whether your <strong>assumptions</strong> are reasonable and stated clearly, whether you can do <strong>quick, accurate maths</strong> under pressure, and whether you <strong>sanity-check</strong> and communicate like someone they could put in front of a client.</p>
+  </section>
+
+  <section id="learn-framework">
+    <h2>The five-step framework</h2>
+    <ol class="steps">
+      <li><strong>Clarify.</strong> Pin down exactly what is being estimated before you touch a number: geography, time period, units (volume or value), and scope. <em>&ldquo;Cars sold&rdquo;</em>: new only, or used too? Passenger vehicles only? Annual?</li>
+      <li><strong>Choose an approach.</strong> Decide whether to size from the <em>demand</em> side (who buys or uses it) or the <em>supply</em> side (who makes or sells it). Say why.</li>
+      <li><strong>Structure and segment.</strong> Break the population into mutually exclusive, collectively exhaustive groups that genuinely behave differently. Draw the tree before calculating.</li>
+      <li><strong>Estimate and calculate.</strong> Assign an assumption to each branch, state it aloud, round aggressively, and compute branch by branch.</li>
+      <li><strong>Sanity-check and conclude.</strong> Compare the answer to something you know, flag the assumptions that swing it most, and close with a crisp one-line answer.</li>
+    </ol>
+    <div class="callout">
+      <p><span class="label">Say it out loud</span></p>
+      <p>Before calculating, walk the interviewer through your tree and ask, &ldquo;Does this structure make sense before I put numbers to it?&rdquo; It invites course-correction early, when it is cheap.</p>
+    </div>
+  </section>
+
+  <section id="learn-approach">
+    <h2>Choosing an approach</h2>
+    <p>Almost every guesstimate is solved with one of a handful of starting points.<label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"><span class="sidenote">If both sides are feasible, pick one to solve and use the other as your sanity check.</span></p>
+    <table class="plain">
+      <thead><tr><th>Approach</th><th>Start from</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td>Population-based</td><td>People &times; % who use &times; frequency</td><td>Personal products: toothpaste, smartphones, movie tickets</td></tr>
+        <tr><td>Household-based</td><td>Households &times; penetration &div; replacement cycle</td><td>Shared durables: TVs, refrigerators, pressure cookers</td></tr>
+        <tr><td>Supply-side</td><td>Outlets &times; capacity &times; utilisation</td><td>Services and venues: petrol pumps, salons, restaurant revenue</td></tr>
+        <tr><td>Proxy / ratio</td><td>A known number &times; a ratio</td><td>When a close cousin is known: tyres from cars sold</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="learn-segment">
+    <h2>Segmenting well</h2>
+    <p>Segment only where behaviour really differs. Every extra branch costs time and adds another assumption to defend. Two or three levels are usually enough.</p>
+    <ul>
+      <li><strong>Geography:</strong> urban vs rural; metro vs tier-2 vs tier-3.</li>
+      <li><strong>Income:</strong> high / middle / low. This drives penetration of most discretionary products.</li>
+      <li><strong>Age:</strong> children, working-age adults, seniors. It drives usage of education, healthcare and entertainment.</li>
+      <li><strong>Usage behaviour:</strong> heavy vs light users; individual vs institutional buyers (B2C vs B2B).</li>
+    </ul>
+    <div class="tree">Smartphones sold / year
+├── Urban population
+│   ├── High income   × penetration × 1 / replacement cycle
+│   ├── Middle income × penetration × 1 / replacement cycle
+│   └── Low income    × penetration × 1 / replacement cycle
+└── Rural population
+    └── (same split)
++ first-time buyers (penetration growth)</div>
+  </section>
+
+  <section id="learn-numbers">
+    <h2>Numbers worth remembering</h2>
+    <p>Rounded anchors for quick maths. Round to numbers that divide easily; the interviewer will not penalise 1.4 billion becoming 1.4 billion, or even 1.5.<label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote">These are approximations for estimation only. Refresh them against recent official data before interview season.</span></p>
+    <table class="plain">
+      <thead><tr><th>Anchor</th><th>Working value</th></tr></thead>
+      <tbody>
+        <tr><td>India population</td><td class="num">~1.4 billion</td></tr>
+        <tr><td>Average household size (India)</td><td class="num">~4.5 people</td></tr>
+        <tr><td>Households in India</td><td class="num">~300 million</td></tr>
+        <tr><td>Urban share of population</td><td class="num">~35%</td></tr>
+        <tr><td>Life expectancy (India)</td><td class="num">~70 years</td></tr>
+        <tr><td>World population</td><td class="num">~8 billion</td></tr>
+        <tr><td>Working days per year</td><td class="num">~250</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="learn-example">
+    <h2>Worked example: pressure cookers</h2>
+    <p><em>&ldquo;Estimate the number of pressure cookers sold in India in a year.&rdquo;</em></p>
+    <h3>Clarify</h3>
+    <p>Units sold, not value; India only; one calendar year; household buyers only (ignore restaurants, which are a small share).</p>
+    <h3>Approach</h3>
+    <p>A pressure cooker is a shared household durable, so a <strong>household-based</strong> approach fits. Annual sales = replacement demand + first-time purchases.</p>
+    <h3>Calculate</h3>
+    <table class="plain">
+      <thead><tr><th>Segment</th><th>Households</th><th>Penetration</th><th>Owners</th><th>Life</th><th>Units / yr</th></tr></thead>
+      <tbody>
+        <tr><td>Urban</td><td class="num">100 M</td><td class="num">90%</td><td class="num">90 M</td><td class="num">7 yrs</td><td class="num">~13 M</td></tr>
+        <tr><td>Rural</td><td class="num">200 M</td><td class="num">50%</td><td class="num">100 M</td><td class="num">10 yrs</td><td class="num">10 M</td></tr>
+        <tr><td>First-time buyers</td><td colspan="4">~1% of 110 M non-owning households adopt each year</td><td class="num">~1 M</td></tr>
+        <tr><th colspan="5">Total</th><th class="num">~24 M</th></tr>
+      </tbody>
+    </table>
+    <h3>Sanity-check and conclude</h3>
+    <p>Roughly one cooker a year for every twelve households feels plausible for a cheap, near-universal durable. <strong>Answer: about 24 million units a year</strong>, most sensitive to the rural penetration and replacement-cycle assumptions.</p>
+  </section>
+
+  <section id="learn-mistakes">
+    <h2>Common mistakes</h2>
+    <ul>
+      <li>Jumping into numbers before clarifying scope and agreeing a structure.</li>
+      <li>Over-segmenting: seven branches where two would do.</li>
+      <li>Forgetting a whole segment (institutional buyers, replacement demand, repeat usage).</li>
+      <li>Mixing units: people with households, daily with annual, volume with value.</li>
+      <li>Silent maths: the interviewer can only reward reasoning they can hear.</li>
+      <li>Skipping the sanity check, or defending an absurd number instead of revisiting an assumption.</li>
+    </ul>
+    <p><a href="#bank">Practise with the question bank &rarr;</a></p>
+  </section>
+</article>
+
+<!-- ============================================================
+     TAB 2 — QUESTION BANK
+     ============================================================ -->
+<article id="view-bank" class="view" hidden>
+  <h1>Question Bank</h1>
+  <p class="subtitle">Filter by difficulty, industry and approach. Pick one to practise with the AI interviewer.</p>
+
+  <div class="filters" role="search">
+    <div class="field search">
+      <label for="f-search">Search</label>
+      <input id="f-search" type="search" placeholder="e.g. petrol, airport, diapers" autocomplete="off">
+    </div>
+    <div class="field">
+      <span class="label">Difficulty</span>
+      <div class="chips" id="f-difficulty"></div>
+    </div>
+    <div class="field">
+      <label for="f-industry">Industry</label>
+      <select id="f-industry"></select>
+    </div>
+    <div class="field">
+      <label for="f-type">Type</label>
+      <select id="f-type"></select>
+    </div>
+    <div class="field">
+      <label for="f-approach">Approach</label>
+      <select id="f-approach"></select>
+    </div>
+  </div>
+
+  <div class="result-meta">
+    <span id="result-count"></span>
+    <button class="linkish" id="f-clear" type="button">Clear filters</button>
+  </div>
+
+  <ul class="qlist" id="qlist"></ul>
+</article>
+
+<!-- ============================================================
+     TAB 3 — AI MODE
+     ============================================================ -->
+<article id="view-ai" class="view" hidden>
+  <h1>AI Mode</h1>
+  <p class="subtitle">Rehearse any guesstimate with an AI interviewer that questions your structure, pushes back on assumptions and scores you at the end.</p>
+
+  <section class="setup">
+    <h2>Connect your Gemini API key</h2>
+    <p>AI Mode runs on Google&rsquo;s Gemini models using <em>your own</em> free API key. The key is saved only in this browser, and your answers go straight from your browser to Google. Nothing passes through our servers.<label for="sn-ai" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-ai" class="margin-toggle"><span class="sidenote">Google&rsquo;s free tier has per-minute and per-day request limits. A typical 15-minute practice case uses 15&ndash;30 requests.</span></p>
+    <ol>
+      <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio &rarr; API keys</a> and sign in with a Google account.</li>
+      <li>Click <strong>Create API key</strong>. If prompted, pick or create a Google Cloud project; the default is fine.</li>
+      <li>Copy the key. It is a long string that starts with <code>AIza</code>.</li>
+      <li>Paste it below and click <strong>Save &amp; test</strong>.</li>
+    </ol>
+
+    <div class="key-row">
+      <div class="field">
+        <label for="api-key">Gemini API key</label>
+        <input id="api-key" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
+      </div>
+      <button class="btn ghost" id="key-toggle" type="button">Show</button>
+      <button class="btn" id="key-save" type="button">Save &amp; test</button>
+      <button class="btn ghost" id="key-clear" type="button">Remove</button>
+    </div>
+    <div class="key-row">
+      <div class="field">
+        <label for="model">Model</label>
+        <input id="model" type="text" list="model-options" spellcheck="false">
+        <datalist id="model-options">
+          <option value="gemini-2.5-flash">
+          <option value="gemini-2.5-flash-lite">
+          <option value="gemini-2.5-pro">
+        </datalist>
+      </div>
+    </div>
+    <p class="status" id="key-status"></p>
+    <p class="muted" style="font-size:1.1rem;line-height:1.5rem;margin-top:0">Treat the key like a password: don&rsquo;t share it or paste it on shared computers. You can revoke it any time from AI Studio.</p>
+  </section>
+
+  <section class="practice">
+    <h2>Practise a guesstimate</h2>
+    <div class="picker">
+      <div class="field">
+        <label for="ai-question">Question from the bank</label>
+        <select id="ai-question"></select>
+      </div>
+      <button class="btn" id="ai-start" type="button">Start interview</button>
+    </div>
+
+    <div class="case-card" id="case-card" hidden></div>
+
+    <div class="chat" id="chat" hidden aria-live="polite"></div>
+
+    <form class="composer" id="composer" hidden>
+      <textarea id="ai-input" rows="4" placeholder="Clarify the question, lay out your structure, or walk through your numbers…"></textarea>
+      <div class="row">
+        <span class="hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send</span>
+        <span>
+          <button class="btn ghost" type="button" id="ai-hint">Hint</button>
+          <button class="btn ghost" type="button" id="ai-feedback">Finish &amp; get feedback</button>
+          <button class="btn" type="submit" id="ai-send">Send</button>
+        </span>
+      </div>
+    </form>
+  </section>
+</article>
+
+</main>
+
+<footer>
+  Breaking Point: consulting case prep. Typography after <a href="https://www.econgraphs.org" target="_blank" rel="noopener">EconGraphs</a> and Tufte CSS.
+</footer>
+
+<script src="data/questions.js"></script>
+<script src="js/app.js"></script>
+<script src="js/bank.js"></script>
+<script src="js/ai.js"></script>
+</body>
+</html>
