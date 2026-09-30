@@ -56,3 +56,7 @@ The filter dropdowns are built automatically from the values you use.
 ## AI Mode and privacy
 
 Each user pastes their own Gemini API key, which they can create at <https://aistudio.google.com/apikey>. The key is stored only in that browser's `localStorage`. Requests go straight from the browser to `generativelanguage.googleapis.com`, and no backend is involved.
+
+## Publishing updates
+
+`index.html` loads CSS and JS with a version tag (`?v=4`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.

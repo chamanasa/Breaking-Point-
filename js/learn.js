@@ -27,10 +27,10 @@
   panelsEl.innerHTML = groups.map(function (g, i) {
     return '<div class="num-group" role="tabpanel" id="numbers-panel-' + esc(g.id) + '" aria-labelledby="numbers-tab-' + esc(g.id) + '"' + (i === 0 ? "" : " hidden") + ">" +
       g.sections.map(function (s) {
-        return "<h3>" + esc(s.title) + "</h3>" +
+        return '<div class="box"><h3>' + esc(s.title) + "</h3>" +
           '<table class="plain numbers"><thead><tr><th>Metric</th><th>Value</th><th>Source</th><th>Year</th></tr></thead><tbody>' +
           s.rows.map(rowHtml).join("") +
-          "</tbody></table>";
+          "</tbody></table></div>";
       }).join("") +
       "</div>";
   }).join("");
