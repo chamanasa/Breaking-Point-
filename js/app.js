@@ -36,9 +36,20 @@
     return { tab: TABS.includes(tab) ? tab : "learn", arg: rest.join("/") || null };
   }
 
+  // Old in-page Learn links (#learn/intro, #learn/fw-mece, ...) now live on their own pages.
+  const LEARN_PAGES = { intro: "introduction", structure: "introduction", frameworks: "frameworks", tips: "pro-tips", example: "worked-example", numbers: "numbers" };
+  function learnPageFor(arg) {
+    if (arg.indexOf("fw-") === 0) return "learn/frameworks.html#" + arg;
+    if (arg.indexOf("numbers-") === 0) return "learn/numbers.html#" + arg.slice("numbers-".length);
+    return LEARN_PAGES[arg] ? "learn/" + LEARN_PAGES[arg] + ".html" : null;
+  }
+
   function render() {
     const route = parseRoute();
-    if (route.tab !== "learn") document.title = "Breaking Point · Guesstimates";
+    if (route.tab === "learn" && route.arg && learnPageFor(route.arg)) {
+      location.replace(learnPageFor(route.arg));
+      return;
+    }
     TABS.forEach(function (t) {
       document.getElementById("view-" + t).hidden = t !== route.tab;
     });
@@ -47,15 +58,8 @@
       else a.removeAttribute("aria-current");
     });
 
-    // Let tabs react first (e.g. select a Numbers sub-tab), then scroll.
     listeners.forEach(function (fn) { fn(route); });
-
-    const target = route.tab === "learn" && route.arg
-      ? document.getElementById("learn-" + route.arg) || document.getElementById("learn-" + route.arg.split("-")[0])
-      : null;
-    // Landing on a whole page starts at the top; deep links scroll to their card.
-    if (target && !target.classList.contains("learn-page")) target.scrollIntoView();
-    else window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   }
 
   window.App = {

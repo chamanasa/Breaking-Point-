@@ -192,3 +192,40 @@ window.INDIA_NUMBERS = [
     ]
   }
 ];
+
+/*
+ * Charts shown above each Numbers tab. Values mirror the tables above.
+ *   hbar  — one bar per row (single series)
+ *   stack — parts of a whole (percentages summing to ~100)
+ *   pair  — two series side by side per row (e.g. urban vs rural)
+ */
+window.INDIA_CHARTS = {
+  demographic: [
+    { type: "hbar", title: "Largest cities (urban agglomeration, million people)", wide: true, unit: " M",
+      rows: [["Delhi", 34], ["Mumbai", 22], ["Kolkata", 15.5], ["Bengaluru", 14], ["Chennai", 12], ["Hyderabad", 11], ["Ahmedabad", 9], ["Pune", 7]] },
+    { type: "stack", title: "Age divide (% of population)",
+      rows: [["0–15", 25], ["15–35", 35], ["35–60", 30], ["60+", 10]] },
+    { type: "stack", title: "Where people live (% of population)",
+      rows: [["Urban", 36], ["Rural", 64]] },
+    { type: "pair", title: "Urban vs rural (%)", wide: true, series: ["Urban", "Rural"],
+      rows: [["Literacy", 88, 74], ["Internet", 75, 50], ["Smartphone", 70, 40]] }
+  ],
+  economic: [
+    { type: "stack", title: "Economy by sector (% of GVA)",
+      rows: [["Services", 54], ["Industry", 28], ["Agriculture", 18]] },
+    { type: "stack", title: "Households by income (PRICE ICE 360°)",
+      rows: [["Aspirers", 52], ["Middle", 31], ["Destitute", 15], ["Rich", 3]] },
+    { type: "stack", title: "Typical urban household budget (%)", wide: true,
+      rows: [["Food", 35], ["Housing", 15], ["Savings", 15], ["Transport", 10], ["Education", 8], ["Utilities", 7], ["Health", 5], ["Misc", 5]] },
+    { type: "hbar", title: "Digital India (million users)", wide: true, unit: " M",
+      rows: [["Internet users", 886], ["OTT audience", 550], ["Social media", 460], ["Online shoppers", 250], ["Paid OTT", 100]] }
+  ],
+  misc: [
+    { type: "hbar", title: "Vehicles sold in FY2024–25 (million units)", unit: " M",
+      rows: [["Two-wheelers", 19.6], ["Passenger vehicles", 4.3], ["Three-wheelers", 0.7]] },
+    { type: "stack", title: "Religion (% of population, Census 2011)",
+      rows: [["Hindu", 80], ["Muslim", 14], ["Christian", 2.3], ["Sikh", 1.7], ["Others", 2]] },
+    { type: "stack", title: "Mobile OS share (%)", wide: true,
+      rows: [["Android", 95], ["iOS", 4], ["Other", 1]] }
+  ]
+};

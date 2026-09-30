@@ -21,12 +21,14 @@ To deploy with GitHub Pages, go to **Settings → Pages → Deploy from branch**
 ## Project layout
 
 ```
-index.html          all three tabs (Learn prose, framework cards and the worked example live here)
+index.html          the three tabs; Learn is a landing page linking to learn/
+learn/              one page per Learn topic: introduction, frameworks, pro-tips,
+                    worked-example, numbers (each with its own illustrations)
 css/style.css       EconGraphs / Tufte-style theme
 data/questions.js   the question bank (edit this to add questions)
-data/numbers.js     India Numbers Bible (value, source and year for each row)
+data/numbers.js     India Numbers Bible tables (value, source, year) and chart data
 js/app.js           tab routing and shared helpers
-js/learn.js         Numbers Bible tabs, step-by-step example, sidebar highlighting
+js/learn.js         Learn pages: Numbers charts and tabs, step-by-step example
 js/bank.js          filters and question list
 js/ai.js            Gemini interviewer
 fonts/              ET Book (MIT, from tufte-css)
@@ -59,4 +61,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` loads CSS and JS with a version tag (`?v=4`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=5`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.

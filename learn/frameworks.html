@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Frameworks & Approach · Guesstimates · Breaking Point</title>
+  <meta name="description" content="Seven frameworks for guesstimates, each with what it is, when to use it and a worked example.">
+  <link rel="stylesheet" href="../css/style.css?v=5">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html#learn">Breaking Point <small>guesstimates</small></a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="../index.html#learn" aria-current="page">Learn</a>
+      <a href="../index.html#bank">Question Bank</a>
+      <a href="../index.html#ai">AI Mode</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<article class="learn-page">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html#learn">Guesstimates</a> <span aria-hidden="true">/</span> Frameworks &amp; Approach</nav>
+<nav aria-label="Guesstimate topics"><ol class="section-links"><li><a href="introduction.html"><span class="n">1</span>Introduction</a></li><li><a href="frameworks.html" aria-current="page"><span class="n">2</span>Frameworks</a></li><li><a href="pro-tips.html"><span class="n">3</span>Pro Tips</a></li><li><a href="worked-example.html"><span class="n">4</span>Worked Example</a></li><li><a href="numbers.html"><span class="n">5</span>Numbers Bible</a></li></ol></nav>
+
+<h1>Frameworks &amp; Approach</h1>
+        <p>Each card follows the same shape: <em>what it is</em>, <em>when to use it</em> and <em>one worked example</em>. The &ldquo;when to use&rdquo; column matters most, because picking the right tool is what separates a clean answer from a messy one.</p>
+        <nav class="jump" aria-label="Frameworks on this page">
+          <a href="#fw-topdown">Top-down vs bottom-up</a>
+          <a href="#fw-mece">MECE</a>
+          <a href="#fw-pareto">Pareto (80/20)</a>
+          <a href="#fw-unit">Unit economics</a>
+          <a href="#fw-extrapolation">Extrapolation</a>
+          <a href="#fw-demand">Demand side</a>
+          <a href="#fw-supply">Supply side &amp; TAM-SAM-SOM</a>
+        </nav>
+
+        <!-- Top-down vs bottom-up -->
+        <div class="fw" id="fw-topdown">
+          <h3><a href="#fw-topdown">Top-down vs. bottom-up</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p><strong>Top-down</strong> starts from a large known total and narrows it with ratios. <strong>Bottom-up</strong> starts from the smallest countable unit (a household, a store, a seat) and builds up.</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>Use top-down when a reliable big number exists (national sales, total population) and you need a quick share. Use bottom-up when the drivers are local and observable, or when the interviewer wants to see granular logic. Doing both is the strongest sanity check.</p>
+            </div>
+          </div>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 250" role="img" aria-label="Top-down narrows India's car count to Bengaluru's share; bottom-up builds from households by income">
+  <text class="sc" x="20" y="16">top-down &#183; start big, narrow down</text>
+  <path d="M20 30 H320 L290 80 H50 Z" fill="#e6e4d4"/><text class="mid" x="170" y="60">India: ~43 M cars</text>
+  <path d="M50 84 H290 L245 134 H95 Z" fill="#a9a89b"/><text class="mid sm" x="170" y="114" style="fill:#111">&#215; Bengaluru share ~5%</text>
+  <path d="M95 138 H245 L210 188 H130 Z" fill="#111"/><text class="mid on-dark b" x="170" y="168">2.2 M</text>
+  <path class="line" d="M8 30 V186"/><path class="line" d="M3 178 L8 188 L13 178"/>
+  <text class="sc end" x="700" y="16">bottom-up &#183; start small, build up</text>
+  <rect x="400" y="150" width="300" height="38" fill="#e6e4d4"/><text class="mid sm" x="550" y="174" style="fill:#111">14 M people &#247; 4 = 3.5 M households</text>
+  <rect x="400" y="104" width="150" height="40" fill="#7c7b72"/><text class="mid on-dark sm" x="475" y="129">High 0.7 M</text>
+  <rect x="552" y="104" width="135" height="40" fill="#a9a89b"/><text class="mid sm" x="619" y="129" style="fill:#111">Middle 0.63 M</text>
+  <rect x="689" y="104" width="11" height="40" fill="#4a4a45"/><text class="xs end" x="700" y="98">low 0.07 M</text>
+  <text class="xs mid" x="550" y="72">+ ~15% for cabs &amp; fleets</text>
+  <rect x="470" y="30" width="160" height="30" fill="#111"/><text class="mid on-dark b" x="550" y="51">1.6 M</text>
+  <path class="line" d="M712 188 V32"/><path class="line" d="M707 40 L712 30 L717 40"/>
+  <text class="mid it" x="360" y="232">Top-down 2.2 M vs bottom-up 1.6 M: the same order of magnitude</text>
+</svg></div><figcaption>The two methods land close together. The interesting discussion is the gap: is Bengaluru’s 5% share too generous, or middle-income ownership too low?</figcaption></figure>
+          <div class="fw-example">
+            <h4>Worked example: number of private cars in Bengaluru</h4>
+            <div class="compare">
+              <div>
+                <p><em>Top-down</em></p>
+                <p>India has ~30 cars per 1,000 people, so about 43 M cars. Bengaluru has ~1% of India&rsquo;s people but far higher incomes, so assume ~5% of the cars.</p>
+                <p>43 M &times; 5% &asymp; <strong>2.2 M cars</strong></p>
+              </div>
+              <div>
+                <p><em>Bottom-up</em></p>
+                <p>14 M people &divide; 4 per household = 3.5 M households.<br>
+                High income 15% &times; 90% own &times; 1.5 cars = 0.7 M<br>
+                Middle 45% &times; 40% own &times; 1 car = 0.63 M<br>
+                Low 40% &times; 5% own &times; 1 car = 0.07 M<br>
+                Add ~15% for cabs and fleets: <strong>~1.6 M cars</strong></p>
+              </div>
+            </div>
+            <p class="note">The two answers are the same order of magnitude. Next, explain the gap: is Bengaluru&rsquo;s 5% share too high, or is middle-income ownership too low?</p>
+          </div>
+        </div>
+
+        <!-- MECE -->
+        <div class="fw" id="fw-mece">
+          <h3><a href="#fw-mece">MECE</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p><strong>Mutually exclusive, collectively exhaustive.</strong> Split the problem into segments that don&rsquo;t overlap (so nothing is counted twice) and that together cover everything (so nothing is missed).</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>Every time you build a tree. Check each level of segmentation against both tests before you put numbers on it. The easiest checks are splits that add up by construction, such as age bands, urban/rural or buyer type.</p>
+            </div>
+          </div>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 230" role="img" aria-label="Overlapping circles with a missing segment versus a rectangle split cleanly into households, HoReCa and food processors">
+  <text class="sc" x="0" y="16">not mece</text>
+  <circle cx="95" cy="110" r="62" fill="#cfcdbd" fill-opacity="0.55" stroke="#111" stroke-width="1.2"/>
+  <circle cx="175" cy="110" r="62" fill="#cfcdbd" fill-opacity="0.55" stroke="#111" stroke-width="1.2"/>
+  <text class="mid sm" x="72" y="106" style="fill:#111">Vegetarian</text><text class="mid sm" x="72" y="122" style="fill:#111">families</text>
+  <text class="mid sm" x="200" y="106" style="fill:#111">North Indian</text><text class="mid sm" x="200" y="122" style="fill:#111">homes</text>
+  <text class="mid xs" x="135" y="216" style="fill:#111">&#8593; overlap is counted twice</text>
+  <circle cx="285" cy="95" r="40" fill="#cfcdbd" fill-opacity="0.55" stroke="#111" stroke-width="1.2"/>
+  <text class="mid sm" x="285" y="100" style="fill:#111">Restaurants</text>
+  <circle class="dash" cx="290" cy="185" r="30"/><text class="mid xs" x="290" y="182">Food</text><text class="mid xs" x="290" y="196">processors?</text>
+  <text class="xs end" x="252" y="178">missing entirely &#8594;</text>
+  <text class="sc" x="380" y="16">mece</text>
+  <rect x="380" y="36" width="187" height="150" fill="#e6e4d4"/><rect x="569" y="36" width="84" height="150" fill="#a9a89b"/><rect x="655" y="36" width="65" height="150" fill="#4a4a45"/>
+  <text class="mid" x="473" y="116">Households</text>
+  <text class="mid sm" x="611" y="116" style="fill:#111">HoReCa</text>
+  <text class="mid on-dark sm" x="687" y="108">Food</text><text class="mid on-dark xs" x="687" y="124" style="fill:#fffff8">processors</text>
+  <text class="mid xs" x="550" y="206">Every litre bought belongs to exactly one box</text>
+</svg></div><figcaption>Left: segments overlap (double counting) and a buyer group is missing. Right: splitting by buyer type is exclusive and exhaustive. Box widths are illustrative.</figcaption></figure>
+          <div class="fw-example">
+            <h4>Worked example: who buys edible oil in India?</h4>
+            <div class="compare">
+              <div>
+                <p><em>Not MECE</em></p>
+                <p>&ldquo;Vegetarian families, restaurants, North Indian households.&rdquo; Vegetarian and North Indian households overlap, and food manufacturers are missing entirely.</p>
+              </div>
+              <div>
+                <p><em>MECE</em></p>
+                <p>By buyer type: <strong>households</strong> + <strong>HoReCa</strong> (hotels, restaurants, caterers) + <strong>food processors</strong> (snacks, bakeries, sweets). Every litre is bought by exactly one of these.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pareto -->
+        <div class="fw" id="fw-pareto">
+          <h3><a href="#fw-pareto">Pareto principle (80/20)</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p>A small share of units (roughly 20%) often drives most of the outcome (roughly 80%). Model that heavy minority carefully and approximate everyone else with one average.</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>When usage is highly skewed: trading, airline miles, restaurant revenue, B2B customers, social-media posting. It saves time in a time-boxed interview. Say the assumption out loud, since the interviewer may want the full split.</p>
+            </div>
+          </div>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 160" role="img" aria-label="Top 20% of users make 80% of trades">
+  <text class="end" x="90" y="45">Users</text>
+  <rect x="100" y="20" width="120" height="40" fill="#111"/><text class="on-dark mid" x="160" y="45">top 20%</text>
+  <rect x="222" y="20" width="478" height="40" fill="#e6e4d4"/><text class="mid" x="461" y="45">other 80% of users</text>
+  <text class="end" x="90" y="135">Trades</text>
+  <rect x="100" y="110" width="480" height="40" fill="#111"/><text class="on-dark mid" x="340" y="135">80% of trades &#183; 2.0 M</text>
+  <rect x="582" y="110" width="118" height="40" fill="#e6e4d4"/><text class="mid sm" x="641" y="135" style="fill:#111">20% &#183; 0.48 M</text>
+  <path class="dash" d="M221 60 L581 110"/>
+</svg></div><figcaption>A fifth of the users generate four-fifths of the trades, so the “10 trades a day” assumption for heavy users drives the whole answer.</figcaption></figure>
+          <div class="fw-example">
+            <h4>Worked example: daily trades on a broking app with 1 M active users</h4>
+            <table class="plain">
+              <thead><tr><th>Segment</th><th class="num">Users</th><th class="num">Trades / day</th><th class="num">Total</th></tr></thead>
+              <tbody>
+                <tr><td>Heavy traders (top 20%)</td><td class="num">200 k</td><td class="num">10</td><td class="num">2.0 M</td></tr>
+                <tr><td>Everyone else</td><td class="num">800 k</td><td class="num">0.6</td><td class="num">0.48 M</td></tr>
+                <tr class="total"><td>Total</td><td></td><td></td><td class="num">~2.5 M</td></tr>
+              </tbody>
+            </table>
+            <p class="note">The top 20% produce ~80% of trades, so the answer depends mostly on the &ldquo;10 trades a day&rdquo; assumption. That&rsquo;s the one to defend.</p>
+          </div>
+        </div>
+
+        <!-- Unit economics -->
+        <div class="fw" id="fw-unit">
+          <h3><a href="#fw-unit">Unit economics</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p>Work out the economics of <em>one</em> unit (one order, customer, ride or seat), then multiply by volume and subtract fixed costs.</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>For revenue, cost or profit questions about a single business: a caf&eacute;, cloud kitchen, delivery fleet or SaaS product. It also exposes whether the business makes money at all, which is often the follow-up question.</p>
+            </div>
+          </div>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 260" role="img" aria-label="Waterfall: order value 400 rupees minus food 140, commission 100 and packaging 20 leaves 140 contribution">
+  <line class="axis" x1="10" y1="220" x2="710" y2="220"/>
+  <rect x="30" y="40" width="90" height="180" rx="2" fill="#111"/><text class="mid b" x="75" y="32">&#8377;400</text>
+  <path class="dash" d="M120 40 H170"/>
+  <rect x="170" y="40" width="90" height="63" fill="#a9a89b"/><text class="mid" x="215" y="32">&#8722;&#8377;140</text>
+  <path class="dash" d="M260 103 H310"/>
+  <rect x="310" y="103" width="90" height="45" fill="#a9a89b"/><text class="mid" x="355" y="95">&#8722;&#8377;100</text>
+  <path class="dash" d="M400 148 H450"/>
+  <rect x="450" y="148" width="90" height="9" fill="#a9a89b"/><text class="mid" x="495" y="140">&#8722;&#8377;20</text>
+  <path class="dash" d="M540 157 H590"/>
+  <rect x="590" y="157" width="90" height="63" rx="2" fill="#111"/><text class="mid b" x="635" y="149">&#8377;140</text>
+  <text class="mid sm" x="75" y="242">Order value</text><text class="mid sm" x="215" y="242">Food 35%</text>
+  <text class="mid sm" x="355" y="242">Commission 25%</text><text class="mid sm" x="495" y="242">Packaging 5%</text>
+  <text class="mid sm" x="635" y="242">Contribution</text>
+</svg></div><figcaption>One order at a time: ₹400 in, ₹260 of variable cost out, ₹140 left to cover rent and salaries. Then multiply by 1,800 orders a month.</figcaption></figure>
+          <div class="fw-example">
+            <h4>Worked example: monthly profit of a cloud kitchen</h4>
+            <table class="plain">
+              <tbody>
+                <tr><td>Average order value</td><td class="num">₹400</td></tr>
+                <tr><td>&minus; Food cost (35%)</td><td class="num">₹140</td></tr>
+                <tr><td>&minus; Aggregator commission (25%)</td><td class="num">₹100</td></tr>
+                <tr><td>&minus; Packaging (5%)</td><td class="num">₹20</td></tr>
+                <tr class="total"><td>Contribution per order</td><td class="num">₹140</td></tr>
+                <tr><td>&times; 60 orders/day &times; 30 days</td><td class="num">₹2.52 L</td></tr>
+                <tr><td>&minus; Fixed costs (rent ₹60 k, staff ₹1.2 L, utilities ₹20 k)</td><td class="num">₹2.0 L</td></tr>
+                <tr class="total"><td>Monthly profit</td><td class="num">~₹52 k</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Extrapolation -->
+        <div class="fw" id="fw-extrapolation">
+          <h3><a href="#fw-extrapolation">Extrapolation</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p>Project a known current value forward at a steady growth rate.</p>
+              <p class="formula">Y = Y&prime; &times; (1 + r)<sup>t</sup></p>
+              <p class="note">Y = future value, Y&prime; = current known value, r = annual growth rate, t = number of years.</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>For &ldquo;in 2030&rdquo; or &ldquo;in five years&rdquo; questions, where today&rsquo;s figure is knowable and the trend is stable. State why the rate holds (policy, falling prices, adoption curve) and note where it might flatten.</p>
+            </div>
+          </div>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 240" role="img" aria-label="Electric two-wheeler sales growing 25% a year from 1.1 million in 2025 to 3.4 million in 2030">
+  <path class="rule" d="M60 151.4 H690 M60 102.8 H690 M60 54.2 H690"/>
+  <text class="xs end" x="52" y="155">1 M</text><text class="xs end" x="52" y="106">2 M</text><text class="xs end" x="52" y="58">3 M</text>
+  <line class="axis" x1="60" y1="200" x2="690" y2="200"/>
+  <text class="xs mid" x="60" y="220">2025</text><text class="xs mid" x="184" y="220">2026</text><text class="xs mid" x="308" y="220">2027</text>
+  <text class="xs mid" x="432" y="220">2028</text><text class="xs mid" x="556" y="220">2029</text><text class="xs mid" x="680" y="220">2030</text>
+  <polyline class="line2" points="60,146.6 184,133.2 308,116.4 432,95.5 556,69.3 680,36.7"/>
+  <circle class="ink" cx="60" cy="146.6" r="5"/><circle class="ink" cx="184" cy="133.2" r="4"/><circle class="ink" cx="308" cy="116.4" r="4"/>
+  <circle class="ink" cx="432" cy="95.5" r="4"/><circle class="ink" cx="556" cy="69.3" r="4"/><circle class="ink" cx="680" cy="36.7" r="5"/>
+  <text class="b" x="70" y="172">1.1 M today</text>
+  <text class="b end" x="668" y="30">3.4 M in 2030</text>
+  <text class="sm it" x="300" y="80">&#215; 1.25 every year</text>
+  <text class="xs" x="408" y="122">roughly doubled by 2028</text>
+</svg></div><figcaption>Y = 1.1 M &#215; 1.25<sup>5</sup> &#8776; 3.4 M. The curve bends upward because growth compounds on a bigger base each year.</figcaption></figure>
+          <div class="fw-example">
+            <h4>Worked example: electric two-wheeler sales in 2030</h4>
+            <p><span class="assume">~1.1 M sold this year</span>, growing <span class="assume">25% a year</span> for 5 years:</p>
+            <p>1.1 M &times; 1.25<sup>5</sup> = 1.1 M &times; 3.05 &asymp; <strong>3.4 M units</strong></p>
+            <p class="note">Shortcut: with the rule of 72, something growing at 25% doubles roughly every 72 &divide; 25 &asymp; 3 years.</p>
+          </div>
+        </div>
+
+        <!-- Demand side -->
+        <div class="fw" id="fw-demand">
+          <h3><a href="#fw-demand">Demand-side approach</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p>Size the market from the buyer&rsquo;s side: who the target population is, how many of them use the product, how often, and how much each time.</p>
+              <p class="formula">Population &times; % users &times; frequency &times; quantity</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>For market size, revenue and consumption questions where supply is abundant and the limit is how many people want it. Examples: sanitary pads in India, daily Delhi Metro riders, toothpaste sales.</p>
+            </div>
+          </div>
+          <h4>Parameters to consider</h4>
+          <ul class="checklist">
+            <li>Age</li><li>Income</li><li>Location (urban / rural, tier)</li><li>Gender</li><li>Occupation</li>
+            <li>Literacy</li><li>Mobile penetration</li><li>Internet penetration</li><li>Usage frequency</li><li>Household vs individual</li>
+          </ul>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 200" role="img" aria-label="Funnel drawn to scale: 300 million households, 190 million own a pressure cooker, 24 million bought this year">
+  <rect x="60" y="10" width="600" height="42" fill="#e6e4d4"/><text class="mid" x="360" y="37">300 M households</text>
+  <text class="xs end" x="165" y="78">&#215; ownership</text>
+  <rect x="170" y="62" width="380" height="42" fill="#a9a89b"/><text class="mid" x="360" y="89">190 M own a cooker</text>
+  <text class="xs end" x="330" y="132">&#247; 7&#8211;10 yr life</text>
+  <rect x="336" y="114" width="48" height="42" fill="#111"/>
+  <text class="b" x="394" y="134">24 M bought this year</text>
+  <text class="xs" x="394" y="150">23 M replacements + 1 M first-time buyers</text>
+  <text class="xs mid" x="360" y="190">Bars drawn to scale</text>
+</svg></div></figure>
+          <div class="fw-example">
+            <h4 style="margin-top:1.2rem">Worked example: pressure cookers sold in India per year</h4>
+            <table class="plain">
+              <thead><tr><th>Segment</th><th class="num">Households</th><th class="num">Own one</th><th class="num">Owners</th><th class="num">Life</th><th class="num">Units / yr</th></tr></thead>
+              <tbody>
+                <tr><td>Urban</td><td class="num">100 M</td><td class="num">90%</td><td class="num">90 M</td><td class="num">7 yrs</td><td class="num">~13 M</td></tr>
+                <tr><td>Rural</td><td class="num">200 M</td><td class="num">50%</td><td class="num">100 M</td><td class="num">10 yrs</td><td class="num">10 M</td></tr>
+                <tr><td>First-time buyers</td><td colspan="4">~1% of 110 M non-owning households buy each year</td><td class="num">~1 M</td></tr>
+                <tr class="total"><td>Total</td><td colspan="4"></td><td class="num">~24 M</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Supply side -->
+        <div class="fw" id="fw-supply">
+          <h3><a href="#fw-supply">Supply-side approach</a></h3>
+          <div class="fw-grid">
+            <div>
+              <h4>What it is</h4>
+              <p>Size the market from the seller&rsquo;s side: production capacity, number of outlets or vehicles, throughput per unit of time, and utilisation.</p>
+              <p class="formula">Capacity &times; throughput &times; hours &times; utilisation</p>
+            </div>
+            <div class="fw-when">
+              <h4>When to use it</h4>
+              <p>When the business is <strong>supply-constrained</strong>: production capacity, delivery or fleet limits, seats and slots, regulation (licences, runway slots) or transport bottlenecks. Examples: Amazon parcels delivered per day, flights out of an airport, limited-edition sneakers resold.</p>
+            </div>
+          </div>
+          <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 110" role="img" aria-label="25 riders times 16 hours times 3 deliveries an hour times 60% utilisation equals 720 orders a day">
+  <rect class="card" x="0" y="10" width="118" height="84" rx="3"/><text class="mid xl" x="59" y="52">25</text><text class="mid sm" x="59" y="78">riders on shift</text>
+  <text class="mid xl" x="134" y="60">&#215;</text>
+  <rect class="card" x="150" y="10" width="118" height="84" rx="3"/><text class="mid xl" x="209" y="52">16</text><text class="mid sm" x="209" y="78">hours open</text>
+  <text class="mid xl" x="284" y="60">&#215;</text>
+  <rect class="card" x="300" y="10" width="118" height="84" rx="3"/><text class="mid xl" x="359" y="52">3</text><text class="mid sm" x="359" y="78">deliveries / hour</text>
+  <text class="mid xl" x="434" y="60">&#215;</text>
+  <rect class="card" x="450" y="10" width="118" height="84" rx="3"/><text class="mid xl" x="509" y="52">60%</text><text class="mid sm" x="509" y="78">utilisation</text>
+  <text class="mid xl" x="584" y="60">=</text>
+  <rect x="600" y="10" width="120" height="84" rx="3" fill="#111"/><text class="mid xl on-dark" x="660" y="52">720</text><text class="mid sm on-dark" x="660" y="78">orders / day</text>
+</svg></div><figcaption>Capacity sets the ceiling; utilisation says how much of it demand actually fills.</figcaption></figure>
+          <div class="fw-example">
+            <h4>Worked example: orders per day at a quick-commerce dark store</h4>
+            <p><span class="assume">25 riders on shift</span> &times; <span class="assume">16 operating hours</span> &times; <span class="assume">3 deliveries per rider per hour</span> (20-minute round trip) &times; <span class="assume">60% utilisation</span> = <strong>~720 orders a day</strong>.</p>
+          </div>
+
+          <div class="mini-fw">
+            <h4>Mini-framework: TAM &middot; SAM &middot; SOM</h4>
+            <div class="nest">
+              <div><b>TAM</b>Total addressable market: everyone who could possibly buy.</div>
+              <div><b>SAM</b>Serviceable available market: the part of TAM your product, channel and geography can actually serve.</div>
+              <div><b>SOM</b>Serviceable obtainable market: the share of SAM you can realistically win, given competition and resources.</div>
+            </div>
+            <figure class="fig"><div class="fig-scroll"><svg class="ill" viewBox="0 0 720 240" role="img" aria-label="Nested circles drawn to scale: TAM 660 crore, SAM 330 crore, SOM 16.5 crore">
+  <circle cx="140" cy="120" r="110" fill="#e6e4d4"/>
+  <circle cx="140" cy="152" r="78" fill="#a9a89b"/>
+  <circle cx="140" cy="212.6" r="17.4" fill="#111"/>
+  <path class="line" d="M218 42 H300"/><text class="lg" x="310" y="40">TAM &#183; &#8377;660 Cr</text><text class="sm" x="310" y="60">~3.3 lakh CAT registrants &#215; &#8377;20 k spend</text>
+  <path class="line" d="M195 97 L240 118 H300"/><text class="lg" x="310" y="116">SAM &#183; &#8377;330 Cr</text><text class="sm" x="310" y="136">~50% open to online-only coaching</text>
+  <path class="line" d="M157 208 L240 200 H300"/><text class="lg" x="310" y="198">SOM &#183; &#8377;16.5 Cr</text><text class="sm" x="310" y="218">5% share a new player could win in 3 years</text>
+</svg></div><figcaption>Circle areas are drawn to scale, which shows how small the obtainable slice is next to the headline market.</figcaption></figure>
+            <p class="note" style="margin-top:0.6rem">Example: an online-only CAT prep start-up. TAM = ~3.3 lakh CAT registrants &times; ₹20 k average spend on preparation = ₹660 Cr. SAM = the ~50% open to online-only coaching = ₹330 Cr. SOM = 5% share in three years = <strong>~₹16.5 Cr</strong>.</p>
+          </div>
+        </div>
+
+<nav class="pager" aria-label="Previous and next topic"><a class="prev" href="introduction.html"><span class="lbl">&larr; Previous</span><span class="ttl">Introduction</span></a><a class="next" href="pro-tips.html"><span class="lbl">Next &rarr;</span><span class="ttl">Pro Tips</span></a></nav>
+</article>
+</main>
+
+<footer>
+  <div class="wrap">Breaking Point: consulting case prep. Typography after <a href="https://www.econgraphs.org" target="_blank" rel="noopener">EconGraphs</a> and Tufte CSS.</div>
+</footer>
+
+<script src="../js/learn.js?v=5"></script>
+</body>
+</html>

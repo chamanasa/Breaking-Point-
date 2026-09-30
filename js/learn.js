@@ -1,159 +1,180 @@
-/* Learn tab: India Numbers Bible tabs, the step-by-step worked example,
- * and sidebar highlighting of the section currently on screen. */
+/* Shared script for the standalone Learn pages (learn/*.html).
+ * Each feature runs only if its elements exist on the current page:
+ *   - worked-example stepper (#stepper)
+ *   - India Numbers Bible tabs, tables and charts (#numbers-tabs)
+ */
 (function () {
-  const App = window.App;
-  const esc = App.escapeHtml;
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  /* ---------- Charts (monochrome SVG, direct labels, hover titles) ---------- */
+
+  // Sequential ink tints, dark → light. Text on the first two uses paper colour.
+  const TINTS = ["#111111", "#4a4a45", "#7c7b72", "#a9a89b", "#cfcdbd", "#e6e4d4", "#efeee0", "#f5f4e8"];
+  const fmt = function (v) { return (Math.round(v * 10) / 10).toLocaleString("en-IN"); };
+
+  function hbar(c) {
+    const W = 640, labelW = 150, rowH = 30, barH = 16, top = 6;
+    const max = Math.max.apply(null, c.rows.map(function (r) { return r[1]; }));
+    const plotW = W - labelW - 70;
+    const H = top + c.rows.length * rowH;
+    let svg = '<svg class="ill" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(c.title) + '">';
+    c.rows.forEach(function (r, i) {
+      const y = top + i * rowH;
+      const w = Math.max(2, (r[1] / max) * plotW);
+      svg += '<text x="' + (labelW - 10) + '" y="' + (y + barH - 3) + '" class="end">' + esc(r[0]) + "</text>" +
+        '<rect class="hit" x="' + labelW + '" y="' + y + '" width="' + w.toFixed(1) + '" height="' + barH + '" rx="2" fill="#111"><title>' +
+        esc(r[0] + ": " + fmt(r[1]) + (c.unit || "")) + "</title></rect>" +
+        '<text x="' + (labelW + w + 8).toFixed(1) + '" y="' + (y + barH - 3) + '" class="sm">' + fmt(r[1]) + esc(c.unit || "") + "</text>";
+    });
+    return svg + "</svg>";
+  }
+
+  function stack(c) {
+    const W = 640, H = 40;
+    const total = c.rows.reduce(function (a, r) { return a + r[1]; }, 0);
+    let x = 0, svg = '<svg class="ill" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(c.title) + '">';
+    c.rows.forEach(function (r, i) {
+      const w = (r[1] / total) * W;
+      const fill = TINTS[Math.min(i, TINTS.length - 1)];
+      svg += '<rect class="hit gap" x="' + x.toFixed(1) + '" y="0" width="' + Math.max(1, w).toFixed(1) + '" height="' + H + '" fill="' + fill + '"><title>' +
+        esc(r[0] + ": " + fmt(r[1]) + "%") + "</title></rect>";
+      if (w > 78) {
+        svg += '<text x="' + (x + 10).toFixed(1) + '" y="' + (H / 2 + 5) + '"' + (i < 2 ? ' class="on-dark"' : "") + ">" +
+          esc(r[0]) + " " + fmt(r[1]) + "%</text>";
+      }
+      x += w;
+    });
+    svg += "</svg>";
+    const legend = '<ul class="legend">' + c.rows.map(function (r, i) {
+      return '<li><i style="background:' + TINTS[Math.min(i, TINTS.length - 1)] + ';outline:1px solid #cfcdbd"></i>' + esc(r[0]) + " <b>" + fmt(r[1]) + "%</b></li>";
+    }).join("") + "</ul>";
+    return svg + legend;
+  }
+
+  function pair(c) {
+    const W = 640, labelW = 120, groupH = 58, barH = 16, top = 4, plotW = W - labelW - 110;
+    const fills = ["#111111", "#a9a89b"];
+    const H = top + c.rows.length * groupH;
+    let svg = '<svg class="ill" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(c.title) + '">';
+    c.rows.forEach(function (r, i) {
+      const y = top + i * groupH;
+      svg += '<text x="' + (labelW - 10) + '" y="' + (y + barH + 6) + '" class="end">' + esc(r[0]) + "</text>";
+      [1, 2].forEach(function (k, j) {
+        const w = (r[k] / 100) * plotW, by = y + j * (barH + 4);
+        svg += '<rect class="hit" x="' + labelW + '" y="' + by + '" width="' + w.toFixed(1) + '" height="' + barH + '" rx="2" fill="' + fills[j] + '"><title>' +
+          esc(c.series[j] + " " + r[0].toLowerCase() + ": " + r[k] + "%") + "</title></rect>" +
+          '<text x="' + (labelW + w + 8).toFixed(1) + '" y="' + (by + barH - 3) + '" class="sm">' + r[k] + "% " + esc(c.series[j].toLowerCase()) + "</text>";
+      });
+    });
+    svg += "</svg>";
+    const legend = '<ul class="legend">' + c.series.map(function (s, j) {
+      return '<li><i style="background:' + fills[j] + '"></i>' + esc(s) + "</li>";
+    }).join("") + "</ul>";
+    return svg + legend;
+  }
+
+  function chart(c) {
+    const body = c.type === "hbar" ? hbar(c) : c.type === "pair" ? pair(c) : stack(c);
+    return '<figure class="fig box' + (c.wide ? " wide" : "") + '" style="margin:0"><p class="fig-title">' + esc(c.title) + "</p>" + body + "</figure>";
+  }
 
   /* ---------- India Numbers Bible ---------- */
 
-  const groups = Array.isArray(window.INDIA_NUMBERS) ? window.INDIA_NUMBERS : [];
   const tabsEl = document.getElementById("numbers-tabs");
-  const panelsEl = document.getElementById("numbers-panels");
+  if (tabsEl) {
+    const groups = window.INDIA_NUMBERS || [];
+    const charts = window.INDIA_CHARTS || {};
+    const panelsEl = document.getElementById("numbers-panels");
 
-  function rowHtml(r) {
-    return "<tr>" +
-      "<td>" + esc(r.metric) + "</td>" +
-      "<td>" + esc(r.value) + (r.approx ? '<span class="flag" title="Working assumption or low-precision figure">approx.</span>' : "") + "</td>" +
-      '<td class="src">' + esc(r.source) + "</td>" +
-      '<td class="yr">' + esc(r.year) + "</td>" +
-      "</tr>";
-  }
+    const rowHtml = function (r) {
+      return "<tr><td>" + esc(r.metric) + "</td><td>" + esc(r.value) +
+        (r.approx ? '<span class="flag" title="Working assumption or low-precision figure">approx.</span>' : "") +
+        '</td><td class="src">' + esc(r.source) + '</td><td class="yr">' + esc(r.year) + "</td></tr>";
+    };
 
-  tabsEl.innerHTML = groups.map(function (g, i) {
-    return '<button type="button" role="tab" id="numbers-tab-' + esc(g.id) + '" aria-controls="numbers-panel-' + esc(g.id) +
-      '" aria-selected="' + (i === 0) + '" data-group="' + esc(g.id) + '">' + esc(g.label) + " variables</button>";
-  }).join("");
+    tabsEl.innerHTML = groups.map(function (g) {
+      return '<button type="button" role="tab" id="tab-' + esc(g.id) + '" aria-controls="panel-' + esc(g.id) + '" data-group="' + esc(g.id) + '">' + esc(g.label) + " variables</button>";
+    }).join("");
 
-  panelsEl.innerHTML = groups.map(function (g, i) {
-    return '<div class="num-group" role="tabpanel" id="numbers-panel-' + esc(g.id) + '" aria-labelledby="numbers-tab-' + esc(g.id) + '"' + (i === 0 ? "" : " hidden") + ">" +
-      g.sections.map(function (s) {
-        return '<div class="box"><h3>' + esc(s.title) + "</h3>" +
-          '<table class="plain numbers"><thead><tr><th>Metric</th><th>Value</th><th>Source</th><th>Year</th></tr></thead><tbody>' +
-          s.rows.map(rowHtml).join("") +
-          "</tbody></table></div>";
-      }).join("") +
-      "</div>";
-  }).join("");
+    panelsEl.innerHTML = groups.map(function (g) {
+      return '<div class="num-group" role="tabpanel" id="panel-' + esc(g.id) + '" aria-labelledby="tab-' + esc(g.id) + '">' +
+        (charts[g.id] ? '<div class="charts">' + charts[g.id].map(chart).join("") + "</div>" : "") +
+        '<h2 style="margin-top:2.4rem">All ' + esc(g.label.toLowerCase()) + " figures</h2>" +
+        g.sections.map(function (s) {
+          return '<div class="box"><h3>' + esc(s.title) + '</h3><table class="plain numbers"><thead><tr><th>Metric</th><th>Value</th><th>Source</th><th>Year</th></tr></thead><tbody>' +
+            s.rows.map(rowHtml).join("") + "</tbody></table></div>";
+        }).join("") + "</div>";
+    }).join("");
 
-  function selectGroup(id) {
-    tabsEl.querySelectorAll("button").forEach(function (b) {
-      b.setAttribute("aria-selected", String(b.dataset.group === id));
+    const select = function (id) {
+      if (!groups.some(function (g) { return g.id === id; })) id = groups[0].id;
+      tabsEl.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.group === id)); });
+      panelsEl.querySelectorAll(".num-group").forEach(function (p) { p.hidden = p.id !== "panel-" + id; });
+    };
+    tabsEl.addEventListener("click", function (e) {
+      const b = e.target.closest("button");
+      if (!b) return;
+      history.replaceState(null, "", "#" + b.dataset.group);
+      select(b.dataset.group);
     });
-    panelsEl.querySelectorAll(".num-group").forEach(function (p) {
-      p.hidden = p.id !== "numbers-panel-" + id;
-    });
+    window.addEventListener("hashchange", function () { select(location.hash.slice(1)); });
+    select(location.hash.slice(1));
   }
-
-  tabsEl.addEventListener("click", function (e) {
-    const b = e.target.closest("button");
-    if (b) selectGroup(b.dataset.group);
-  });
-
-  App.onRoute(function (route) {
-    if (route.tab === "learn" && route.arg && route.arg.indexOf("numbers-") === 0) {
-      const id = route.arg.slice("numbers-".length);
-      if (groups.some(function (g) { return g.id === id; })) selectGroup(id);
-    }
-  });
 
   /* ---------- Worked example stepper ---------- */
 
-  const steps = Array.from(document.querySelectorAll("#stepper .step-x"));
-  const progress = document.getElementById("stepper-progress");
-  const nextBtn = document.getElementById("stepper-next");
-  let revealed = 1;
+  const stepper = document.getElementById("stepper");
+  if (stepper) {
+    const steps = Array.from(stepper.querySelectorAll(".step-x"));
+    const progress = document.getElementById("stepper-progress");
+    const nextBtn = document.getElementById("stepper-next");
+    let revealed = 1;
 
-  function setOpen(step, open) {
-    step.dataset.open = String(open);
-    step.querySelector(".body").hidden = !open;
-    step.querySelector("button").setAttribute("aria-expanded", String(open));
-  }
+    const setOpen = function (step, open) {
+      step.dataset.open = String(open);
+      step.querySelector(".body").hidden = !open;
+      step.querySelector("button").setAttribute("aria-expanded", String(open));
+    };
+    const paint = function () {
+      steps.forEach(function (step, i) {
+        const locked = i >= revealed;
+        step.dataset.locked = String(locked);
+        step.querySelector("button").disabled = locked;
+        if (locked) setOpen(step, false);
+      });
+      progress.textContent = "Step " + revealed + " of " + steps.length + " revealed";
+      nextBtn.disabled = revealed >= steps.length;
+    };
 
-  function paintStepper() {
     steps.forEach(function (step, i) {
-      const locked = i >= revealed;
-      step.dataset.locked = String(locked);
-      step.querySelector("button").disabled = locked;
-      if (locked) setOpen(step, false);
+      setOpen(step, i === 0);
+      step.querySelector("button").addEventListener("click", function () {
+        if (i < revealed) setOpen(step, step.dataset.open !== "true");
+      });
     });
-    progress.textContent = "Step " + revealed + " of " + steps.length + " revealed";
-    nextBtn.disabled = revealed >= steps.length;
-  }
-
-  steps.forEach(function (step, i) {
-    setOpen(step, i === 0);
-    step.querySelector("button").addEventListener("click", function () {
-      if (i < revealed) setOpen(step, step.dataset.open !== "true");
+    nextBtn.addEventListener("click", function () {
+      if (revealed >= steps.length) return;
+      steps.slice(0, revealed).forEach(function (s) { setOpen(s, false); });
+      revealed += 1;
+      paint();
+      setOpen(steps[revealed - 1], true);
+      steps[revealed - 1].scrollIntoView({ block: "nearest" });
     });
-  });
-
-  nextBtn.addEventListener("click", function () {
-    if (revealed >= steps.length) return;
-    steps.slice(0, revealed).forEach(function (s) { setOpen(s, false); });
-    revealed += 1;
-    paintStepper();
-    const step = steps[revealed - 1];
-    setOpen(step, true);
-    step.scrollIntoView({ block: "nearest" });
-  });
-
-  document.getElementById("stepper-all").addEventListener("click", function () {
-    revealed = steps.length;
-    paintStepper();
-    steps.forEach(function (s) { setOpen(s, true); });
-  });
-
-  document.getElementById("stepper-reset").addEventListener("click", function () {
-    revealed = 1;
-    paintStepper();
-    steps.forEach(function (s, i) { setOpen(s, i === 0); });
-    document.getElementById("learn-example").scrollIntoView();
-  });
-
-  paintStepper();
-
-  /* ---------- Pages: landing grid, one topic page at a time ---------- */
-
-  const PAGES = [
-    { id: "intro", title: "Introduction" },
-    { id: "frameworks", title: "Frameworks & Approach" },
-    { id: "tips", title: "Pro Tips" },
-    { id: "example", title: "Worked Example" },
-    { id: "numbers", title: "India Numbers Bible" }
-  ];
-  const home = document.getElementById("learn-home");
-  const crumbs = document.getElementById("learn-crumbs");
-  const crumbCurrent = document.getElementById("learn-crumb-current");
-  const pager = document.getElementById("learn-pager");
-
-  // Map a route argument (e.g. "fw-mece", "numbers-economic", "structure") to its page.
-  function pageFor(arg) {
-    if (!arg) return null;
-    if (arg === "structure") return "intro";
-    if (arg.indexOf("fw-") === 0) return "frameworks";
-    if (arg.indexOf("numbers-") === 0) return "numbers";
-    return PAGES.some(function (p) { return p.id === arg; }) ? arg : null;
-  }
-
-  function pagerLink(page, cls, label) {
-    return '<a class="' + cls + '" href="#learn/' + page.id + '"><span class="lbl">' + label + '</span><span class="ttl">' + esc(page.title) + "</span></a>";
-  }
-
-  App.onRoute(function (route) {
-    if (route.tab !== "learn") return;
-    const current = pageFor(route.arg);
-    home.hidden = current !== null;
-    crumbs.hidden = pager.hidden = current === null;
-    document.querySelectorAll("#view-learn .learn-page").forEach(function (sec) {
-      sec.hidden = sec.dataset.page !== current;
+    document.getElementById("stepper-all").addEventListener("click", function () {
+      revealed = steps.length;
+      paint();
+      steps.forEach(function (s) { setOpen(s, true); });
     });
-    if (current === null) { document.title = "Guesstimates · Breaking Point"; return; }
-
-    const i = PAGES.findIndex(function (p) { return p.id === current; });
-    crumbCurrent.textContent = PAGES[i].title;
-    document.title = PAGES[i].title + " · Breaking Point";
-    pager.innerHTML =
-      (i > 0 ? pagerLink(PAGES[i - 1], "prev", "&larr; Previous") : "") +
-      (i < PAGES.length - 1 ? pagerLink(PAGES[i + 1], "next", "Next &rarr;") : '<a class="next" href="#learn"><span class="lbl">Back to</span><span class="ttl">All topics</span></a>');
-  });
+    document.getElementById("stepper-reset").addEventListener("click", function () {
+      revealed = 1;
+      paint();
+      steps.forEach(function (s, i) { setOpen(s, i === 0); });
+      window.scrollTo(0, 0);
+    });
+    paint();
+  }
 })();
