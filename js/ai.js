@@ -525,7 +525,7 @@
     el.qTitle.textContent = q.title;
     el.qMeta.textContent = metaLine(q);
     el.chat.querySelectorAll(".msg").forEach(function (m) { m.remove(); });
-    el.input.placeholder = "Clarify the question, lay out your structure, or walk through your numbers…";
+    el.input.placeholder = window.innerWidth <= 820 ? "Type your answer…" : "Clarify the question, lay out your structure, or walk through your numbers…";
     el.start.textContent = "Restart";
     el.timer.hidden = false;
     clearInterval(timerHandle);
