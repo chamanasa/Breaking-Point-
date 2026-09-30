@@ -136,7 +136,7 @@
   function pickMatches(q) {
     if (pick.diff.size && !pick.diff.has(q.difficulty)) return false;
     if (!pick.search) return true;
-    const hay = [q.id, q.title, q.industry, q.firm, q.geography, q.source].join(" ").toLowerCase();
+    const hay = [q.id, q.title, q.industry, q.firm, q.geography].join(" ").toLowerCase();
     return pick.search.toLowerCase().split(/\s+/).every(function (t) { return hay.includes(t); });
   }
 

@@ -30,12 +30,12 @@
 :root {
   --paper: #fffff8;
   --ink: #111;
-  --muted: #454540;
-  --faint: #6f6f66;
-  --rule: #deddcf;
-  --panel: #f6f5e8;
-  --panel-strong: #eeecd9;
-  --card: #fbfaf0;
+  --muted: #33332e;
+  --faint: #5c5c54;
+  --rule: #c9c7b5;
+  --panel: #efeedd;
+  --panel-strong: #e4e2cb;
+  --card: #f8f7e9;
   --easy: #2e6b3a;
   --medium: #8a6a12;
   --hard: #8e2b2b;
@@ -53,7 +53,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--serif);
-  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
@@ -127,6 +127,7 @@ ul, ol { max-width: var(--measure); padding-left: 1.4rem; }
 li { padding: 0.2rem 0; }
 
 a:link, a:visited { color: inherit; }
+::placeholder { color: var(--faint); opacity: 1; }
 a { text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
 
 code, kbd { font-family: var(--mono); font-size: 0.95rem; }
@@ -256,6 +257,8 @@ kbd { border: 1px solid var(--rule); padding: 0 0.3em; border-radius: 2px; backg
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 0.6rem 0; }
 .compare > div { border-top: 1px solid var(--rule); padding-top: 0.6rem; }
 .compare p { font-size: 1.25rem; line-height: 1.75rem; margin: 0.4rem 0; }
+.label-sc { font-variant: small-caps; letter-spacing: 0.06em; color: var(--ink); font-weight: bold; }
+.msg em { font-style: normal; font-weight: bold; }
 
 .formula {
   font-family: var(--serif);
@@ -410,7 +413,7 @@ table.numbers .flag { font-variant: small-caps; letter-spacing: 0.05em; font-siz
 
 .filters {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.1rem 1.6rem;
   align-items: end;
   padding: 1rem 0 1.2rem;
@@ -419,7 +422,7 @@ table.numbers .flag { font-variant: small-caps; letter-spacing: 0.05em; font-siz
   margin: 1.5rem 0 0.5rem;
 }
 .field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
-.filters .field.search { grid-column: span 3; }
+.filters .field.search { grid-column: span 2; }
 .filters .field.diff-field { grid-column: span 2; }
 .qitem .firm { color: var(--ink); }
 .qitem details p.src { color: var(--muted); }

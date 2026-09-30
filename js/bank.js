@@ -1,22 +1,20 @@
 /* Question bank: filtering and rendering. Filter options are derived from
- * the data, so adding a new industry, firm or source in data/questions.js is enough. */
+ * the data, so adding a new industry or firm in data/questions.js is enough. */
 (function () {
   const App = window.App;
   const esc = App.escapeHtml;
   const DIFFICULTIES = ["Easy", "Medium", "Hard"];
 
-  // Several filters use a derived value: a question can list more than one
-  // firm ("Bain / BCG"), and both 180DC volumes group under one book.
+  // A question can list more than one firm ("Bain / BCG"); each counts for filtering.
   const FIELDS = {
     industry: function (q) { return [q.industry]; },
     type: function (q) { return [q.type]; },
     approach: function (q) { return [q.approach]; },
-    firm: function (q) { return (q.firm || "").split(" / ").filter(Boolean); },
-    book: function (q) { return [App.bookOf(q)]; }
+    firm: function (q) { return (q.firm || "").split(" / ").filter(Boolean); }
   };
-  const ALL_LABEL = { industry: "All industries", type: "All types", approach: "All approaches", firm: "All firms", book: "All sources" };
+  const ALL_LABEL = { industry: "All industries", type: "All types", approach: "All approaches", firm: "All firms" };
 
-  const state = { search: "", difficulty: new Set(), industry: "", type: "", approach: "", firm: "", book: "" };
+  const state = { search: "", difficulty: new Set(), industry: "", type: "", approach: "", firm: "" };
 
   const el = {
     search: document.getElementById("f-search"),
@@ -49,7 +47,7 @@
       if (state[k] && FIELDS[k](q).indexOf(state[k]) === -1) return false;
     }
     if (state.search) {
-      const hay = [q.id, q.title, q.industry, q.type, q.approach, q.geography, q.firm, q.source].join(" ").toLowerCase();
+      const hay = [q.id, q.title, q.industry, q.type, q.approach, q.geography, q.firm].join(" ").toLowerCase();
       const terms = state.search.toLowerCase().split(/\s+/).filter(Boolean);
       if (!terms.every(function (t) { return hay.includes(t); })) return false;
     }
@@ -71,10 +69,7 @@
           "<span>" + esc(q.approach) + "</span>" +
           (q.geography ? "<span>" + esc(q.geography) + "</span>" : "") +
         "</div>" +
-        '<details><summary>Hint &amp; source</summary>' +
-          (q.hint ? "<p><em>Hint.</em> " + esc(q.hint) + "</p>" : "") +
-          '<p class="src"><em>Source.</em> ' + esc(q.source) + "</p>" +
-        "</details>" +
+        (q.hint ? "<details><summary>Show hint</summary><p>" + esc(q.hint) + "</p></details>" : "") +
       "</li>"
     );
   }
