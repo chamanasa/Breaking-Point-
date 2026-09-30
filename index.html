@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Breaking Point · Consulting Case Prep</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
-  <link rel="stylesheet" href="css/style.css?v=11">
-  <script src="js/update.js?v=11"></script>
+  <link rel="stylesheet" href="css/style.css?v=12">
+  <script src="js/update.js?v=12"></script>
 </head>
 <body>
 
@@ -234,11 +234,31 @@
           </div>
           <div class="compose-row">
             <textarea id="ai-input" rows="1" placeholder="Start an interview to reply&hellip;" disabled></textarea>
+            <button class="voice-btn" type="button" id="ai-voice" disabled aria-label="Start a voice interview" title="Voice interview: speak with the interviewer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
+            </button>
             <button class="send" type="submit" id="ai-send" disabled aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
           </div>
-          <p class="hint-line"><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</p>
+          <p class="hint-line" id="hint-line"><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line &middot; <span id="voice-hint-text">tap the waveform for a spoken interview</span></p>
         </div>
       </form>
+
+      <!-- Voice interview: replaces the composer while active -->
+      <div class="voice-bar" id="voice-bar" hidden aria-live="polite">
+        <button class="orb" type="button" id="voice-orb" data-state="idle" aria-label="Tap to talk">
+          <span class="orb-ring" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+        </button>
+        <div class="voice-info">
+          <p class="voice-state" id="voice-state">Starting…</p>
+          <p class="voice-live" id="voice-live"></p>
+        </div>
+        <div class="voice-actions">
+          <button class="chip" type="button" id="voice-hint">Hint</button>
+          <button class="chip" type="button" id="voice-finish">Finish &amp; feedback</button>
+          <button class="btn ghost" type="button" id="voice-end">End voice</button>
+        </div>
+      </div>
     </div>
   </section>
 </article>
@@ -249,13 +269,13 @@
   <div class="wrap">Breaking Point &middot; Consulting Case Prep</div>
 </footer>
 
-<script src="data/questions.js?v=11"></script>
-<script src="data/transcripts-1.js?v=11"></script>
-<script src="data/transcripts-2.js?v=11"></script>
-<script src="data/transcripts-3.js?v=11"></script>
-<script src="data/transcripts-4.js?v=11"></script>
-<script src="js/app.js?v=11"></script>
-<script src="js/bank.js?v=11"></script>
-<script src="js/ai.js?v=11"></script>
+<script src="data/questions.js?v=12"></script>
+<script src="data/transcripts-1.js?v=12"></script>
+<script src="data/transcripts-2.js?v=12"></script>
+<script src="data/transcripts-3.js?v=12"></script>
+<script src="data/transcripts-4.js?v=12"></script>
+<script src="js/app.js?v=12"></script>
+<script src="js/bank.js?v=12"></script>
+<script src="js/ai.js?v=12"></script>
 </body>
 </html>

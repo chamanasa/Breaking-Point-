@@ -34,7 +34,9 @@
     pickSearch: $("pick-search"), pickDiff: $("pick-diff"), pickList: $("pick-list"), pickCount: $("pick-count"), pickRandom: $("pick-random"),
     qTitle: $("chat-q-title"), qMeta: $("chat-q-meta"), timer: $("timer"), start: $("ai-start"),
     messages: $("messages"), chat: $("chat"), empty: $("empty-chat"), composer: $("composer"), input: $("ai-input"),
-    send: $("ai-send"), hint: $("ai-hint"), feedback: $("ai-feedback")
+    send: $("ai-send"), hint: $("ai-hint"), feedback: $("ai-feedback"),
+    voiceBtn: $("ai-voice"), voiceBar: $("voice-bar"), orb: $("voice-orb"), vState: $("voice-state"), vLive: $("voice-live"),
+    vHint: $("voice-hint"), vFinish: $("voice-finish"), vEnd: $("voice-end"), hintLine: $("hint-line"), voiceHintText: $("voice-hint-text")
   };
 
   // Conversation in Gemini's format: [{ role: "user"|"model", parts: [{ text }] }]
@@ -173,6 +175,7 @@
       el.qTitle.textContent = q.title;
       el.qMeta.textContent = metaLine(q);
       el.start.disabled = false;
+      el.voiceBtn.disabled = !!(session && session.busy);
       el.start.textContent = session ? "Start this one" : "Start interview";
     }
     if (opts && opts.scroll) {
@@ -215,6 +218,7 @@
 
   App.onRoute(function (route) {
     onAiTab = route.tab === "ai";
+    if (!onAiTab) exitVoice();
     paintMode();
     if (onAiTab && route.arg && App.findQuestion(route.arg)) select(route.arg, { scroll: true });
   });
@@ -332,6 +336,7 @@
     const live = !!session && !busy;
     [el.send, el.hint, el.feedback, el.input].forEach(function (b) { b.disabled = !live; });
     el.start.disabled = busy || !selectedId;
+    el.voiceBtn.disabled = busy || !selectedId;
   }
 
   function elapsed() {
@@ -353,10 +358,12 @@
       session.contents.push({ role: "model", parts: [{ text: reply }] });
       typing.remove();
       addMessage("model", renderMarkdown(reply));
+      voiceAfterReply(reply);
     } catch (err) {
       session.contents.pop(); // let the user retry the same turn
       typing.remove();
       addMessage("model error", "<p>Couldn't reach Gemini: " + esc(err.message) + "</p>");
+      voicePause("Couldn't reach Gemini. Tap the mic to try again.");
       if (shown === undefined && userText) el.input.value = userText;
     } finally {
       setBusy(false);
@@ -444,6 +451,11 @@
       typing.remove();
       const card = addMessage("model", scorecardHtml(fb, session.question));
       card.classList.add("feedback");
+      const avg = (fb.scores || []).reduce(function (a, x) { return a + (x.score || 0); }, 0) / Math.max(1, (fb.scores || []).length);
+      if (voice.active) {
+        setVoiceState("speaking", "Reading your score…");
+        speak("Your overall score is " + (avg * 2).toFixed(1) + " out of 10. " + (fb.verdict || "") + " The full scorecard is on screen.", exitVoice);
+      }
       el.messages.scrollTop = card.offsetTop - 12;
     } catch (err) {
       // Fall back to plain-text feedback if structured output isn't available.
@@ -451,9 +463,11 @@
         const text = await gemini(evaluatorPrompt(session.question) + "\nWrite the feedback as short headed sections with bullet points.", contents, { temperature: 0.3 });
         typing.remove();
         addMessage("model", renderMarkdown(text));
+        if (voice.active) speak("Your feedback is on screen.", exitVoice);
       } catch (err2) {
         typing.remove();
         addMessage("model error", "<p>Couldn't get feedback from Gemini: " + esc(err2.message) + "</p>");
+        voicePause("Couldn't get feedback. Try Finish again, or end voice.");
         session.endedAt = null;
         timerHandle = setInterval(tick, 1000);
       }
@@ -488,6 +502,8 @@
     if (!q) return;
     if (!skipConfirm && session && !session.feedback && session.contents.length > 2 &&
         !window.confirm("Start a new interview? The current conversation will be cleared.")) return;
+    stopSpeaking();
+    stopListening();
     session = { question: q, contents: [], busy: false, startedAt: Date.now(), endedAt: null, hints: 0, feedback: null };
     el.qTitle.textContent = q.title;
     el.qMeta.textContent = metaLine(q);
@@ -529,6 +545,219 @@
     exchange("I'm stuck. Could you give me a small hint for the next step, without solving it?", "You asked for a hint");
   });
   el.feedback.addEventListener("click", finish);
+
+  /* ---------- Voice interview (like ChatGPT / Gemini voice mode) ----------
+   * Tap the waveform: the interviewer speaks, then listens; when you pause,
+   * your answer is sent and the reply is spoken, and so on until you finish.
+   * Uses the browser's Web Speech API: speechSynthesis (interviewer's voice)
+   * and SpeechRecognition (your voice). Chrome, Edge and Safari support both;
+   * elsewhere the voice button hides and typing works as normal. */
+
+  const synth = window.speechSynthesis || null;
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  const voice = { active: false, state: "idle", rec: null, heard: "", silence: null, idle: null, speakToken: 0 };
+  const SILENCE_MS = 2200;   // pause this long after speaking and your answer is sent
+  const NO_SPEECH_MS = 12000; // nothing said for this long: pause and wait for a tap
+
+  const STATE_TEXT = {
+    speaking: "Interviewer is speaking… tap to interrupt",
+    listening: "Listening… pause when you're done",
+    thinking: "Thinking…",
+    paused: "Paused. Tap the mic when you're ready."
+  };
+
+  function setVoiceState(state, text) {
+    voice.state = state;
+    el.orb.dataset.state = state;
+    el.vState.textContent = text || STATE_TEXT[state] || "";
+    el.orb.setAttribute("aria-label", state === "speaking" ? "Interrupt and answer" : state === "listening" ? "Send my answer now" : "Tap to talk");
+  }
+
+  // Make replies sound natural: drop markdown and read symbols and units as words.
+  function forSpeech(text) {
+    return String(text)
+      .replace(/\*\*|`|#+/g, "")
+      .replace(/^\s*[-*•]\s+/gm, "")
+      .replace(/~/g, "about ")
+      .replace(/≈/g, " approximately ")
+      .replace(/×/g, " times ")
+      .replace(/÷/g, " divided by ")
+      .replace(/→/g, ", then ")
+      .replace(/₹\s?/g, "rupees ")
+      .replace(/(\d)\s?Cr\b/g, "$1 crore")
+      .replace(/(\d)\s?M\b/g, "$1 million")
+      .replace(/(\d)\s?B\b/g, "$1 billion")
+      .replace(/(\d)\s?k\b/g, "$1 thousand")
+      .replace(/\s+/g, " ")
+      .replace(/\s+([,.;:!?])/g, "$1")
+      .trim();
+  }
+
+  function pickVoice() {
+    const voices = synth ? synth.getVoices() : [];
+    return voices.find(function (v) { return /en[-_]IN/i.test(v.lang); }) ||
+      voices.find(function (v) { return /en[-_]GB/i.test(v.lang); }) ||
+      voices.find(function (v) { return /^en/i.test(v.lang); }) || null;
+  }
+
+  // Speak text sentence by sentence (long utterances get cut off in some
+  // browsers), then call done once. A watchdog covers browsers that never
+  // fire the final "end" event.
+  function speak(text, done) {
+    if (!synth) { if (done) done(); return; }
+    synth.cancel();
+    const token = ++voice.speakToken;
+    let finished = false;
+    const finish = function () {
+      if (finished || token !== voice.speakToken) return;
+      finished = true;
+      if (done) done();
+    };
+    const parts = forSpeech(text).replace(/([.!?])\s+/g, "$1\u0000").split("\u0000").filter(function (t) { return t.trim(); });
+    if (!parts.length) { finish(); return; }
+    const v = pickVoice();
+    parts.forEach(function (t, i) {
+      const u = new SpeechSynthesisUtterance(t.trim());
+      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = "en-IN"; }
+      u.rate = 1.03;
+      if (i === parts.length - 1) { u.onend = finish; u.onerror = finish; }
+      synth.speak(u);
+    });
+    const words = parts.join(" ").split(/\s+/).length;
+    setTimeout(finish, words * 450 + 4000);
+  }
+
+  function stopSpeaking() {
+    voice.speakToken++;
+    if (synth) synth.cancel();
+  }
+
+  function stopListening() {
+    clearTimeout(voice.silence);
+    clearTimeout(voice.idle);
+    if (voice.rec) {
+      const r = voice.rec;
+      voice.rec = null;
+      r.onresult = r.onerror = r.onend = null;
+      try { r.abort(); } catch (e) { /* already stopped */ }
+    }
+  }
+
+  function voicePause(text) {
+    if (!voice.active) return;
+    stopListening();
+    setVoiceState("paused", text);
+  }
+
+  function sendHeard() {
+    const text = voice.heard.trim();
+    stopListening();
+    if (!text) { voicePause(); return; }
+    el.vLive.textContent = "";
+    setVoiceState("thinking");
+    exchange(text);
+  }
+
+  function listen() {
+    if (!voice.active || !session || session.busy || session.feedback) return;
+    stopSpeaking();
+    stopListening();
+    const rec = new Recognition();
+    rec.lang = "en-IN";
+    rec.continuous = true;
+    rec.interimResults = true;
+    voice.rec = rec;
+    voice.heard = "";
+    el.vLive.textContent = "";
+    rec.onresult = function (e) {
+      let interim = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) voice.heard += e.results[i][0].transcript + " ";
+        else interim += e.results[i][0].transcript;
+      }
+      el.vLive.textContent = (voice.heard + interim).trim();
+      clearTimeout(voice.idle);
+      clearTimeout(voice.silence);
+      voice.silence = setTimeout(sendHeard, SILENCE_MS);
+    };
+    rec.onerror = function (e) {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+        exitVoice();
+        addMessage("system", "Microphone access is blocked. Allow it in your browser's site settings to use voice, or keep typing.");
+      } else if (e.error === "no-speech") {
+        voicePause("Didn't hear anything. Tap the mic when you're ready.");
+      } else if (e.error !== "aborted") {
+        voicePause("Voice input stopped. Tap the mic to continue.");
+      }
+    };
+    // Browsers end recognition on their own after long silences.
+    rec.onend = function () { if (voice.rec === rec) { voice.rec = null; if (voice.heard.trim()) sendHeard(); else voicePause(); } };
+    try { rec.start(); } catch (err) { voicePause("Couldn't start the microphone. Tap to try again."); return; }
+    setVoiceState("listening");
+    voice.idle = setTimeout(function () { if (!voice.heard.trim()) voicePause("Didn't hear anything. Tap the mic when you're ready."); }, NO_SPEECH_MS);
+  }
+
+  // Called after every interviewer reply: speak it, then hand the turn back.
+  function voiceAfterReply(reply) {
+    if (!voice.active) return;
+    setVoiceState("speaking");
+    el.vLive.textContent = "";
+    speak(reply, function () {
+      if (voice.active && session && !session.busy && !session.feedback) listen();
+    });
+  }
+
+  function enterVoice() {
+    if (!Recognition || !synth || !selectedId) return;
+    voice.active = true;
+    el.composer.hidden = true;
+    el.voiceBar.hidden = false;
+    try { synth.speak(new SpeechSynthesisUtterance("")); } catch (e) { /* iOS: unlock speech on this tap */ }
+    if (!session || session.feedback || session.question.id !== selectedId) {
+      setVoiceState("thinking", "Starting the interview…");
+      startInterview(true);
+    } else if (!session.busy) {
+      listen();
+    } else {
+      setVoiceState("thinking");
+    }
+  }
+
+  function exitVoice() {
+    if (!voice.active) return;
+    voice.active = false;
+    stopListening();
+    stopSpeaking();
+    el.voiceBar.hidden = true;
+    el.composer.hidden = false;
+    setVoiceState("idle", "");
+  }
+
+  if (!Recognition || !synth) {
+    el.voiceBtn.hidden = true;
+    el.voiceHintText.parentNode.innerHTML = "<kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line";
+  }
+
+  el.voiceBtn.addEventListener("click", enterVoice);
+  el.orb.addEventListener("click", function () {
+    if (voice.state === "speaking") listen();           // barge in
+    else if (voice.state === "listening") sendHeard();  // done talking
+    else if (voice.state === "paused" || voice.state === "idle") listen();
+  });
+  el.vHint.addEventListener("click", function () {
+    if (!session || session.busy) return;
+    stopListening(); stopSpeaking();
+    session.hints += 1;
+    setVoiceState("thinking");
+    exchange("I'm stuck. Could you give me a small hint for the next step, without solving it?", "You asked for a hint");
+  });
+  el.vFinish.addEventListener("click", function () {
+    if (!session || session.busy) return;
+    stopListening(); stopSpeaking();
+    setVoiceState("thinking", "Scoring your interview…");
+    finish();
+  });
+  el.vEnd.addEventListener("click", exitVoice);
 
   renderPicker();
   paintMode();

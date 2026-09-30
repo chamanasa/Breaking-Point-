@@ -4,7 +4,7 @@ An AI-powered consulting case-prep website, starting with guesstimates.
 
 - **Learn**: an introduction and the five-step method, framework cards (what it is, when to use it, a worked example), pro tips, an interactive worked example you reveal step by step, and the India Numbers Bible (demographic, economic and miscellaneous figures, each with source and year).
 - **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm. Each has a one-line hint and a full model interview transcript (clarifying questions, structure, push-back, calculation, sanity check, final answer).
-- **AI Mode**: step-by-step setup for a free Gemini API key, then a chat interface to practise any question from the bank with an AI interviewer.
+- **AI Mode**: step-by-step setup for a free Gemini API key, then a full-page chat to practise any question with an AI interviewer, by typing or as a spoken voice interview (the interviewer speaks, listens, and replies by voice; uses the browser's built-in speech features in Chrome, Edge and Safari), ending with a scorecard.
 
 The design follows [EconGraphs](https://www.econgraphs.org), which is built on Tufte CSS: the ET Book serif font, off-white paper (`#fffff8`) and near-black ink (`#111`).
 
@@ -61,4 +61,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=11`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=12`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
