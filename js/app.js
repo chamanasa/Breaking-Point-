@@ -10,6 +10,7 @@
 (function () {
   const TABS = ["learn", "bank", "ai"];
   const listeners = [];
+  let lastTab = null;
 
   function escapeHtml(s) {
     return String(s == null ? "" : s)
@@ -28,6 +29,46 @@
       if (value == null) localStorage.removeItem(key);
       else localStorage.setItem(key, value);
     } catch (e) { /* private mode etc. — ignore */ }
+  }
+
+  // Minimal, safe markdown shared by the chat and the transcript reader:
+  // escape first, then paragraphs, lists and **bold** / *emphasis*.
+  function renderMarkdown(src) {
+    const inline = function (s) {
+      return escapeHtml(s)
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>");
+    };
+    const out = [];
+    let list = null;
+    let para = [];
+    const flushList = function () {
+      if (list) { out.push("<" + list.tag + ">" + list.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</" + list.tag + ">"); list = null; }
+    };
+    const flushPara = function () { if (para.length) { out.push("<p>" + para.join("<br>") + "</p>"); para = []; } };
+
+    src.split(/\r?\n/).forEach(function (line) {
+      const ul = line.match(/^\s*[-*•]\s+(.*)$/);
+      const ol = line.match(/^\s*\d+[.)]\s+(.*)$/);
+      const h = line.match(/^\s*#{1,6}\s+(.*)$/);
+      if (ul || ol) {
+        flushPara();
+        const tag = ul ? "ul" : "ol";
+        if (!list || list.tag !== tag) { flushList(); list = { tag: tag, items: [] }; }
+        list.items.push(inline((ul || ol)[1]));
+      } else if (!line.trim()) {
+        flushList(); flushPara();
+      } else if (h) {
+        flushList(); flushPara();
+        out.push("<p><strong>" + inline(h[1]) + "</strong></p>");
+      } else {
+        flushList();
+        para.push(inline(line));
+      }
+    });
+    flushList(); flushPara();
+    return out.join("");
   }
 
   function parseRoute() {
@@ -59,12 +100,14 @@
     });
 
     listeners.forEach(function (fn) { fn(route); });
-    window.scrollTo(0, 0);
+    if (route.tab !== lastTab) window.scrollTo(0, 0);
+    lastTab = route.tab;
   }
 
   window.App = {
     questions: Array.isArray(window.GUESSTIMATES) ? window.GUESSTIMATES : [],
     escapeHtml: escapeHtml,
+    renderMarkdown: renderMarkdown,
     storageGet: storageGet,
     storageSet: storageSet,
     onRoute: function (fn) { listeners.push(fn); },

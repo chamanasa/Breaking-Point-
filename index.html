@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Breaking Point · Guesstimates</title>
+  <title>Breaking Point · Consulting Case Prep</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
-  <link rel="stylesheet" href="css/style.css?v=10">
-  <script src="js/update.js?v=10"></script>
+  <link rel="stylesheet" href="css/style.css?v=11">
+  <script src="js/update.js?v=11"></script>
 </head>
 <body>
 
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="#learn">Breaking Point <small>guesstimates</small></a>
+    <a class="brand" href="#learn">Breaking Point <small>Consulting Case Prep</small></a>
     <nav class="tabs" aria-label="Sections">
       <a href="#learn" data-tab="learn">Learn</a>
       <a href="#bank" data-tab="bank">Question Bank</a>
@@ -47,7 +47,7 @@
      ============================================================ -->
 <article id="view-bank" class="view" hidden>
   <h1>Question Bank</h1>
-  <p class="subtitle">77 guesstimates asked in consulting interviews. Filter by difficulty, industry, approach or firm, then practise any of them with the AI interviewer.</p>
+  <p class="subtitle">77 guesstimates asked in consulting interviews, each with a full model interview. Filter by difficulty, industry, approach or firm, read how a strong candidate solves it, then practise it with the AI interviewer.</p>
 
   <div class="filters" role="search">
     <div class="field search">
@@ -82,6 +82,29 @@
   </div>
 
   <ul class="qlist" id="qlist"></ul>
+
+  <!-- Model interview reader (opened via #bank/<id>) -->
+  <div class="reader" id="reader" hidden>
+    <div class="reader-backdrop" data-close></div>
+    <div class="reader-panel" role="dialog" aria-modal="true" aria-labelledby="reader-title">
+      <header class="reader-head">
+        <div class="reader-titles">
+          <p class="reader-kicker" id="reader-kicker"></p>
+          <h2 id="reader-title"></h2>
+          <p class="reader-meta" id="reader-meta"></p>
+        </div>
+        <button class="icon-btn reader-close" type="button" data-close aria-label="Close transcript">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="reader-body" id="reader-body" tabindex="-1"></div>
+      <footer class="reader-foot">
+        <button class="btn ghost" type="button" id="reader-prev">&larr; Previous</button>
+        <a class="btn" id="reader-practise" href="#ai">Practise this with AI</a>
+        <button class="btn ghost" type="button" id="reader-next">Next &rarr;</button>
+      </footer>
+    </div>
+  </div>
 </article>
 
 <!-- ============================================================
@@ -223,12 +246,16 @@
 </main>
 
 <footer>
-  <div class="wrap">Breaking Point &middot; consulting case prep</div>
+  <div class="wrap">Breaking Point &middot; Consulting Case Prep</div>
 </footer>
 
-<script src="data/questions.js?v=10"></script>
-<script src="js/app.js?v=10"></script>
-<script src="js/bank.js?v=10"></script>
-<script src="js/ai.js?v=10"></script>
+<script src="data/questions.js?v=11"></script>
+<script src="data/transcripts-1.js?v=11"></script>
+<script src="data/transcripts-2.js?v=11"></script>
+<script src="data/transcripts-3.js?v=11"></script>
+<script src="data/transcripts-4.js?v=11"></script>
+<script src="js/app.js?v=11"></script>
+<script src="js/bank.js?v=11"></script>
+<script src="js/ai.js?v=11"></script>
 </body>
 </html>

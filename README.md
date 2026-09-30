@@ -3,7 +3,7 @@
 An AI-powered consulting case-prep website, starting with guesstimates.
 
 - **Learn**: an introduction and the five-step method, framework cards (what it is, when to use it, a worked example), pro tips, an interactive worked example you reveal step by step, and the India Numbers Bible (demographic, economic and miscellaneous figures, each with source and year).
-- **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm, each with a one-line hint.
+- **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm. Each has a one-line hint and a full model interview transcript (clarifying questions, structure, push-back, calculation, sanity check, final answer).
 - **AI Mode**: step-by-step setup for a free Gemini API key, then a chat interface to practise any question from the bank with an AI interviewer.
 
 The design follows [EconGraphs](https://www.econgraphs.org), which is built on Tufte CSS: the ET Book serif font, off-white paper (`#fffff8`) and near-black ink (`#111`).
@@ -26,12 +26,13 @@ learn/              one page per Learn topic: introduction, frameworks, pro-tips
                     worked-example, numbers (each with its own illustrations)
 css/style.css       EconGraphs / Tufte-style theme
 data/questions.js   the question bank (edit this to add questions)
+data/transcripts-*.js  model interview for each question, keyed by id
 data/numbers.js     India Numbers Bible tables (value, source, year) and chart data
 js/app.js           tab routing and shared helpers
 js/learn.js         Learn pages: Numbers charts and tabs, step-by-step example
 js/bank.js          filters and question list
 js/ai.js            Gemini interviewer
-fonts/              ET Book (MIT, from tufte-css)
+fonts/              ET Book (MIT, from tufte-css) and Source Sans 3 (SIL OFL)
 ```
 
 ## Adding questions
@@ -60,4 +61,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=10`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=11`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.

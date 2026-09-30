@@ -308,44 +308,7 @@
 
   /* ---------- Rendering ---------- */
 
-  // Minimal, safe markdown: escape first, then paragraphs, lists and **bold** / *italic*.
-  function renderMarkdown(src) {
-    const inline = function (s) {
-      return esc(s)
-        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-        .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
-        .replace(/`([^`]+)`/g, "<code>$1</code>");
-    };
-    const out = [];
-    let list = null;
-    let para = [];
-    const flushList = function () {
-      if (list) { out.push("<" + list.tag + ">" + list.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</" + list.tag + ">"); list = null; }
-    };
-    const flushPara = function () { if (para.length) { out.push("<p>" + para.join("<br>") + "</p>"); para = []; } };
-
-    src.split(/\r?\n/).forEach(function (line) {
-      const ul = line.match(/^\s*[-*•]\s+(.*)$/);
-      const ol = line.match(/^\s*\d+[.)]\s+(.*)$/);
-      const h = line.match(/^\s*#{1,6}\s+(.*)$/);
-      if (ul || ol) {
-        flushPara();
-        const tag = ul ? "ul" : "ol";
-        if (!list || list.tag !== tag) { flushList(); list = { tag: tag, items: [] }; }
-        list.items.push(inline((ul || ol)[1]));
-      } else if (!line.trim()) {
-        flushList(); flushPara();
-      } else if (h) {
-        flushList(); flushPara();
-        out.push("<p><strong>" + inline(h[1]) + "</strong></p>");
-      } else {
-        flushList();
-        para.push(inline(line));
-      }
-    });
-    flushList(); flushPara();
-    return out.join("");
-  }
+  const renderMarkdown = App.renderMarkdown;
 
   function scrollToEnd() { el.messages.scrollTop = el.messages.scrollHeight; }
 
