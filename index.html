@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Breaking Point · Guesstimates</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 
@@ -135,42 +135,44 @@
         </div>
         <button class="btn ghost" id="key-toggle" type="button">Show</button>
         <button class="btn" id="key-save" type="button">Connect</button>
+        <button class="btn ghost" id="key-cancel" type="button" hidden>Back to interview</button>
       </div>
       <p class="status" id="key-status"></p>
       <p class="note">Your key is saved only in this browser, and your answers go straight from your browser to Google. Nothing passes through our servers. Treat the key like a password; you can revoke it from AI Studio any time.</p>
     </div>
   </section>
 
-  <!-- Shown once a key is saved -->
-  <div class="connected-bar" id="ai-connected" hidden>
-    <span class="ok-dot" aria-hidden="true"></span>
-    <span><strong>Gemini connected.</strong> <span class="muted">Your key is saved in this browser.</span></span>
-    <label class="model-pick">Model
-      <input id="model" type="text" list="model-options" spellcheck="false">
-      <datalist id="model-options">
-        <option value="gemini-2.5-flash">
-        <option value="gemini-2.5-flash-lite">
-        <option value="gemini-2.5-pro">
-      </datalist>
-    </label>
-    <button class="linkish" id="key-change" type="button">Change key</button>
-    <button class="linkish" id="key-clear" type="button">Remove key</button>
-  </div>
-
   <!-- Step 2: the interview -->
   <section class="chat-shell" id="ai-chat" hidden aria-label="Practice interview">
-    <aside class="picker-panel">
+    <aside class="picker-panel" id="picker-panel" aria-label="Pick a guesstimate">
       <div class="picker-head">
         <h2>Pick a guesstimate</h2>
-        <input id="pick-search" type="search" placeholder="Search 77 questions" autocomplete="off">
+        <input id="pick-search" type="search" placeholder="Search questions, firms, cities" autocomplete="off">
         <div class="chips" id="pick-diff"></div>
+        <p class="pick-count" id="pick-count"></p>
       </div>
       <ul class="pick-list" id="pick-list"></ul>
-      <button class="btn ghost" id="pick-random" type="button">Surprise me</button>
+      <div class="side-foot">
+        <div class="row"><button class="btn ghost" id="pick-random" type="button">Surprise me</button></div>
+        <div class="row"><span class="ok-dot" aria-hidden="true"></span> Gemini connected</div>
+        <label class="model-pick">Model
+          <input id="model" type="text" list="model-options" spellcheck="false">
+          <datalist id="model-options">
+            <option value="gemini-2.5-flash">
+            <option value="gemini-2.5-flash-lite">
+            <option value="gemini-2.5-pro">
+          </datalist>
+        </label>
+        <div class="row">
+          <button class="linkish" id="key-change" type="button">Change key</button>
+          <button class="linkish" id="key-clear" type="button">Remove key</button>
+        </div>
+      </div>
     </aside>
 
     <div class="chat-window">
-      <header class="chat-head" id="chat-head">
+      <header class="chat-head">
+        <button class="btn ghost icon-btn" id="picker-toggle" type="button" aria-controls="picker-panel" aria-expanded="false">Questions</button>
         <div class="chat-q">
           <p class="chat-q-title" id="chat-q-title">Choose a question to begin</p>
           <p class="chat-q-meta" id="chat-q-meta">Pick from the list, or use &ldquo;Practise with AI&rdquo; in the Question Bank.</p>
@@ -181,28 +183,32 @@
         </div>
       </header>
 
-      <div class="messages" id="chat" aria-live="polite">
-        <div class="empty-chat" id="empty-chat">
-          <p class="lg">How it works</p>
-          <ol>
-            <li>The interviewer reads out the question.</li>
-            <li>Ask clarifying questions, then lay out your structure.</li>
-            <li>Walk through assumptions and maths; expect push-back.</li>
-            <li>Click <strong>Finish &amp; get feedback</strong> for scores out of 5.</li>
-          </ol>
+      <div class="messages" id="messages" aria-live="polite">
+        <div class="thread" id="chat">
+          <div class="empty-chat" id="empty-chat">
+            <p class="lg">How it works</p>
+            <ol>
+              <li>Pick a guesstimate and press <strong>Start interview</strong>.</li>
+              <li>Ask clarifying questions, then lay out your structure.</li>
+              <li>Walk through assumptions and maths; expect push-back.</li>
+              <li>Press <strong>Finish &amp; get feedback</strong> for a full scorecard.</li>
+            </ol>
+          </div>
         </div>
       </div>
 
       <form class="composer" id="composer">
-        <div class="quick">
-          <button class="chip" type="button" id="ai-hint" disabled>Ask for a hint</button>
-          <button class="chip" type="button" id="ai-feedback" disabled>Finish &amp; get feedback</button>
+        <div class="composer-inner">
+          <div class="quick">
+            <button class="chip" type="button" id="ai-hint" disabled>Ask for a hint</button>
+            <button class="chip" type="button" id="ai-feedback" disabled>Finish &amp; get feedback</button>
+          </div>
+          <div class="compose-row">
+            <textarea id="ai-input" rows="1" placeholder="Start an interview to reply&hellip;" disabled></textarea>
+            <button class="btn send" type="submit" id="ai-send" disabled aria-label="Send">Send</button>
+          </div>
+          <p class="hint-line"><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</p>
         </div>
-        <div class="compose-row">
-          <textarea id="ai-input" rows="1" placeholder="Start an interview to reply&hellip;" disabled></textarea>
-          <button class="btn send" type="submit" id="ai-send" disabled aria-label="Send">Send</button>
-        </div>
-        <p class="hint-line"><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</p>
       </form>
     </div>
   </section>
@@ -214,9 +220,9 @@
   <div class="wrap">Breaking Point: consulting case prep. Typography after <a href="https://www.econgraphs.org" target="_blank" rel="noopener">EconGraphs</a> and Tufte CSS.</div>
 </footer>
 
-<script src="data/questions.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
-<script src="js/bank.js?v=6"></script>
-<script src="js/ai.js?v=6"></script>
+<script src="data/questions.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
+<script src="js/bank.js?v=7"></script>
+<script src="js/ai.js?v=7"></script>
 </body>
 </html>

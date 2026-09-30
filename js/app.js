@@ -77,6 +77,15 @@
     }
   };
 
+  // Keep --header-h equal to the real header height (it wraps on phones), so
+  // full-page views like AI Mode can sit exactly beneath it.
+  function syncHeader() {
+    const h = document.querySelector(".site-header");
+    if (h) document.documentElement.style.setProperty("--header-h", h.offsetHeight + "px");
+  }
+  window.addEventListener("resize", syncHeader);
+  document.addEventListener("DOMContentLoaded", syncHeader);
+
   window.addEventListener("hashchange", render);
   document.addEventListener("DOMContentLoaded", render);
 })();
