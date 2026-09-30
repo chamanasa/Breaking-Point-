@@ -68,6 +68,10 @@
     storageGet: storageGet,
     storageSet: storageSet,
     onRoute: function (fn) { listeners.push(fn); },
+    // Groups sources for filtering: both 180DC volumes count as one book.
+    bookOf: function (q) {
+      return /180DC/.test(q.source || "") ? "180DC SRCC Guesstimate Books" : q.source || "Other";
+    },
     findQuestion: function (id) {
       return this.questions.find(function (q) { return q.id === id; }) || null;
     }

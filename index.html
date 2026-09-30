@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Breaking Point · Guesstimates</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -46,14 +46,14 @@
      ============================================================ -->
 <article id="view-bank" class="view" hidden>
   <h1>Question Bank</h1>
-  <p class="subtitle">Filter by difficulty, industry and approach. Pick one to practise with the AI interviewer.</p>
+  <p class="subtitle">77 guesstimates from consulting interviews and casebooks. Filter by difficulty, industry, approach, firm or source, then practise any of them with the AI interviewer.</p>
 
   <div class="filters" role="search">
     <div class="field search">
       <label for="f-search">Search</label>
       <input id="f-search" type="search" placeholder="e.g. petrol, airport, diapers" autocomplete="off">
     </div>
-    <div class="field">
+    <div class="field diff-field">
       <span class="label">Difficulty</span>
       <div class="chips" id="f-difficulty"></div>
     </div>
@@ -68,6 +68,14 @@
     <div class="field">
       <label for="f-approach">Approach</label>
       <select id="f-approach"></select>
+    </div>
+    <div class="field">
+      <label for="f-firm">Asked at</label>
+      <select id="f-firm"></select>
+    </div>
+    <div class="field">
+      <label for="f-book">Source</label>
+      <select id="f-book"></select>
     </div>
   </div>
 
@@ -86,71 +94,117 @@
   <h1>AI Mode</h1>
   <p class="subtitle">Rehearse any guesstimate with an AI interviewer that questions your structure, pushes back on assumptions and scores you at the end.</p>
 
-  <div class="ai-grid">
-    <section>
-      <h2>Connect your Gemini API key</h2>
-      <p>AI Mode runs on Google&rsquo;s Gemini models using <em>your own</em> free API key. The key is saved only in this browser, and your answers go straight from your browser to Google. Nothing passes through our servers.</p>
-      <ol>
-        <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio &rarr; API keys</a> and sign in with a Google account.</li>
-        <li>Click <strong>Create API key</strong>. If prompted, pick or create a Google Cloud project; the default is fine.</li>
-        <li>Copy the key. It is a long string that starts with <code>AIza</code>.</li>
-        <li>Paste it into the box on the right and click <strong>Save &amp; test</strong>.</li>
-      </ol>
-      <p class="note">Google&rsquo;s free tier has per-minute and per-day limits; a 15-minute practice case uses roughly 15&ndash;30 requests. Treat the key like a password and revoke it from AI Studio any time.</p>
-    </section>
+  <!-- Step 1: connect a Gemini key (shown until a key is saved) -->
+  <section id="ai-setup" aria-labelledby="ai-setup-title">
+    <h2 id="ai-setup-title">First, get your free Gemini API key</h2>
+    <p>AI Mode runs on Google&rsquo;s Gemini using your own free key. It takes about two minutes, and you only do it once per browser.</p>
 
-    <section class="key-panel">
+    <ol class="setup-steps">
+      <li class="box">
+        <span class="step-n">1</span>
+        <svg class="step-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="8" width="40" height="32" rx="3"/><path d="M4 16 H44"/><circle cx="9" cy="12" r="1.3"/><circle cx="14" cy="12" r="1.3"/><path d="M16 28 H32 M26 22 L32 28 L26 34"/></svg>
+        <h3>Visit Google AI Studio</h3>
+        <p>Open the API keys page in a new tab.</p>
+        <a class="btn" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Open aistudio.google.com &#8599;</a>
+      </li>
+      <li class="box">
+        <span class="step-n">2</span>
+        <svg class="step-ico" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="17" r="8"/><path d="M10 40 a14 14 0 0 1 28 0"/></svg>
+        <h3>Sign in</h3>
+        <p>Use any Google account. If it&rsquo;s your first visit, accept the terms of service.</p>
+      </li>
+      <li class="box">
+        <span class="step-n">3</span>
+        <svg class="step-ico" viewBox="0 0 48 48" aria-hidden="true"><circle cx="16" cy="24" r="8"/><path d="M24 24 H42 M36 24 V31 M42 24 V29"/></svg>
+        <h3>Find your API key</h3>
+        <p>Click <strong>Create API key</strong> (pick the default project if asked). If you already have one, it&rsquo;s listed on the same page.</p>
+      </li>
+      <li class="box">
+        <span class="step-n">4</span>
+        <svg class="step-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="6" width="24" height="30" rx="2"/><rect x="8" y="12" width="24" height="30" rx="2"/><path d="M14 22 H26 M14 28 H26 M14 34 H22"/></svg>
+        <h3>Copy &amp; paste it here</h3>
+        <p>Copy the key (it starts with <code>AIza</code>), paste it below and click <strong>Connect</strong>.</p>
+      </li>
+    </ol>
+
+    <div class="connect box">
       <div class="key-row">
         <div class="field">
-          <label for="api-key">Gemini API key</label>
-          <input id="api-key" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
+          <label for="api-key">Paste your Gemini API key</label>
+          <input id="api-key" type="password" placeholder="AIza&hellip;" autocomplete="off" spellcheck="false">
         </div>
         <button class="btn ghost" id="key-toggle" type="button">Show</button>
-      </div>
-      <div class="key-row">
-        <button class="btn" id="key-save" type="button">Save &amp; test</button>
-        <button class="btn ghost" id="key-clear" type="button">Remove</button>
-      </div>
-      <div class="key-row">
-        <div class="field">
-          <label for="model">Model</label>
-          <input id="model" type="text" list="model-options" spellcheck="false">
-          <datalist id="model-options">
-            <option value="gemini-2.5-flash">
-            <option value="gemini-2.5-flash-lite">
-            <option value="gemini-2.5-pro">
-          </datalist>
-        </div>
+        <button class="btn" id="key-save" type="button">Connect</button>
       </div>
       <p class="status" id="key-status"></p>
-    </section>
+      <p class="note">Your key is saved only in this browser, and your answers go straight from your browser to Google. Nothing passes through our servers. Treat the key like a password; you can revoke it from AI Studio any time.</p>
+    </div>
+  </section>
+
+  <!-- Shown once a key is saved -->
+  <div class="connected-bar" id="ai-connected" hidden>
+    <span class="ok-dot" aria-hidden="true"></span>
+    <span><strong>Gemini connected.</strong> <span class="muted">Your key is saved in this browser.</span></span>
+    <label class="model-pick">Model
+      <input id="model" type="text" list="model-options" spellcheck="false">
+      <datalist id="model-options">
+        <option value="gemini-2.5-flash">
+        <option value="gemini-2.5-flash-lite">
+        <option value="gemini-2.5-pro">
+      </datalist>
+    </label>
+    <button class="linkish" id="key-change" type="button">Change key</button>
+    <button class="linkish" id="key-clear" type="button">Remove key</button>
   </div>
 
-  <section class="practice">
-    <h2>Practise a guesstimate</h2>
-    <div class="picker">
-      <div class="field">
-        <label for="ai-question">Question from the bank</label>
-        <select id="ai-question"></select>
+  <!-- Step 2: the interview -->
+  <section class="chat-shell" id="ai-chat" hidden aria-label="Practice interview">
+    <aside class="picker-panel">
+      <div class="picker-head">
+        <h2>Pick a guesstimate</h2>
+        <input id="pick-search" type="search" placeholder="Search 77 questions" autocomplete="off">
+        <div class="chips" id="pick-diff"></div>
       </div>
-      <button class="btn" id="ai-start" type="button">Start interview</button>
+      <ul class="pick-list" id="pick-list"></ul>
+      <button class="btn ghost" id="pick-random" type="button">Surprise me</button>
+    </aside>
+
+    <div class="chat-window">
+      <header class="chat-head" id="chat-head">
+        <div class="chat-q">
+          <p class="chat-q-title" id="chat-q-title">Choose a question to begin</p>
+          <p class="chat-q-meta" id="chat-q-meta">Pick from the list, or use &ldquo;Practise with AI&rdquo; in the Question Bank.</p>
+        </div>
+        <div class="chat-ctrl">
+          <span class="timer" id="timer" title="Time since the interview started" hidden>00:00</span>
+          <button class="btn" id="ai-start" type="button" disabled>Start interview</button>
+        </div>
+      </header>
+
+      <div class="messages" id="chat" aria-live="polite">
+        <div class="empty-chat" id="empty-chat">
+          <p class="lg">How it works</p>
+          <ol>
+            <li>The interviewer reads out the question.</li>
+            <li>Ask clarifying questions, then lay out your structure.</li>
+            <li>Walk through assumptions and maths; expect push-back.</li>
+            <li>Click <strong>Finish &amp; get feedback</strong> for scores out of 5.</li>
+          </ol>
+        </div>
+      </div>
+
+      <form class="composer" id="composer">
+        <div class="quick">
+          <button class="chip" type="button" id="ai-hint" disabled>Ask for a hint</button>
+          <button class="chip" type="button" id="ai-feedback" disabled>Finish &amp; get feedback</button>
+        </div>
+        <div class="compose-row">
+          <textarea id="ai-input" rows="1" placeholder="Start an interview to reply&hellip;" disabled></textarea>
+          <button class="btn send" type="submit" id="ai-send" disabled aria-label="Send">Send</button>
+        </div>
+        <p class="hint-line"><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</p>
+      </form>
     </div>
-
-    <div class="case-card" id="case-card" hidden></div>
-
-    <div class="chat" id="chat" hidden aria-live="polite"></div>
-
-    <form class="composer" id="composer" hidden>
-      <textarea id="ai-input" rows="4" placeholder="Clarify the question, lay out your structure, or walk through your numbers…"></textarea>
-      <div class="row">
-        <span class="hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send</span>
-        <span>
-          <button class="btn ghost" type="button" id="ai-hint">Hint</button>
-          <button class="btn ghost" type="button" id="ai-feedback">Finish &amp; get feedback</button>
-          <button class="btn" type="submit" id="ai-send">Send</button>
-        </span>
-      </div>
-    </form>
   </section>
 </article>
 
@@ -160,9 +214,9 @@
   <div class="wrap">Breaking Point: consulting case prep. Typography after <a href="https://www.econgraphs.org" target="_blank" rel="noopener">EconGraphs</a> and Tufte CSS.</div>
 </footer>
 
-<script src="data/questions.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
-<script src="js/bank.js?v=5"></script>
-<script src="js/ai.js?v=5"></script>
+<script src="data/questions.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
+<script src="js/bank.js?v=6"></script>
+<script src="js/ai.js?v=6"></script>
 </body>
 </html>

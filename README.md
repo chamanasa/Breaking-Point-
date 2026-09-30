@@ -3,8 +3,8 @@
 An AI-powered consulting case-prep website, starting with guesstimates.
 
 - **Learn**: an introduction and the five-step method, framework cards (what it is, when to use it, a worked example), pro tips, an interactive worked example you reveal step by step, and the India Numbers Bible (demographic, economic and miscellaneous figures, each with source and year).
-- **Question Bank**: guesstimates you can filter by difficulty, industry, type and approach.
-- **AI Mode**: practise any question from the bank with a Gemini-powered interviewer, using your own API key.
+- **Question Bank**: 77 guesstimates from the 180DC SRCC Guesstimate Books (Vol. 1 & 2), the IIM Ahmedabad Casebook 2022–23 and Case Interviews Cracked, filterable by difficulty, industry, type, approach, firm and source. Only the questions are included, with our own one-line hints; the books' worked solutions are not reproduced.
+- **AI Mode**: step-by-step setup for a free Gemini API key, then a chat interface to practise any question from the bank with an AI interviewer.
 
 The design follows [EconGraphs](https://www.econgraphs.org), which is built on Tufte CSS: the ET Book serif font, off-white paper (`#fffff8`) and near-black ink (`#111`).
 
@@ -47,9 +47,9 @@ Append entries to `data/questions.js`:
   type: "Count / volume",
   approach: "Population-based",
   geography: "India",              // optional
-  tags: ["marriage"],              // optional, used by search
-  hint: "…",                       // optional
-  solution: "…"                    // optional; the AI uses it to judge answers
+  firm: "Bain",                     // optional: where it was asked
+  source: "Your casebook",          // where the question comes from
+  hint: "…"                         // optional one-line structure; the AI uses it to judge
 }
 ```
 
@@ -61,4 +61,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=5`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=6`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.

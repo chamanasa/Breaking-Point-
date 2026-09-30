@@ -1,116 +1,201 @@
 /*
  * Guesstimate question bank.
  *
- * Replace these SAMPLE entries with the full list. Each entry:
+ * Each entry:
  *   id          unique string, shown as the question number
  *   title       the question as asked in the interview
  *   difficulty  "Easy" | "Medium" | "Hard"
  *   industry    free text; filter options are built from the values used here
  *   type        e.g. "Market sizing", "Revenue estimation", "Count / volume"
  *   approach    e.g. "Population-based", "Household-based", "Supply-side"
- *   geography   optional, e.g. "India", "Mumbai", "Global"
- *   tags        optional array of search keywords
- *   hint        optional one-line nudge, shown on the card and given to the AI
- *   solution    optional outline; shown on the card and used by the AI to judge
+ *   geography   optional, e.g. "India", "Delhi"
+ *   firm        optional, the firm the question is attributed to
+ *   source      where the question comes from
+ *   hint        a one-line nudge (our own wording), shown on the card and given to the AI
  *
- * Loaded as a plain script (not JSON) so the site also works when index.html
- * is opened directly from disk.
+ * Difficulty for Volume 2 follows the book's 1–5 rating (1–2 Easy, 3 Medium,
+ * 4–5 Hard); other sources are rated by us. Only questions are listed here,
+ * not the books' worked solutions.
+ *
+ * Loaded as a plain script (not JSON) so the site also works from disk.
  */
-window.GUESSTIMATES = [
-  {
-    id: "G001",
-    title: "Estimate the number of pressure cookers sold in India in a year.",
-    difficulty: "Easy",
-    industry: "Consumer Durables",
-    type: "Count / volume",
-    approach: "Household-based",
-    geography: "India",
-    tags: ["kitchen", "appliances", "replacement"],
-    hint: "Think replacement demand plus first-time buyers, split urban vs rural.",
-    solution: "~300M households; urban 100M at 90% penetration, 7-yr life ≈ 13M; rural 200M at 50%, 10-yr life ≈ 10M; first-time buyers ≈ 1M. Total ≈ 24M units/yr."
-  },
-  {
-    id: "G002",
-    title: "How many cups of tea are consumed in Delhi every day?",
-    difficulty: "Easy",
-    industry: "FMCG / Food & Beverage",
-    type: "Count / volume",
-    approach: "Population-based",
-    geography: "Delhi",
-    tags: ["chai", "beverages"],
-    hint: "Segment by age group and drinker vs non-drinker, then cups per day.",
-    solution: "~20M people; ~70% adults, of whom ~80% drink tea at ~2.5 cups/day ≈ 28M; add out-of-home office/stall consumption already captured in cups/day. ≈ 25–30M cups/day."
-  },
-  {
-    id: "G003",
-    title: "Estimate the daily revenue of a petrol pump on a highway.",
-    difficulty: "Medium",
-    industry: "Energy & Oil",
-    type: "Revenue estimation",
-    approach: "Supply-side",
-    geography: "India",
-    tags: ["fuel", "highway", "retail"],
-    hint: "Nozzles × vehicles served per hour × average fill × operating hours, split by vehicle type.",
-    solution: "8 nozzles, 18 hrs; utilisation varies peak/off-peak; trucks (diesel, large fills) dominate on highways. Volume × price per litre ≈ revenue."
-  },
-  {
-    id: "G004",
-    title: "What is the annual market size (in ₹) of diapers in India?",
-    difficulty: "Medium",
-    industry: "FMCG / Food & Beverage",
-    type: "Market sizing",
-    approach: "Population-based",
-    geography: "India",
-    tags: ["baby care", "hygiene", "adult diapers"],
-    hint: "Babies 0–2 years by income segment, usage per day, price per diaper. Don't forget adult diapers.",
-    solution: "~25M births/yr → ~50M children aged 0–2; penetration by income (high 80%, mid 40%, low 5%); 3–4 diapers/day when used; ~₹12 each. Add a small adult segment."
-  },
-  {
-    id: "G005",
-    title: "How many flights take off from Mumbai airport in a day?",
-    difficulty: "Medium",
-    industry: "Aviation & Travel",
-    type: "Count / volume",
-    approach: "Supply-side",
-    geography: "Mumbai",
-    tags: ["airport", "runway", "airline"],
-    hint: "Runway capacity: movements per hour × operating hours × utilisation, then half are departures.",
-    solution: "~45 movements/hr at peak on the main runway, ~20 hrs of meaningful operations at varying utilisation ≈ 900 movements → ~450 departures/day."
-  },
-  {
-    id: "G006",
-    title: "Estimate the number of smartphones sold in India annually.",
-    difficulty: "Medium",
-    industry: "Technology & Telecom",
-    type: "Count / volume",
-    approach: "Population-based",
-    geography: "India",
-    tags: ["mobile", "electronics", "replacement"],
-    hint: "Users by urban/rural and income, replacement cycle by segment, plus first-time buyers.",
-    solution: "~700M smartphone users; replacement cycles 2–4 yrs by income ≈ 200M replacements… sanity check against ~150M reported shipments and refine."
-  },
-  {
-    id: "G007",
-    title: "Estimate the annual revenue of a Starbucks outlet in a Bengaluru mall.",
-    difficulty: "Hard",
-    industry: "Retail & QSR",
-    type: "Revenue estimation",
-    approach: "Supply-side",
-    geography: "Bengaluru",
-    tags: ["cafe", "coffee", "mall"],
-    hint: "Hours × customers per hour (peak/off-peak, weekday/weekend) × average ticket size.",
-    solution: "12 hrs/day; weekday ~30 orders/hr avg, weekend ~50; average ticket ~₹450; ~360 days. Reconcile against counter throughput capacity."
-  },
-  {
-    id: "G008",
-    title: "What is the market size of EV charging stations in India by 2030?",
-    difficulty: "Hard",
-    industry: "Automotive & Mobility",
-    type: "Market sizing",
-    approach: "Proxy / ratio",
-    geography: "India",
-    tags: ["electric vehicles", "infrastructure", "future"],
-    hint: "Project the EV fleet by vehicle type, then vehicles-per-charger ratios for public charging.",
-    solution: "Project 2W/3W/4W EV stock from sales × adoption curve; most 2W charge at home; apply ~10–20 EVs per public charger for 4W; multiply by capex per charger."
-  }
-];
+(function () {
+  const V1 = "180DC SRCC Guesstimate Book, Vol. 1";
+  const V2 = "180DC SRCC Guesstimate Book, Vol. 2";
+  const IIMA = "IIM Ahmedabad Casebook 2022–23";
+  const CIC = "Case Interviews Cracked";
+
+  const q = function (title, difficulty, industry, type, approach, geography, firm, source, hint) {
+    return { title: title, difficulty: difficulty, industry: industry, type: type, approach: approach,
+      geography: geography, firm: firm, source: source, hint: hint };
+  };
+
+  const list = [
+    /* ---------- 180DC SRCC Vol. 2 (book difficulty rating) ---------- */
+    q("Estimate the market size of the Indian refrigerator industry.", "Easy", "Consumer Durables", "Market sizing", "Household-based", "India", "BCG", V2,
+      "Households by urban/rural and income × ownership ÷ replacement cycle, plus first-time buyers, × average price."),
+    q("Estimate the consumption of wheat in India per month.", "Hard", "Agriculture & Food", "Consumption", "Population-based", "India", "BCG", V2,
+      "Split by region (wheat-eating north and west vs rice-eating south and east), then per-capita daily intake; add bakeries and processed food."),
+    q("Estimate the number of weight-loss drugs sold by a pharma company in India in a year.", "Hard", "Healthcare & Pharma", "Count / volume", "Population-based", "India", "Kearney", V2,
+      "Overweight/obese adults → diagnosed → prescribed → can afford → company's share → doses per patient per year."),
+    q("Estimate the number of candles sold in Assam during Diwali.", "Easy", "Consumer Goods", "Count / volume", "Household-based", "Assam", "Accenture", V2,
+      "Households that celebrate Diwali × candles per household by income; remember diyas and electric lights substitute for candles."),
+    q("Estimate the number of pizzas sold in Delhi per month.", "Easy", "Food Service & QSR", "Count / volume", "Population-based", "Delhi", "Accenture", V2,
+      "Pizza-eating population by age and income × orders per month × pizzas per order; split dine-in and delivery."),
+    q("Estimate the number of Ola and Uber cabs running in Delhi-NCR in a day.", "Easy", "Automotive & Mobility", "Count / volume", "Population-based", "Delhi-NCR", "Accenture", V2,
+      "Daily cab trips demanded (peak vs off-peak) ÷ trips one cab completes in a day."),
+    q("Estimate the number of used tyres in Delhi.", "Medium", "Automotive & Mobility", "Count / volume", "Proxy / ratio", "Delhi", "Accenture", V2,
+      "Vehicles by type × tyres per vehicle ÷ tyre life gives tyres worn out each year; clarify 'used' (in use vs discarded)."),
+    q("Estimate the number of users who joined Instagram in the last year.", "Hard", "Technology & Internet", "Count / volume", "Population-based", "Global", "Accenture", V2,
+      "Global internet users by region and age × Instagram adoption; new users = growth in the user base plus churned users replaced."),
+    q("Estimate the market size of the skin care industry in India.", "Medium", "Beauty & Personal Care", "Market sizing", "Population-based", "India", "Kepler Cannon", V2,
+      "Users by gender, age, urban/rural and income × products used × replacement frequency × average price."),
+    q("Estimate the weekly revenue of an average urban Indian cinema.", "Medium", "Media & Entertainment", "Revenue estimation", "Supply-side", "India", "FTI Consulting", V2,
+      "Screens × shows × seats × occupancy (weekday vs weekend) × ticket price, plus food and beverage per visitor."),
+    q("Estimate the weekly food revenue of a bowling alley in Delhi.", "Medium", "Food Service & QSR", "Revenue estimation", "Supply-side", "Delhi", "Indus Insights", V2,
+      "Lanes × players per lane × games per hour × occupancy gives visitors; × share who order food × average bill."),
+    q("Estimate the weekly commute time for office-goers in Delhi.", "Medium", "Automotive & Mobility", "Time & usage", "Population-based", "Delhi", "Indus Insights", V1 + " & Vol. 2",
+      "Working population by sector → office-goers (not WFH) → commuting within vs outside Delhi × hours per day × office days per week."),
+    q("Estimate the revenue of the Delhi–Gurgaon toll plaza in a day.", "Easy", "Infrastructure & Transport", "Revenue estimation", "Supply-side", "Delhi-NCR", "Bain", V1 + " & Vol. 2",
+      "Lanes × vehicles per lane per hour (peak vs off-peak) × toll by vehicle type (car, truck, bus)."),
+    q("Estimate the number of orders placed on Swiggy in Delhi in a day.", "Easy", "Retail & E-commerce", "Count / volume", "Population-based", "Delhi", "Bain", V1 + " & Vol. 2",
+      "Smartphone users by income × food-delivery users × orders per week × Swiggy's share vs competitors."),
+    q("Estimate the number of credit cards in India.", "Medium", "Banking & Financial Services", "Count / volume", "Population-based", "India", "Bain", V1 + " & Vol. 2",
+      "Adults by income → eligible (salaried, credit history) → holders × cards per holder."),
+    q("Estimate the number of outstanding education loans in India.", "Medium", "Banking & Financial Services", "Count / volume", "Population-based", "India", "Bain / BCG", V1 + " & Vol. 2",
+      "Students in higher education per year × share taking loans × average repayment tenure (loans stay outstanding for years)."),
+    q("Estimate the number of burgers consumed per day in Delhi.", "Easy", "Food Service & QSR", "Count / volume", "Population-based", "Delhi", "Nation with NaMo", V2,
+      "Population by age and income × share who eat burgers × burgers per week ÷ 7."),
+    q("Estimate the daily Netflix viewing hours of SRCC students.", "Easy", "Media & Entertainment", "Time & usage", "Population-based", "Delhi", "Nation with NaMo", V2,
+      "Students × share with Netflix access (own or shared) × hours per day, weekday vs weekend."),
+    q("Estimate the number of flights that take off from Delhi airport in a day.", "Medium", "Aviation & Travel", "Count / volume", "Supply-side", "Delhi", "Nation with NaMo", V1 + " & Vol. 2",
+      "Runways × take-offs per hour (peak vs non-peak) × operating hours; half of all movements are departures."),
+    q("Estimate the number of tea cups consumed in Delhi each day.", "Easy", "FMCG / Food & Beverage", "Count / volume", "Population-based", "Delhi", "Meesho", V2,
+      "Population by age and occupation × share who drink tea × cups per day, at home and outside."),
+    q("Estimate the number of college canteens operating in Delhi.", "Easy", "Education", "Count / volume", "Proxy / ratio", "Delhi", "Meesho", V2,
+      "Number of colleges (by students in higher education ÷ students per college) × canteens per college."),
+    q("Estimate the number of pairs of footwear sold in India in a year.", "Easy", "Apparel & Footwear", "Count / volume", "Population-based", "India", "Meesho", V2,
+      "Population by age, urban/rural and income × pairs owned ÷ replacement cycle."),
+    q("Estimate the number of weddings taking place in India in a year.", "Easy", "Events & Lifestyle", "Count / volume", "Population-based", "India", "Meesho", V2,
+      "People reaching marriageable age each year (population ÷ life expectancy) × share who marry ÷ 2 people per wedding."),
+    q("Estimate the number of electric two-wheelers that will be sold in India next year.", "Medium", "Automotive & Mobility", "Count / volume", "Population-based", "India", "Meesho", V2,
+      "Two-wheeler sales per year × EV share this year, grown by the adoption rate; or bottom-up from urban buyers by income."),
+    q("Estimate the number of workers required to fulfil 3,000 Zepto orders a day.", "Medium", "Retail & E-commerce", "Operations & capacity", "Supply-side", "India", "Meesho", V2,
+      "Split into pickers/packers and riders: orders per hour at peak ÷ orders one worker handles per hour, across shifts."),
+    q("Estimate the number of rides a cab driver takes in a day.", "Medium", "Automotive & Mobility", "Operations & capacity", "Supply-side", "India", "Meesho", V2,
+      "Driving hours per day ÷ (average ride time + wait/pickup time), adjusted for peak vs off-peak demand."),
+    q("Estimate the number of cars on the Bandra–Worli Sea Link per month.", "Medium", "Infrastructure & Transport", "Count / volume", "Supply-side", "Mumbai", "Meesho", V2,
+      "Lanes × cars per lane per hour by time of day (peak, normal, night) × 30 days; split frequent commuters vs occasional users."),
+    q("Estimate annual air-conditioner sales in Delhi.", "Hard", "Consumer Durables", "Count / volume", "Household-based", "Delhi", "Meesho", V2,
+      "Households by income × ACs per household ÷ AC life, plus first-time buyers; add offices and shops."),
+    q("Estimate the market size of electric vehicles in India.", "Easy", "Automotive & Mobility", "Market sizing", "Population-based", "India", "Trinity Life Sciences", V2,
+      "Vehicle buyers each year by segment (2W, 3W, 4W) × EV share × average price."),
+    q("Estimate the milk required by each coffee shop in Connaught Place in a day.", "Medium", "FMCG / Food & Beverage", "Consumption", "Supply-side", "Delhi", "Trinity Life Sciences", V1 + " & Vol. 2",
+      "Coffees per day (seats × turnover by hour, weekday vs weekend) × mix of black/regular/latte × ml of milk per drink."),
+    q("Estimate the number of operational metro trains in Delhi-NCR.", "Medium", "Infrastructure & Transport", "Count / volume", "Supply-side", "Delhi-NCR", "Trinity Life Sciences", V2,
+      "Daily ridership → peak-hour passengers per line ÷ train capacity × round-trip time ÷ headway."),
+    q("Estimate the number of Spotify Premium subscribers in India.", "Hard", "Media & Entertainment", "Count / volume", "Population-based", "India", "Trinity Life Sciences", V1 + " & Vol. 2",
+      "Internet users → music streamers → Spotify's share → paying premium users by income and age."),
+
+    /* ---------- 180DC SRCC Vol. 1 (not repeated in Vol. 2) ---------- */
+    q("Estimate the market size of the healthy biscuit industry in India.", "Medium", "FMCG / Food & Beverage", "Market sizing", "Population-based", "India", "Accenture", V1,
+      "Urban, health-conscious consumers by income and age × biscuits per year × price per biscuit."),
+    q("Estimate the number of flights taking off from Delhi in a week.", "Medium", "Aviation & Travel", "Count / volume", "Supply-side", "Delhi", "Accenture", V1,
+      "Take-offs per hour in peak vs non-peak windows × hours, weekday vs weekend, × 7 days."),
+    q("Estimate the annual revenue of a premium salon.", "Medium", "Services", "Revenue estimation", "Supply-side", "India", "Bain", V1,
+      "Chairs × operating hours = chair-hours; × occupancy (weekday vs weekend) ÷ time per service × price, split men vs women."),
+    q("Estimate the market size of fantasy sports in India.", "Medium", "Sports & Gaming", "Market sizing", "Population-based", "India", "Bain", V1,
+      "Smartphone users by age and gender × sports fans × fantasy players × paid contests per year × entry fee (platform takes a cut)."),
+    q("Estimate the amount of paint required to paint a car.", "Easy", "Automotive & Mobility", "Physical estimation", "Unit / geometry", "", "Bain / McKinsey", V1,
+      "Model the car as cuboids to get surface area, subtract windows, × coats ÷ coverage per litre."),
+    q("Estimate the number of Bollywood movies released in India in a year.", "Easy", "Media & Entertainment", "Count / volume", "Supply-side", "India", "Bain", V1,
+      "Release slots: Fridays × movies per Friday, plus holiday releases; sanity check by budget tier (high, medium, low)."),
+    q("Estimate the market size of the tyre industry in India in revenue terms.", "Hard", "Automotive & Mobility", "Market sizing", "Proxy / ratio", "India", "Bain", V1,
+      "New-vehicle fitment (sales × tyres) + replacement (vehicle stock × tyres ÷ life) by vehicle type × price per tyre."),
+    q("Estimate the revenue of a dentist in Delhi in a day.", "Easy", "Healthcare & Pharma", "Revenue estimation", "Supply-side", "Delhi", "Indus Insights", V1,
+      "Operating hours ÷ time per appointment × occupancy × fee, split simple vs complicated procedures."),
+    q("Estimate the annual revenue of a laundry service in Delhi.", "Medium", "Services", "Revenue estimation", "Supply-side", "Delhi", "Indus Insights", V1,
+      "Customers served per day × clothes per customer × price per item by service (wash, iron, dry-clean) × working days."),
+    q("Estimate the weekly revenue from the food stalls in a mall food court in Delhi.", "Medium", "Food Service & QSR", "Revenue estimation", "Supply-side", "Delhi", "Indus Insights", V1,
+      "Number of stalls × orders per hour (meal times vs off-peak, weekday vs weekend) × average order value."),
+    q("Estimate the number of books an Indian reads in a lifetime.", "Medium", "Education", "Time & usage", "Population-based", "India", "Indus Insights", V1,
+      "Split life into age bands (school, college, working, retired) × books per year in each × literacy rate."),
+    q("Estimate the expenditure incurred by the Government of India on the 2024 Lok Sabha elections.", "Hard", "Government & Public Sector", "Cost estimation", "Unit economics", "India", "Indus Insights", V1,
+      "Voters → polling booths (voters per booth) × cost per booth (staff, EVMs, security, logistics) + central costs."),
+    q("Estimate the market size for an alco-beverage firm in Mumbai.", "Medium", "Alcobev & Tobacco", "Market sizing", "Population-based", "Mumbai", "Kepler Cannon", V1,
+      "Adults of legal drinking age × drinkers by income × drinks per month × price, split beer, spirits and wine."),
+    q("Estimate the number of red cars in Delhi.", "Easy", "Automotive & Mobility", "Count / volume", "Household-based", "Delhi", "Nation with NaMo", V1,
+      "Households by income × car ownership × cars per household (+ commercial fleet) × share of cars that are red."),
+    q("Estimate the number of chairs in households in Delhi.", "Easy", "Consumer Durables", "Count / volume", "Household-based", "Delhi", "Nation with NaMo", V1,
+      "Households by income × chairs per household (dining, study, plastic, sofa-chairs)."),
+    q("Estimate the number of SRCC students who travel by metro every day.", "Easy", "Education", "Count / volume", "Population-based", "Delhi", "Nation with NaMo", V1,
+      "Students → day scholars vs hostellers → share living near a metro line → share choosing metro over other modes."),
+    q("Estimate the number of wine bottles sold in India in a year.", "Medium", "Alcobev & Tobacco", "Count / volume", "Population-based", "India", "Nation with NaMo", V1,
+      "Adults above drinking age × drinkers × wine drinkers (skewed to high income) × bottles per year."),
+    q("Estimate the number of people who visit India Gate in a day.", "Easy", "Tourism & Hospitality", "Count / volume", "Population-based", "Delhi", "Nation with NaMo", V1,
+      "Delhi residents visiting per year + domestic and foreign tourists, ÷ 365, adjusted for weekends and evenings."),
+    q("Estimate the number of students who commute by metro to North Campus colleges in Delhi.", "Easy", "Education", "Count / volume", "Population-based", "Delhi", "Nation with NaMo", V1,
+      "Total North Campus students → day scholars → share by income who take the metro vs bus, cab or own vehicle."),
+    q("Estimate the monthly revenue of a Saravana Bhavan outlet.", "Medium", "Food Service & QSR", "Revenue estimation", "Supply-side", "Delhi", "Nation with NaMo", V1,
+      "Seats × table turns per hour (peak vs non-peak) × hours × average bill; weekends at a higher occupancy."),
+    q("Estimate the market size of quick commerce in India.", "Hard", "Retail & E-commerce", "Market sizing", "Population-based", "India", "Redseer", V1,
+      "Urban households in serviceable cities by income × quick-commerce users × orders per month × average order value."),
+    q("Estimate the size of India's advertising market on non-traditional platforms (OTT, apps, social media, e-commerce).", "Hard", "Media & Entertainment", "Market sizing", "Population-based", "India", "Redseer", V1,
+      "Users per platform × ad impressions per user per day × CPM, or users × ad revenue per user by platform."),
+    q("Estimate the size of the animation and VFX market in India.", "Hard", "Media & Entertainment", "Market sizing", "Population-based", "India", "Redseer", V1,
+      "Consumers of movies, TV and games by age and internet access × spend attributable to animation/VFX; cross-check from production budgets."),
+    q("Estimate the volume of paint required to paint an Airbus aircraft.", "Medium", "Aviation & Travel", "Physical estimation", "Unit / geometry", "", "Trinity Life Sciences", V1,
+      "Approximate fuselage as a cylinder and wings/tail as flat plates → surface area × coats ÷ coverage per litre."),
+    q("Estimate the number of pens bought in India in a day.", "Easy", "Consumer Goods", "Count / volume", "Population-based", "India", "Trinity Life Sciences", V1,
+      "Population by age (students, working adults, seniors) × pens per month ÷ 30; add institutional buying."),
+
+    /* ---------- IIM Ahmedabad Casebook 2022–23 ---------- */
+    q("Estimate the annual demand for Gold Flake cigarettes in Mumbai.", "Medium", "Alcobev & Tobacco", "Count / volume", "Top-down", "Mumbai", "", IIMA,
+      "Total cigarette market (adults × smokers × sticks per day × 365) × Gold Flake's share, borrowed from similar metros."),
+    q("Estimate the monthly residential electricity consumption in India.", "Medium", "Energy & Utilities", "Consumption", "Household-based", "India", "", IIMA,
+      "Urban and rural households (different household sizes) × income mix × units per month by income; adjust for unelectrified homes."),
+    q("Estimate the total duration of ads streamed on YouTube daily.", "Hard", "Technology & Internet", "Time & usage", "Population-based", "", "", IIMA,
+      "Non-premium viewers × videos watched by length × ads per video × ad length (skippable vs non-skippable)."),
+    q("Estimate the number of pairs of shoes sold in Mumbai daily.", "Easy", "Apparel & Footwear", "Count / volume", "Population-based", "Mumbai", "", IIMA,
+      "Population by age and income × pairs bought per year ÷ 365; sanity check with shops per km² × pairs sold per shop."),
+    q("Estimate the size of the home renovation market in Hyderabad.", "Medium", "Real Estate & Construction", "Market sizing", "Household-based", "Hyderabad", "", IIMA,
+      "Houses by type and income × share renovated each year × average spend per renovation."),
+    q("Estimate the size of the maternity wear market in India.", "Medium", "Apparel & Footwear", "Market sizing", "Population-based", "India", "", IIMA,
+      "Births per year → pregnant women by urban/rural and income → share buying maternity wear × spend per pregnancy."),
+    q("Estimate the annual revenue of a multiplex.", "Easy", "Media & Entertainment", "Revenue estimation", "Supply-side", "India", "", IIMA,
+      "Screens × shows × seats × occupancy × ticket price × days, plus food & beverage and advertising."),
+    q("Estimate the monthly revenue from Tata Play subscribers in Delhi.", "Medium", "Media & Entertainment", "Revenue estimation", "Household-based", "Delhi", "", IIMA,
+      "Households × TV ownership × DTH (vs cable and OTT-only) × Tata Play's share × average monthly pack price."),
+    q("Estimate the total toll tax collected annually across India.", "Hard", "Infrastructure & Transport", "Revenue estimation", "Supply-side", "India", "", IIMA,
+      "Toll plazas (highway km ÷ spacing) × vehicles per day by type × toll per vehicle × 365."),
+    q("Estimate the revenue from consumption of Nestlé coffee on a weekday in Mumbai.", "Hard", "FMCG / Food & Beverage", "Revenue estimation", "Population-based", "Mumbai", "", IIMA,
+      "Coffee drinkers by income × cups per day × share instant/soluble coffee × Nestlé's share × price per cup's worth of coffee."),
+    q("Estimate the number of Snapchat streaks shared in a day.", "Medium", "Technology & Internet", "Count / volume", "Population-based", "India", "", IIMA,
+      "Smartphone users by age (skewed to teens and young adults) × Snapchat users × streak keepers × streaks per user."),
+    q("Estimate the litres of paint used annually in India to paint private cars.", "Hard", "Automotive & Mobility", "Consumption", "Household-based", "India", "", IIMA,
+      "Households by income × new and used cars bought per year × litres per car (bigger cars for higher income); add repaints."),
+    q("Estimate the number of bullets fired in India annually.", "Hard", "Defence & Security", "Count / volume", "Supply-side", "India", "", IIMA,
+      "Segment by user: armed forces training, police training, sport shooting and licensed civilians × rounds per person per year."),
+    q("Estimate the total number of chess moves played in a day in India.", "Medium", "Sports & Gaming", "Count / volume", "Population-based", "India", "", IIMA,
+      "Players online vs offline × games per day × moves per game by format (bullet, blitz, classical)."),
+    q("Estimate the number of injections administered in Ahmedabad in a day.", "Medium", "Healthcare & Pharma", "Count / volume", "Population-based", "Ahmedabad", "", IIMA,
+      "Population by age × doctor visits per year × share needing injections (vaccines, treatment) + blood tests, ÷ 365."),
+
+    /* ---------- Case Interviews Cracked ---------- */
+    q("Estimate the number of burgers a McDonald's outlet sells in a day.", "Easy", "Food Service & QSR", "Count / volume", "Supply-side", "India", "", CIC,
+      "Split dine-in and takeaway: seats × occupancy by hour × people per seat per hour × burgers per person; takeaway from counter throughput."),
+    q("Estimate the fleet size of Air India.", "Hard", "Aviation & Travel", "Count / volume", "Supply-side", "India", "", CIC,
+      "Routes (domestic and international) × daily frequency × block hours ÷ hours one aircraft flies per day."),
+    q("Estimate the number of schools in Mumbai.", "Medium", "Education", "Count / volume", "Population-based", "Mumbai", "", CIC,
+      "School-age children (by income: school enrolment differs) ÷ average students per school; sanity check with schools per km²."),
+    q("Estimate the market size for air conditioners in Mumbai, in tonnage.", "Hard", "Consumer Durables", "Market sizing", "Household-based", "Mumbai", "", CIC,
+      "Installed tonnage (homes by income × rooms cooled + offices, shops, hospitals) ÷ AC life + tonnage added by growth."),
+    q("Estimate the number of taxis in Mumbai.", "Medium", "Automotive & Mobility", "Count / volume", "Population-based", "Mumbai", "", CIC,
+      "Commuters needing autos/taxis × share choosing taxis × trips per day ÷ trips per taxi per day (peak-hour constrained).")
+  ];
+
+  window.GUESSTIMATES = list.map(function (item, i) {
+    item.id = "G" + String(i + 1).padStart(3, "0");
+    return item;
+  });
+})();
