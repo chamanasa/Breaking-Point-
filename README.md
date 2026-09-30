@@ -2,7 +2,7 @@
 
 An AI-powered consulting case-prep website, starting with guesstimates.
 
-- **Learn**: a framework for solving guesstimates, with a worked example.
+- **Learn**: an introduction and the five-step method, framework cards (what it is, when to use it, a worked example), pro tips, an interactive worked example you reveal step by step, and the India Numbers Bible (demographic, economic and miscellaneous figures, each with source and year).
 - **Question Bank**: guesstimates you can filter by difficulty, industry, type and approach.
 - **AI Mode**: practise any question from the bank with a Gemini-powered interviewer, using your own API key.
 
@@ -21,10 +21,12 @@ To deploy with GitHub Pages, go to **Settings → Pages → Deploy from branch**
 ## Project layout
 
 ```
-index.html          all three tabs (the Learn content lives here)
+index.html          all three tabs (Learn prose, framework cards and the worked example live here)
 css/style.css       EconGraphs / Tufte-style theme
 data/questions.js   the question bank (edit this to add questions)
+data/numbers.js     India Numbers Bible (value, source and year for each row)
 js/app.js           tab routing and shared helpers
+js/learn.js         Numbers Bible tabs, step-by-step example, sidebar highlighting
 js/bank.js          filters and question list
 js/ai.js            Gemini interviewer
 fonts/              ET Book (MIT, from tufte-css)

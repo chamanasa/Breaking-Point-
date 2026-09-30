@@ -46,17 +46,14 @@
       else a.removeAttribute("aria-current");
     });
 
-    if (route.tab === "learn" && route.arg) {
-      const target = document.getElementById("learn-" + route.arg);
-      if (target) {
-        const headerH = document.querySelector(".site-header").offsetHeight;
-        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - headerH - 12 });
-      }
-    } else {
-      window.scrollTo(0, 0);
-    }
-
+    // Let tabs react first (e.g. select a Numbers sub-tab), then scroll.
     listeners.forEach(function (fn) { fn(route); });
+
+    const target = route.tab === "learn" && route.arg
+      ? document.getElementById("learn-" + route.arg) || document.getElementById("learn-" + route.arg.split("-")[0])
+      : null;
+    if (target) target.scrollIntoView();
+    else window.scrollTo(0, 0);
   }
 
   window.App = {

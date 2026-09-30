@@ -55,7 +55,7 @@
     if (q.hint) extras.push("<p><em>Hint.</em> " + esc(q.hint) + "</p>");
     if (q.solution) extras.push("<p><em>Solution outline.</em> " + esc(q.solution) + "</p>");
     return (
-      '<li class="q">' +
+      '<li class="qitem">' +
         '<span class="qid">' + esc(q.id) + "</span>" +
         '<p class="qtitle">' + esc(q.title) + "</p>" +
         '<div class="qactions"><a class="btn" href="#ai/' + encodeURIComponent(q.id) + '">Practise with AI</a></div>' +
