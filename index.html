@@ -26,61 +26,37 @@
      TAB 1 — LEARN
      ============================================================ -->
 <article id="view-learn" class="view">
-  <div class="learn-layout">
+  <!-- Landing: heading + one card per page -->
+  <div id="learn-home">
+    <h1>Guesstimates</h1>
+    <p class="subtitle">Everything you need to size anything in an interview, from the method to the numbers. Pick a topic.</p>
+    <ol class="learn-cards">
+      <li><a href="#learn/intro"><span class="n">1</span><span class="t">Introduction</span><span class="d">What guesstimates are, why interviewers ask them, and the five-step method.</span><span class="go">Read &rarr;</span></a></li>
+      <li><a href="#learn/frameworks"><span class="n">2</span><span class="t">Frameworks &amp; Approach</span><span class="d">Seven tools, each with what it is, when to use it and a worked example.</span><span class="go">Read &rarr;</span></a></li>
+      <li><a href="#learn/tips"><span class="n">3</span><span class="t">Pro Tips</span><span class="d">A one-screen cheat sheet of habits that make answers faster and cleaner.</span><span class="go">Read &rarr;</span></a></li>
+      <li><a href="#learn/example"><span class="n">4</span><span class="t">Worked Example</span><span class="d">A full interview walkthrough you reveal one step at a time.</span><span class="go">Read &rarr;</span></a></li>
+      <li><a href="#learn/numbers"><span class="n">5</span><span class="t">India Numbers Bible</span><span class="d">Demographic, economic and reference figures, each with source and year.</span><span class="go">Read &rarr;</span></a></li>
+    </ol>
+  </div>
 
-    <nav class="learn-nav" aria-label="Learn sections">
-      <div class="group">
-        <a href="#learn/intro" data-nav="intro">Introduction</a>
-        <ul>
-          <li><a href="#learn/intro" data-nav="intro">What &amp; why</a></li>
-          <li><a href="#learn/structure" data-nav="structure">The five steps</a></li>
-        </ul>
-      </div>
-      <div class="group">
-        <a href="#learn/frameworks" data-nav="frameworks">Frameworks &amp; Approach</a>
-        <ul>
-          <li><a href="#learn/fw-topdown" data-nav="fw-topdown">Top-down vs bottom-up</a></li>
-          <li><a href="#learn/fw-mece" data-nav="fw-mece">MECE</a></li>
-          <li><a href="#learn/fw-pareto" data-nav="fw-pareto">Pareto (80/20)</a></li>
-          <li><a href="#learn/fw-unit" data-nav="fw-unit">Unit economics</a></li>
-          <li><a href="#learn/fw-extrapolation" data-nav="fw-extrapolation">Extrapolation</a></li>
-          <li><a href="#learn/fw-demand" data-nav="fw-demand">Demand-side approach</a></li>
-          <li><a href="#learn/fw-supply" data-nav="fw-supply">Supply-side &amp; TAM-SAM-SOM</a></li>
-        </ul>
-      </div>
-      <div class="group">
-        <a href="#learn/tips" data-nav="tips">Pro Tips</a>
-      </div>
-      <div class="group">
-        <a href="#learn/example" data-nav="example">Worked Example</a>
-      </div>
-      <div class="group">
-        <a href="#learn/numbers" data-nav="numbers">India Numbers Bible</a>
-        <ul>
-          <li><a href="#learn/numbers-demographic" data-nav="numbers">Demographic</a></li>
-          <li><a href="#learn/numbers-economic" data-nav="numbers">Economic</a></li>
-          <li><a href="#learn/numbers-misc" data-nav="numbers">Miscellaneous</a></li>
-        </ul>
-      </div>
-    </nav>
-
-    <div class="learn-content">
+  <!-- One page per topic; learn.js shows exactly one at a time -->
+  <nav class="crumbs" id="learn-crumbs" aria-label="Breadcrumb" hidden><a href="#learn">Guesstimates</a> <span aria-hidden="true">/</span> <span id="learn-crumb-current"></span></nav>
+  <div class="learn-pages">
 
       <!-- ---------------- Introduction ---------------- -->
-      <section id="learn-intro" data-section="intro">
-        <p class="eyebrow">Introduction</p>
-        <h1>How to Solve a Guesstimate</h1>
+      <section id="learn-intro" class="learn-page" data-page="intro" hidden>
+        <h1>Introduction</h1>
         <p class="subtitle">A structured way to size anything, from chai stalls to smartphone sales, in fifteen minutes and out loud.</p>
 
-        <h3>What is a guesstimate?</h3>
+        <h2>What is a guesstimate?</h2>
         <p>A guesstimate asks you to estimate a number you cannot possibly know, such as the cars sold in India each year or the daily revenue of a petrol pump. You work it out from a handful of reasonable assumptions and some quick arithmetic.</p>
 
-        <h3>Why interviewers ask them</h3>
+        <h2>Why interviewers ask them</h2>
         <p>The final number matters far less than the route to it. Interviewers use guesstimates to see whether you can <strong>structure</strong> an ambiguous problem, make <strong>sensible assumptions</strong> and state them clearly, <strong>do fast and accurate maths</strong> under pressure, and <strong>communicate</strong> like someone they could put in front of a client.</p>
         <p class="note">An answer within about 2&times; of reality, reached through a clean structure, beats an exact figure recalled from memory.</p>
 
         <div id="learn-structure" data-section="structure">
-          <h3>Structure &amp; approach: the five steps</h3>
+          <h2>The five steps</h2>
           <ol class="flow">
             <li><strong>Clarification</strong>Pin down exactly what is being estimated: geography, time period, units, scope.</li>
             <li><strong>Approach</strong>Choose demand-side or supply-side (or top-down vs bottom-up) and say why.</li>
@@ -93,10 +69,18 @@
       </section>
 
       <!-- ---------------- Frameworks ---------------- -->
-      <section id="learn-frameworks" data-section="frameworks">
-        <p class="eyebrow">Toolkit</p>
-        <h2>Frameworks &amp; Approach</h2>
+      <section id="learn-frameworks" class="learn-page" data-page="frameworks" hidden>
+        <h1>Frameworks &amp; Approach</h1>
         <p>Each card follows the same shape: <em>what it is</em>, <em>when to use it</em> and <em>one worked example</em>. The &ldquo;when to use&rdquo; column matters most, because picking the right tool is what separates a clean answer from a messy one.</p>
+        <nav class="jump" aria-label="Frameworks on this page">
+          <a href="#learn/fw-topdown">Top-down vs bottom-up</a>
+          <a href="#learn/fw-mece">MECE</a>
+          <a href="#learn/fw-pareto">Pareto (80/20)</a>
+          <a href="#learn/fw-unit">Unit economics</a>
+          <a href="#learn/fw-extrapolation">Extrapolation</a>
+          <a href="#learn/fw-demand">Demand side</a>
+          <a href="#learn/fw-supply">Supply side &amp; TAM-SAM-SOM</a>
+        </nav>
 
         <!-- Top-down vs bottom-up -->
         <div class="fw" id="learn-fw-topdown" data-section="fw-topdown">
@@ -305,9 +289,9 @@
       </section>
 
       <!-- ---------------- Pro tips ---------------- -->
-      <section id="learn-tips" data-section="tips">
-        <p class="eyebrow">Cheat sheet</p>
-        <h2>Pro Tips</h2>
+      <section id="learn-tips" class="learn-page" data-page="tips" hidden>
+        <h1>Pro Tips</h1>
+        <p class="subtitle">Five habits that make an answer faster, cleaner and easier to follow.</p>
         <ul class="tips">
           <li><b>Ask before you solve</b>Clarify scope, geography, time frame and units.<span class="eg">&ldquo;Global or India? Per day or per year? Volume or value?&rdquo;</span></li>
           <li><b>Anchor on benchmarks</b>Start from numbers you know cold: population, households, GDP.<span class="eg">India &asymp; 140 Cr people &asymp; 30 Cr households.</span></li>
@@ -318,9 +302,8 @@
       </section>
 
       <!-- ---------------- Worked example ---------------- -->
-      <section id="learn-example" data-section="example">
-        <p class="eyebrow">Walkthrough</p>
-        <h2>Worked Example: Multiplex Tickets</h2>
+      <section id="learn-example" class="learn-page" data-page="example" hidden>
+        <h1>Worked Example: Multiplex Tickets</h1>
         <p>Work through it the way a live interview runs: open one step at a time and try each step yourself before you reveal it.</p>
 
         <div class="stepper-bar" id="stepper-bar">
@@ -415,15 +398,14 @@ Slots per screen: Morning · Matinee · Afternoon · Evening · Night</div>
       </section>
 
       <!-- ---------------- Numbers bible ---------------- -->
-      <section id="learn-numbers" data-section="numbers">
-        <p class="eyebrow">Reference</p>
-        <h2>India Numbers Bible</h2>
+      <section id="learn-numbers" class="learn-page" data-page="numbers" hidden>
+        <h1>India Numbers Bible</h1>
         <p>Rounded working values for interviews, each with its source and year. Round further when you calculate, and refresh against the source before interview season.</p>
         <div class="subtabs" role="tablist" id="numbers-tabs"></div>
         <div id="numbers-panels"></div>
       </section>
 
-    </div>
+    <nav class="pager" id="learn-pager" aria-label="Learn pages" hidden></nav>
   </div>
 </article>
 

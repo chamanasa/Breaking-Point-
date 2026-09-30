@@ -45,6 +45,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { font-size: 15px; }
 body {
   margin: 0;
@@ -142,51 +143,56 @@ kbd { border: 1px solid var(--rule); padding: 0 0.3em; border-radius: 2px; backg
   max-width: var(--measure);
 }
 
-/* ---------- Learn layout: sidebar + content ---------- */
+/* ---------- Learn: landing cards + one page per topic ---------- */
 
-.learn-layout {
+.learn-cards {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  max-width: none;
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr);
-  gap: 56px;
-  align-items: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem 2.2rem;
 }
-.learn-nav {
-  position: sticky;
-  top: calc(var(--header-h) + 24px);
-  max-height: calc(100vh - var(--header-h) - 48px);
-  overflow-y: auto;
-  padding: 0.3rem 0 1rem;
-  border-right: 1px solid var(--rule);
-}
-.learn-nav .group { margin-bottom: 1.1rem; }
-.learn-nav .group > a {
-  display: block;
-  font-variant: small-caps;
-  letter-spacing: 0.06em;
-  font-size: 1.2rem;
-  color: var(--ink);
+.learn-cards li { padding: 0; }
+.learn-cards a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   text-decoration: none;
-  padding: 0.15rem 0;
+  border-top: 2px solid var(--ink);
+  padding: 1rem 0 0.4rem;
 }
-.learn-nav ul { list-style: none; padding: 0; margin: 0.15rem 0 0; }
-.learn-nav li { padding: 0; }
-.learn-nav ul a {
-  display: block;
-  font-size: 1.12rem;
-  line-height: 1.35rem;
-  color: var(--muted);
-  text-decoration: none;
-  padding: 0.22rem 0.8rem 0.22rem 0.8rem;
-  border-left: 2px solid transparent;
-  margin-left: -1px;
-}
-.learn-nav a:hover { color: var(--ink); }
-.learn-nav a.active { color: var(--ink); border-left-color: var(--ink); }
-.learn-nav .group > a.active { text-decoration: underline; }
+.learn-cards .n { font-family: et-book-roman-old-style; font-style: italic; font-size: 1.5rem; color: var(--faint); }
+.learn-cards .t { font-size: 2rem; font-style: italic; line-height: 1.15; margin: 0.2rem 0 0.6rem; }
+.learn-cards .d { font-size: 1.25rem; line-height: 1.75rem; color: var(--muted); flex: 1; }
+.learn-cards .go { font-variant: small-caps; letter-spacing: 0.06em; font-size: 1.15rem; margin-top: 0.9rem; }
+.learn-cards a:hover .t, .learn-cards a:hover .go { text-decoration: underline; text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
 
-.learn-content > section { padding: 0 0 3.5rem; margin-bottom: 3.5rem; border-bottom: 1px solid var(--rule); }
-.learn-content > section:last-child { border-bottom: 0; }
-.eyebrow { font-variant: small-caps; letter-spacing: 0.08em; color: var(--faint); font-size: 1.15rem; margin: 0 0 0.2rem; }
+.crumbs { font-size: 1.15rem; color: var(--muted); margin: 0 0 1.4rem; }
+.crumbs a { color: var(--muted); }
+.crumbs span[aria-hidden] { margin: 0 0.35rem; color: var(--faint); }
+
+.learn-page { max-width: 64rem; }
+.learn-page > h1 { margin-top: 0; }
+.learn-page h2 { margin-top: 2.6rem; }
+
+.jump { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.4rem 0 0.5rem; }
+.jump a {
+  font-size: 1.15rem; text-decoration: none; border: 1px solid var(--rule);
+  border-radius: 999px; padding: 0.15rem 0.8rem; color: var(--muted);
+}
+.jump a:hover { color: var(--ink); border-color: var(--ink); }
+
+.pager {
+  display: flex; justify-content: space-between; gap: 1.5rem;
+  max-width: 64rem; border-top: 1px solid var(--ink); margin-top: 3.5rem; padding-top: 1rem;
+}
+.pager a { text-decoration: none; display: flex; flex-direction: column; max-width: 48%; }
+.pager a.next { text-align: right; margin-left: auto; }
+.pager .lbl { font-variant: small-caps; letter-spacing: 0.06em; font-size: 1.1rem; color: var(--muted); }
+.pager .ttl { font-size: 1.6rem; font-style: italic; }
+.pager a:hover .ttl { text-decoration: underline; text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
 
 /* Five-step flow */
 .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin: 1.8rem 0 1.2rem; counter-reset: flow; }
@@ -287,7 +293,7 @@ table.plain tr.total td { border-top: 1px solid var(--ink); border-bottom: 0; }
 }
 
 /* Pro tips */
-.tips { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.2rem; list-style: none; padding: 0; margin: 1.5rem 0 0; max-width: none; counter-reset: tip; }
+.tips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.8rem 1.6rem; list-style: none; padding: 0; margin: 1.5rem 0 0; max-width: none; counter-reset: tip; }
 .tips li {
   counter-increment: tip;
   border-top: 2px solid var(--ink);
@@ -302,7 +308,7 @@ table.plain tr.total td { border-top: 1px solid var(--ink); border-bottom: 0; }
 /* Worked example stepper */
 .stepper-bar { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin: 1.4rem 0 0.6rem; }
 .stepper-bar .progress { font-size: 1.15rem; color: var(--muted); font-style: italic; margin-right: auto; }
-.steps-x { list-style: none; padding: 0; margin: 0; max-width: 56rem; }
+.steps-x { list-style: none; padding: 0; margin: 0; max-width: none; }
 .step-x { border-top: 1px solid var(--rule); }
 .step-x:last-child { border-bottom: 1px solid var(--rule); }
 .step-x > button {
@@ -497,7 +503,7 @@ footer { border-top: 1px solid var(--rule); color: var(--faint); font-size: 1.05
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1000px) {
-  .learn-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 36px; }
+  .learn-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filters { grid-template-columns: 1fr 1fr 1fr; }
   .filters .field.search { grid-column: 1 / -1; }
 }
@@ -513,13 +519,9 @@ footer { border-top: 1px solid var(--rule); color: var(--faint); font-size: 1.05
   h1 { font-size: 2.5rem; }
   h2 { font-size: 2rem; }
 
-  .learn-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .learn-nav {
-    position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--rule);
-    margin-bottom: 2rem; padding-bottom: 0.8rem; overflow: visible;
-    display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.2rem;
-  }
-  .learn-nav .group { min-width: 0; }
+  .learn-cards, .tips { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+  .learn-cards .t { font-size: 1.7rem; }
+  .pager .ttl { font-size: 1.3rem; }
 
   .flow { grid-template-columns: 1fr; gap: 0.8rem; }
   .flow li::after { display: none; }

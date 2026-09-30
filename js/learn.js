@@ -112,31 +112,48 @@
 
   paintStepper();
 
-  /* ---------- Sidebar: highlight the section in view ---------- */
+  /* ---------- Pages: landing grid, one topic page at a time ---------- */
 
-  const navLinks = Array.from(document.querySelectorAll(".learn-nav a[data-nav]"));
-  const tracked = Array.from(document.querySelectorAll("#view-learn [data-section]"));
+  const PAGES = [
+    { id: "intro", title: "Introduction" },
+    { id: "frameworks", title: "Frameworks & Approach" },
+    { id: "tips", title: "Pro Tips" },
+    { id: "example", title: "Worked Example" },
+    { id: "numbers", title: "India Numbers Bible" }
+  ];
+  const home = document.getElementById("learn-home");
+  const crumbs = document.getElementById("learn-crumbs");
+  const crumbCurrent = document.getElementById("learn-crumb-current");
+  const pager = document.getElementById("learn-pager");
 
-  function highlight(key) {
-    const parentOf = { structure: "intro" };
-    navLinks.forEach(function (a) {
-      const k = a.dataset.nav;
-      const inGroup = key.indexOf("fw-") === 0 ? k === "frameworks" : k === parentOf[key];
-      a.classList.toggle("active", k === key || inGroup);
+  // Map a route argument (e.g. "fw-mece", "numbers-economic", "structure") to its page.
+  function pageFor(arg) {
+    if (!arg) return null;
+    if (arg === "structure") return "intro";
+    if (arg.indexOf("fw-") === 0) return "frameworks";
+    if (arg.indexOf("numbers-") === 0) return "numbers";
+    return PAGES.some(function (p) { return p.id === arg; }) ? arg : null;
+  }
+
+  function pagerLink(page, cls, label) {
+    return '<a class="' + cls + '" href="#learn/' + page.id + '"><span class="lbl">' + label + '</span><span class="ttl">' + esc(page.title) + "</span></a>";
+  }
+
+  App.onRoute(function (route) {
+    if (route.tab !== "learn") return;
+    const current = pageFor(route.arg);
+    home.hidden = current !== null;
+    crumbs.hidden = pager.hidden = current === null;
+    document.querySelectorAll("#view-learn .learn-page").forEach(function (sec) {
+      sec.hidden = sec.dataset.page !== current;
     });
-  }
+    if (current === null) { document.title = "Guesstimates · Breaking Point"; return; }
 
-  if ("IntersectionObserver" in window) {
-    const visible = new Map();
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { visible.set(en.target, en.isIntersecting ? en.boundingClientRect.top : null); });
-      // The top-most visible tracked element wins; nested items beat their parent section.
-      let best = null, bestTop = Infinity;
-      visible.forEach(function (top, el) {
-        if (top !== null && top < bestTop) { best = el; bestTop = top; }
-      });
-      if (best) highlight(best.dataset.section);
-    }, { rootMargin: "-80px 0px -60% 0px" });
-    tracked.forEach(function (el) { io.observe(el); });
-  }
+    const i = PAGES.findIndex(function (p) { return p.id === current; });
+    crumbCurrent.textContent = PAGES[i].title;
+    document.title = PAGES[i].title + " · Breaking Point";
+    pager.innerHTML =
+      (i > 0 ? pagerLink(PAGES[i - 1], "prev", "&larr; Previous") : "") +
+      (i < PAGES.length - 1 ? pagerLink(PAGES[i + 1], "next", "Next &rarr;") : '<a class="next" href="#learn"><span class="lbl">Back to</span><span class="ttl">All topics</span></a>');
+  });
 })();

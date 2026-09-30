@@ -38,6 +38,7 @@
 
   function render() {
     const route = parseRoute();
+    if (route.tab !== "learn") document.title = "Breaking Point · Guesstimates";
     TABS.forEach(function (t) {
       document.getElementById("view-" + t).hidden = t !== route.tab;
     });
@@ -52,7 +53,8 @@
     const target = route.tab === "learn" && route.arg
       ? document.getElementById("learn-" + route.arg) || document.getElementById("learn-" + route.arg.split("-")[0])
       : null;
-    if (target) target.scrollIntoView();
+    // Landing on a whole page starts at the top; deep links scroll to their card.
+    if (target && !target.classList.contains("learn-page")) target.scrollIntoView();
     else window.scrollTo(0, 0);
   }
 
