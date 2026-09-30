@@ -574,7 +574,13 @@ body.ai-full .site-header { display: none; }
 .chat-q-meta { font-size: 1.05rem; color: var(--muted); margin: 0.15rem 0 0; max-width: none; line-height: 1.4rem; }
 .chat-ctrl { display: flex; align-items: center; gap: 0.7rem; }
 .timer { font-size: 1.3rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.icon-btn { display: none; }
+.icon-btn {
+  display: none; flex: none; width: 40px; height: 40px; border: 0; background: transparent; border-radius: 10px;
+  align-items: center; justify-content: center; cursor: pointer; color: var(--ink);
+}
+.icon-btn:hover { background: var(--panel); }
+.icon-btn svg, .send svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#empty-browse { display: none; margin-top: 0.6rem; }
 
 .messages { position: relative; flex: 1; overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
 .thread { max-width: 46rem; margin: 0 auto; padding: 1.6rem 1.4rem 2rem; display: flex; flex-direction: column; gap: 1.4rem; }
@@ -621,7 +627,12 @@ body.ai-full .site-header { display: none; }
 }
 .compose-row textarea:focus { border: 0; }
 .compose-row textarea:disabled { opacity: 0.6; }
-.compose-row .send { border-radius: 12px; padding: 0.5rem 1.1rem; }
+.compose-row .send {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--ink); color: var(--paper); display: inline-flex; align-items: center; justify-content: center;
+}
+.compose-row .send:disabled { background: var(--rule); color: var(--faint); cursor: not-allowed; }
+.compose-row { border-radius: 24px; padding: 0.4rem 0.4rem 0.4rem 1.1rem; align-items: center; }
 .hint-line { font-size: 1rem; color: var(--faint); margin: 0; max-width: none; text-align: center; }
 
 /* Feedback scorecard */
@@ -694,15 +705,27 @@ footer { border-top: 1px solid var(--rule); color: var(--faint); font-size: 1.05
   .chat-shell.show-picker .picker-panel { transform: none; }
   .chat-shell.show-picker::after { content: ""; position: absolute; inset: 0; background: rgba(17,17,17,0.25); z-index: 2; }
   .icon-btn { display: inline-flex; }
-  .chat-head { padding: 0.6rem 0.8rem; gap: 0.5rem 0.6rem; flex-wrap: wrap; min-height: 0; }
-  .chat-q { order: 3; flex-basis: 100%; }
-  .chat-ctrl { margin-left: auto; }
-  .chat-q-title { font-size: 1.15rem; }
-  .chat-q-meta { display: none; }
-  .thread { padding: 1.1rem 0.9rem 1.4rem; }
-  .composer { padding: 0.5rem 0.7rem 0.7rem; }
+  #empty-browse { display: inline-block; }
+  .chat-head { padding: 0.45rem 0.6rem; gap: 0.4rem; flex-wrap: nowrap; min-height: 56px; }
+  .chat-q { min-width: 0; text-align: center; }
+  .chat-q-title { font-size: 1.12rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-q-meta { display: block; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
+  .chat-ctrl { gap: 0.4rem; }
+  .timer { font-size: 1.05rem; }
+  #ai-start { font-size: 1.02rem; padding: 0.3rem 0.8rem; border-radius: 999px; }
+  .thread { padding: 1rem 1rem 1.2rem; gap: 1.1rem; }
+  .msg { font-size: 1.25rem; line-height: 1.8rem; }
+  .msg.user { max-width: 88%; }
+  .msg.user .bubble { border-radius: 18px; border-bottom-right-radius: 4px; }
+  .empty-chat { margin: 8vh 0 0; text-align: left; }
+  .empty-chat .lg { font-size: 1.6rem; }
+  .empty-chat ol { font-size: 1.12rem; line-height: 1.7rem; padding-left: 1.2rem; }
+  .composer { padding: 0.4rem 0.7rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .composer .quick { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .composer .quick::-webkit-scrollbar { display: none; }
+  .composer .chip { font-size: 1rem; white-space: nowrap; }
+  .compose-row textarea { font-size: 16px; line-height: 1.4; }
   .hint-line { display: none; }
-  .msg.user { max-width: 92%; }
   .sc-row { grid-template-columns: 1fr 6rem 1.6rem; }
   .sc-row .cmt { grid-column: 1 / -1; }
   .sc-cols, .sc-compare { grid-template-columns: minmax(0, 1fr); }

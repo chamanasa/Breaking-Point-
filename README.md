@@ -61,4 +61,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=8`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=9`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones.

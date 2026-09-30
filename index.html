@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Breaking Point · Guesstimates</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <script src="js/update.js?v=9"></script>
 </head>
 <body>
 
@@ -180,7 +181,7 @@
 
     <div class="chat-window">
       <header class="chat-head">
-        <button class="btn ghost icon-btn" id="picker-toggle" type="button" aria-controls="picker-panel" aria-expanded="false">Questions</button>
+        <button class="icon-btn" id="picker-toggle" type="button" aria-controls="picker-panel" aria-expanded="false" aria-label="Open question list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <div class="chat-q">
           <p class="chat-q-title" id="chat-q-title">Choose a question to begin</p>
           <p class="chat-q-meta" id="chat-q-meta">Pick from the list, or use &ldquo;Practise with AI&rdquo; in the Question Bank.</p>
@@ -201,6 +202,7 @@
               <li>Walk through assumptions and maths; expect push-back.</li>
               <li>Press <strong>Finish &amp; get feedback</strong> for a full scorecard.</li>
             </ol>
+            <button class="btn" type="button" id="empty-browse">Browse questions</button>
           </div>
         </div>
       </div>
@@ -213,7 +215,7 @@
           </div>
           <div class="compose-row">
             <textarea id="ai-input" rows="1" placeholder="Start an interview to reply&hellip;" disabled></textarea>
-            <button class="btn send" type="submit" id="ai-send" disabled aria-label="Send">Send</button>
+            <button class="send" type="submit" id="ai-send" disabled aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
           </div>
           <p class="hint-line"><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</p>
         </div>
@@ -228,9 +230,9 @@
   <div class="wrap">Breaking Point: consulting case prep. Typography after <a href="https://www.econgraphs.org" target="_blank" rel="noopener">EconGraphs</a> and Tufte CSS.</div>
 </footer>
 
-<script src="data/questions.js?v=8"></script>
-<script src="js/app.js?v=8"></script>
-<script src="js/bank.js?v=8"></script>
-<script src="js/ai.js?v=8"></script>
+<script src="data/questions.js?v=9"></script>
+<script src="js/app.js?v=9"></script>
+<script src="js/bank.js?v=9"></script>
+<script src="js/ai.js?v=9"></script>
 </body>
 </html>

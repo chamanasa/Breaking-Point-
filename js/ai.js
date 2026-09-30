@@ -204,6 +204,10 @@
     e.stopPropagation();
     setDrawer(!el.chatShell.classList.contains("show-picker"));
   });
+  $("empty-browse").addEventListener("click", function (e) {
+    e.stopPropagation();
+    setDrawer(true);
+  });
   // Tapping the dimmed area beside the drawer closes it.
   el.chatShell.addEventListener("click", function (e) {
     if (el.chatShell.classList.contains("show-picker") && !el.pickerPanel.contains(e.target)) setDrawer(false);
