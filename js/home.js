@@ -4,8 +4,8 @@
   const esc = App.escapeHtml;
   const wall = document.getElementById("logo-wall");
   if (wall) {
-    wall.innerHTML = App.firms.map(function (f) {
-      return '<a class="logo-item" href="#firms/' + f.id + '">' + App.firmLogo(f.id) + "<span>" + esc(f.short) + "</span></a>";
+    wall.innerHTML = App.firms.filter(function (f) { return f.group === "global"; }).slice(0, 6).map(function (f) {
+      return '<a href="#firms/' + f.id + '" title="' + esc(f.name) + '">' + App.firmLogo(f.id, "sm") + "</a>";
     }).join("");
   }
   const strip = document.getElementById("mod-logos");

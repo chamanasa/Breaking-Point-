@@ -9,9 +9,10 @@
  *   #drill            Mental maths driller (#drill/<category> preselects one)
  *   #firms            Firm-specific prep (#firms/<firmId> opens a profile)
  *   #progress         Progress dashboard
+ *   #admin            Users (admins only; see js/admin.js)
  */
 (function () {
-  const TABS = ["learn", "bank", "ai", "drill", "firms", "progress"];
+  const TABS = ["learn", "bank", "ai", "drill", "firms", "progress", "admin"];
   const listeners = [];
   let lastTab = null;
 

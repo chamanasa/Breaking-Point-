@@ -6,8 +6,10 @@
   <title>Breaking Point · Consulting Case Prep</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=15">
-  <script src="js/update.js?v=15"></script>
+  <link rel="stylesheet" href="css/style.css?v=16">
+  <script>document.documentElement.classList.add("auth-pending");</script>
+  <script src="js/update.js?v=16"></script>
+  <script src="js/config.js?v=16"></script>
 </head>
 <body>
 
@@ -23,8 +25,86 @@
       <a href="#progress" data-tab="progress">Progress</a>
     </nav>
     <a class="btn header-cta" href="#ai">Start practising</a>
+    <div class="user-slot" id="user-slot"></div>
   </div>
 </header>
+
+<!-- ============================================================
+     SIGN IN / CREATE ACCOUNT (shown before the app; see js/auth.js)
+     ============================================================ -->
+<section class="auth" id="auth" hidden aria-labelledby="auth-title">
+  <div class="auth-main">
+    <a class="auth-brand" href="#learn"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg>Breaking Point</a>
+    <div class="auth-card">
+      <div id="auth-start">
+        <h1 id="auth-title">Welcome back</h1>
+        <p class="auth-sub" id="auth-sub">Sign in to continue your case prep.</p>
+        <p class="auth-msg warn" id="auth-preview">Preview mode: accounts aren&rsquo;t connected on this site yet.</p>
+        <div class="auth-social" id="auth-social">
+          <button class="social-btn" type="button" data-provider="google">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Continue with Google
+          </button>
+          <button class="social-btn" type="button" data-provider="facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+            Continue with Facebook
+          </button>
+        </div>
+        <div class="auth-or"><span>or</span></div>
+        <form class="auth-form" id="auth-form" novalidate>
+          <div class="field" id="auth-name-row" hidden>
+            <label for="auth-name">Full name</label>
+            <input id="auth-name" type="text" autocomplete="name" placeholder="Aditi Sharma">
+          </div>
+          <div class="field">
+            <label for="auth-email">Email</label>
+            <input id="auth-email" type="email" autocomplete="email" placeholder="you@college.edu" required>
+          </div>
+          <button class="btn lg auth-submit" type="submit" id="auth-submit">Continue with email</button>
+          <p class="auth-msg" id="auth-msg" hidden></p>
+        </form>
+        <p class="auth-switch"><span id="auth-switch-text">New to Breaking Point?</span> <button class="linkish" type="button" id="auth-switch">Create an account</button></p>
+      </div>
+
+      <div id="auth-code" hidden>
+        <button class="back-link linkish" type="button" id="auth-back">&larr; Use a different email</button>
+        <h1>Check your email</h1>
+        <p class="auth-sub">We sent a verification code to <b id="auth-code-to"></b>. It expires in an hour.</p>
+        <div class="otp" id="auth-otp" role="group" aria-label="Verification code"></div>
+        <button class="btn lg auth-submit" type="button" id="auth-verify">Verify and continue</button>
+        <p class="auth-msg" id="auth-code-msg" hidden></p>
+        <p class="auth-switch"><button class="linkish" type="button" id="auth-resend" disabled>Resend code</button></p>
+      </div>
+    </div>
+    <p class="auth-legal">By continuing you agree to use Breaking Point for personal interview preparation. We only use your email to sign you in.</p>
+    <button class="linkish auth-guest" type="button" id="auth-guest" hidden>Continue as a guest &rarr;</button>
+  </div>
+
+  <aside class="auth-side" aria-hidden="true">
+    <div class="auth-side-inner">
+      <p class="auth-quote">&ldquo;Estimate the number of credit cards in India.&rdquo;</p>
+      <div class="demo-chat">
+        <div class="demo-msg i"><span>Interviewer</span>Before any numbers, how would you structure this?</div>
+        <div class="demo-msg c"><span>You</span>Split adults by income band, then cards per holder in each band, and cross-check against bank issuance.</div>
+        <div class="demo-msg i"><span>Interviewer</span>Good. Why income rather than age?</div>
+      </div>
+      <div class="demo-score">
+        <div class="demo-score-top"><b>7.8</b><span>/ 10</span><em>On track</em></div>
+        <ul>
+          <li><span>Structure</span><i class="p4"></i></li>
+          <li><span>Assumptions</span><i class="p3"></i></li>
+          <li><span>Maths</span><i class="p5"></i></li>
+          <li><span>Sanity check</span><i class="p3"></i></li>
+        </ul>
+      </div>
+      <ul class="auth-points">
+        <li>An AI interviewer that pushes back, by text or voice</li>
+        <li>77 guesstimates with full model interviews</li>
+        <li>Prep plans for McKinsey, BCG, Bain and 12 more firms</li>
+      </ul>
+    </div>
+  </aside>
+</section>
 
 <main class="wrap">
 
@@ -34,30 +114,44 @@
 <article id="view-learn" class="view">
   <!-- Landing: heading + one card per topic; each topic is its own page in learn/ -->
   <div id="learn-home">
-    <section class="hero">
-      <span class="pill"><span class="dot"></span>New &middot; Firm-style AI mocks, maths drills and progress tracking</span>
-      <h1>Crack your <span class="accent">consulting case interviews.</span></h1>
-      <p class="lead">One place for every part of case prep: learn each case type, practise on real interview questions, drill your mental maths, and rehearse out loud with an AI interviewer that scores you.</p>
-      <div class="cta">
-        <a class="btn lg" href="#ai">Start a mock interview</a>
-        <a class="btn ghost lg" href="#learn" data-scroll-to="modules">Explore modules</a>
+    <section class="hero2">
+      <div class="hero2-copy">
+        <p class="eyebrow">Consulting case prep</p>
+        <h1>Practise the case interview until it feels routine.</h1>
+        <p class="lead">Real interview questions, a model answer for every one, and an AI interviewer that questions your structure, challenges your assumptions and scores you on six criteria.</p>
+        <div class="cta">
+          <a class="btn lg" href="#ai">Start a mock interview</a>
+          <a class="btn ghost lg" href="#bank">Browse 77 questions</a>
+        </div>
+        <div class="hero2-firms">
+          <div class="logos-inline" id="logo-wall"></div>
+          <span>Prep for McKinsey, BCG, Bain and 12 more firms</span>
+        </div>
       </div>
-      <ul class="stats">
-        <li><b>77</b><span>Guesstimates with model interviews</span></li>
-        <li><b>15</b><span>Firm playbooks</span></li>
-        <li><b>6</b><span>Adaptive maths drills</span></li>
-        <li><b>Voice</b><span>AI interviewer that talks back</span></li>
-      </ul>
-    </section>
-
-    <section class="logo-wall" aria-label="Firms covered">
-      <p>Questions and playbooks for interviews at</p>
-      <div class="logos" id="logo-wall"></div>
+      <div class="hero2-demo" aria-hidden="true">
+        <div class="demo-window">
+          <div class="demo-bar"><span class="dots"><i></i><i></i><i></i></span><b>Mock interview &middot; Swiggy orders in Delhi</b><span class="demo-timer">08:42</span></div>
+          <div class="demo-body">
+            <div class="demo-msg i"><span>Interviewer</span>How many orders does Swiggy deliver in Delhi on a typical day?</div>
+            <div class="demo-msg c"><span>You</span>I&rsquo;ll size it from the demand side: online-ordering households, times orders per week, times Swiggy&rsquo;s share. Then I&rsquo;ll sanity-check against restaurant capacity.</div>
+            <div class="demo-msg i"><span>Interviewer</span>What share of Delhi households order online at all? Justify it.</div>
+            <div class="demo-typing"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <div class="demo-score floating">
+          <div class="demo-score-top"><b>8.2</b><span>/ 10</span><em>Strong</em></div>
+          <ul>
+            <li><span>Clarification</span><i class="p4"></i></li>
+            <li><span>Structure</span><i class="p5"></i></li>
+            <li><span>Maths</span><i class="p4"></i></li>
+            <li><span>Sanity check</span><i class="p3"></i></li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <div class="section-head" id="modules">
-      <p class="kicker">Modules</p>
-      <h2>Everything you need, case type by case type</h2>
+      <h2>What&rsquo;s inside</h2>
       <p>Guesstimates, maths drills, firm prep and progress tracking are live today. The other case types are on the way.</p>
     </div>
 
@@ -183,8 +277,8 @@
     </ol>
 
     <div class="section-head">
-      <p class="kicker">Why Breaking Point</p>
-      <h2>Built to beat the usual way of preparing</h2>
+      <h2>How it compares</h2>
+      <p>What preparing usually looks like, and what changes here.</p>
     </div>
     <div class="compare-table box">
       <table>
@@ -200,31 +294,6 @@
         </tbody>
       </table>
     </div>
-
-    <div class="section-head">
-      <p class="kicker">How it works</p>
-      <h2>The same three steps in every module</h2>
-    </div>
-    <ol class="features">
-      <li>
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/></svg></span>
-        <p class="step">Step 1</p>
-        <h3>Learn the method</h3>
-        <p>Short guides with frameworks, illustrations and fully worked examples.</p>
-      </li>
-      <li>
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></span>
-        <p class="step">Step 2</p>
-        <h3>Practise real questions</h3>
-        <p>Filter questions asked at top firms and read how a strong candidate solves each one.</p>
-      </li>
-      <li>
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/><circle cx="12" cy="12" r="3.5"/></svg></span>
-        <p class="step">Step 3</p>
-        <h3>Get interviewed and scored</h3>
-        <p>Type or speak with an AI interviewer that pushes back, then get a scorecard across six criteria.</p>
-      </li>
-    </ol>
 
     <section class="cta-band">
       <div>
@@ -467,6 +536,7 @@
 <article id="view-drill" class="view" hidden><div id="drill-root"></div></article>
 <article id="view-firms" class="view" hidden><div id="firms-root"></div></article>
 <article id="view-progress" class="view" hidden><div id="progress-root"></div></article>
+<article id="view-admin" class="view" hidden><div id="admin-root"></div></article>
 
 </main>
 
@@ -484,18 +554,21 @@
   </div>
 </footer>
 
-<script src="data/questions.js?v=15"></script>
-<script src="data/transcripts-1.js?v=15"></script>
-<script src="data/transcripts-2.js?v=15"></script>
-<script src="data/transcripts-3.js?v=15"></script>
-<script src="data/transcripts-4.js?v=15"></script>
-<script src="data/firms.js?v=15"></script>
-<script src="js/app.js?v=15"></script>
-<script src="js/bank.js?v=15"></script>
-<script src="js/ai.js?v=15"></script>
-<script src="js/drill.js?v=15"></script>
-<script src="js/firms.js?v=15"></script>
-<script src="js/progress.js?v=15"></script>
-<script src="js/home.js?v=15"></script>
+<script src="data/questions.js?v=16"></script>
+<script src="data/transcripts-1.js?v=16"></script>
+<script src="data/transcripts-2.js?v=16"></script>
+<script src="data/transcripts-3.js?v=16"></script>
+<script src="data/transcripts-4.js?v=16"></script>
+<script src="data/firms.js?v=16"></script>
+<script src="js/app.js?v=16"></script>
+<script src="js/bank.js?v=16"></script>
+<script src="js/ai.js?v=16"></script>
+<script src="js/drill.js?v=16"></script>
+<script src="js/firms.js?v=16"></script>
+<script src="js/progress.js?v=16"></script>
+<script src="js/home.js?v=16"></script>
+<script src="js/vendor/supabase.js?v=16"></script>
+<script src="js/auth.js?v=16"></script>
+<script src="js/admin.js?v=16"></script>
 </body>
 </html>

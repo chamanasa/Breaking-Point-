@@ -4,7 +4,7 @@
  * reloads the page under a new URL so the browser fetches it fresh.
  * Bump BUILD here and the number in version.txt together on every release. */
 (function () {
-  var BUILD = "15";
+  var BUILD = "16";
   var script = document.currentScript;
   var base = script ? script.src.replace(/js\/update\.js.*$/, "") : "";
   try {
@@ -13,6 +13,7 @@
       .then(function (v) {
         v = (v || "").trim();
         if (!v || v === BUILD) return;
+        if (/[?&](code|error)=/.test(location.search)) return; // mid sign-in: don't drop the OAuth code
         var flag = "bp.updated." + v;
         if (sessionStorage.getItem(flag)) return; // avoid reload loops
         sessionStorage.setItem(flag, "1");
