@@ -66,7 +66,7 @@
         "</div>" +
         '<div class="qmeta">' +
           '<span class="diff ' + esc(diff) + '">' + esc(q.difficulty) + "</span>" +
-          (q.firm ? '<span class="firm">Asked at ' + esc(q.firm) + "</span>" : "") +
+          (q.firm ? '<span class="firm">' + q.firm.split(" / ").map(function (f) { return App.firmLogo(f, "xs"); }).join("") + "Asked at " + esc(q.firm) + "</span>" : "") +
           "<span>" + esc(q.industry) + "</span>" +
           "<span>" + esc(q.type) + "</span>" +
           "<span>" + esc(q.approach) + "</span>" +
@@ -160,6 +160,8 @@
     rd.practise.href = "#ai/" + encodeURIComponent(id);
     rd.root.hidden = false;
     document.body.classList.add("reader-open");
+    const last = App.activity().slice(-1)[0];
+    if (!last || last.kind !== "read" || last.id !== id) App.log("read", { id: id });
     rd.body.scrollTop = 0;
     rd.body.focus({ preventScroll: true });
     document.getElementById("reader-skip").addEventListener("click", function (e) {

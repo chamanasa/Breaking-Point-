@@ -6,9 +6,12 @@
  *   #bank             Question bank
  *   #ai               AI mode
  *   #ai/<questionId>  AI mode with that question preselected
+ *   #drill            Mental maths driller (#drill/<category> preselects one)
+ *   #firms            Firm-specific prep (#firms/<firmId> opens a profile)
+ *   #progress         Progress dashboard
  */
 (function () {
-  const TABS = ["learn", "bank", "ai"];
+  const TABS = ["learn", "bank", "ai", "drill", "firms", "progress"];
   const listeners = [];
   let lastTab = null;
 
@@ -95,13 +98,58 @@
       document.getElementById("view-" + t).hidden = t !== route.tab;
     });
     document.querySelectorAll(".tabs a").forEach(function (a) {
-      if (a.dataset.tab === route.tab) a.setAttribute("aria-current", "page");
-      else a.removeAttribute("aria-current");
+      if (a.dataset.tab === route.tab) {
+        a.setAttribute("aria-current", "page");
+        // On phones the tab row scrolls sideways: keep the current tab visible.
+        const bar = a.parentNode;
+        if (bar.scrollWidth > bar.clientWidth) bar.scrollLeft = a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2;
+      } else a.removeAttribute("aria-current");
     });
 
     listeners.forEach(function (fn) { fn(route); });
     if (route.tab !== lastTab) window.scrollTo(0, 0);
     lastTab = route.tab;
+  }
+
+  /* ---------- Activity log (feeds the Progress dashboard) ----------
+   * Everything stays in this browser's localStorage under bp.activity:
+   * { kind: "interview" | "drill" | "read", at: <ms>, ...details } */
+  const ACTIVITY_KEY = "bp.activity";
+  function activity() {
+    try {
+      const list = JSON.parse(storageGet(ACTIVITY_KEY) || "[]");
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+  function log(kind, data) {
+    const list = activity();
+    list.push(Object.assign({ kind: kind, at: Date.now() }, data));
+    storageSet(ACTIVITY_KEY, JSON.stringify(list.slice(-2000)));
+  }
+
+  /* ---------- Firm logos ----------
+   * A brand-coloured tile per firm (data/firms.js). A firm with `logo` set uses
+   * that image file instead; one with `icon` draws that SVG path. */
+  const FIRMS = Array.isArray(window.FIRMS) ? window.FIRMS : [];
+  function findFirm(key) {
+    if (!key) return null;
+    const k = String(key).toLowerCase();
+    return FIRMS.find(function (f) {
+      return f.id === k || f.short.toLowerCase() === k || (f.bank && f.bank.toLowerCase() === k) || f.name.toLowerCase() === k;
+    }) || null;
+  }
+  function firmLogo(key, size) {
+    const f = findFirm(key);
+    const cls = "flogo" + (size ? " flogo-" + size : "");
+    if (!f) {
+      const initials = String(key || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 3).toUpperCase();
+      return '<span class="' + cls + '" aria-hidden="true">' + escapeHtml(initials) + "</span>";
+    }
+    const style = ' style="--fc:' + f.color + (f.ink ? ";--fi:" + f.ink : "") + '"';
+    let inner = escapeHtml(f.mark);
+    if (f.logo) inner = '<img src="' + escapeHtml(f.logo) + '" alt="">';
+    else if (f.icon) inner = '<svg viewBox="0 0 24 24"><path d="' + f.icon + '"/></svg>';
+    return '<span class="' + cls + (f.mark.length > 2 ? " is-long" : "") + '"' + style + ' title="' + escapeHtml(f.name) + '" aria-hidden="true">' + inner + "</span>";
   }
 
   window.App = {
@@ -111,6 +159,11 @@
     storageGet: storageGet,
     storageSet: storageSet,
     onRoute: function (fn) { listeners.push(fn); },
+    log: log,
+    activity: activity,
+    firms: FIRMS,
+    findFirm: findFirm,
+    firmLogo: firmLogo,
     findQuestion: function (id) {
       return this.questions.find(function (q) { return q.id === id; }) || null;
     }

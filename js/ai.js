@@ -36,6 +36,7 @@
     messages: $("messages"), chat: $("chat"), empty: $("empty-chat"), composer: $("composer"), input: $("ai-input"),
     send: $("ai-send"), hint: $("ai-hint"), feedback: $("ai-feedback"),
     voiceBtn: $("ai-voice"), voiceBar: $("voice-bar"), orb: $("voice-orb"), vState: $("voice-state"), vLive: $("voice-live"),
+    firmStyle: $("firm-style"),
     vHint: $("voice-hint"), vFinish: $("voice-finish"), vEnd: $("voice-end"), hintLine: $("hint-line"), voiceHintText: $("voice-hint-text")
   };
 
@@ -127,6 +128,24 @@
     App.storageSet(MODEL_STORE, el.model.value.trim() || null);
   });
 
+  /* ---------- Interviewer style (standard or a specific firm's format) ---------- */
+
+  const STYLE_STORE = "bp.firmStyle";
+  el.firmStyle.innerHTML = '<option value="">Standard</option>' + App.firms.map(function (f) {
+    return '<option value="' + esc(f.id) + '">' + esc(f.short) + " style</option>";
+  }).join("");
+  function currentStyle() { return App.findFirm(App.storageGet(STYLE_STORE)); }
+  function syncStyle() {
+    const f = currentStyle();
+    el.firmStyle.value = f ? f.id : "";
+    const q = App.findQuestion(selectedId);
+    if (q && (!session || session.question.id === q.id)) el.qMeta.textContent = metaLine(q);
+  }
+  el.firmStyle.addEventListener("change", function () {
+    App.storageSet(STYLE_STORE, el.firmStyle.value || null);
+    syncStyle();
+  });
+
   /* ---------- Question picker (sidebar; a drawer on phones) ---------- */
 
   const pick = { search: "", diff: new Set() };
@@ -158,7 +177,8 @@
   }
 
   function metaLine(q) {
-    return [q.difficulty, q.firm ? "Asked at " + q.firm : "", q.industry, q.approach].filter(Boolean).join(" · ");
+    const f = currentStyle();
+    return [q.difficulty, q.firm ? "Asked at " + q.firm : "", q.industry, f ? f.short + "-style interviewer" : q.approach].filter(Boolean).join(" · ");
   }
 
   function setDrawer(open) {
@@ -220,6 +240,7 @@
     onAiTab = route.tab === "ai";
     if (!onAiTab) exitVoice();
     paintMode();
+    if (onAiTab) syncStyle();
     if (onAiTab && route.arg && App.findQuestion(route.arg)) select(route.arg, { scroll: true });
   });
 
@@ -232,6 +253,7 @@
       "THE QUESTION: " + q.title,
       "Difficulty: " + q.difficulty + ". Industry: " + q.industry + ". Suggested approach: " + q.approach + (q.geography ? ". Geography: " + q.geography : "") + ".",
       q.firm ? "This question has been asked in interviews at " + q.firm + "." : "",
+      session && session.style ? "\nFIRM STYLE (" + session.style.name + "): " + session.style.style : "",
       q.hint ? "A good structure (private; use it to judge and to give hints, never reveal it wholesale): " + q.hint : "",
       "",
       "HOW TO RUN THE INTERVIEW:",
@@ -452,6 +474,13 @@
       const card = addMessage("model", scorecardHtml(fb, session.question));
       card.classList.add("feedback");
       const avg = (fb.scores || []).reduce(function (a, x) { return a + (x.score || 0); }, 0) / Math.max(1, (fb.scores || []).length);
+      const byCrit = {};
+      (fb.scores || []).forEach(function (x) { byCrit[x.criterion] = Math.max(1, Math.min(5, Math.round(x.score))); });
+      App.log("interview", {
+        id: session.question.id, title: session.question.title, scores: byCrit,
+        overall: Math.round(RUBRIC.reduce(function (t, r) { return t + (byCrit[r[0]] || 1); }, 0) / RUBRIC.length * 20) / 10,
+        secs: Math.round((session.endedAt - session.startedAt) / 1000), hints: session.hints, style: session.style ? session.style.id : null
+      });
       if (voice.active) {
         setVoiceState("speaking", "Reading your score…");
         speak("Your overall score is " + (avg * 2).toFixed(1) + " out of 10. " + (fb.verdict || "") + " The full scorecard is on screen.", exitVoice);
@@ -504,7 +533,7 @@
         !window.confirm("Start a new interview? The current conversation will be cleared.")) return;
     stopSpeaking();
     stopListening();
-    session = { question: q, contents: [], busy: false, startedAt: Date.now(), endedAt: null, hints: 0, feedback: null };
+    session = { question: q, contents: [], busy: false, startedAt: Date.now(), endedAt: null, hints: 0, feedback: null, style: currentStyle() };
     el.qTitle.textContent = q.title;
     el.qMeta.textContent = metaLine(q);
     el.chat.querySelectorAll(".msg").forEach(function (m) { m.remove(); });

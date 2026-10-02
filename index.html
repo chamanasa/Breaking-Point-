@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Breaking Point · Consulting Case Prep</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/update.js?v=14"></script>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=15">
+  <script src="js/update.js?v=15"></script>
 </head>
 <body>
 
@@ -15,8 +16,11 @@
     <a class="brand" href="#learn" aria-label="Breaking Point home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg><span class="brand-name">Breaking Point</span></a>
     <nav class="tabs" aria-label="Sections">
       <a href="#learn" data-tab="learn">Home</a>
-      <a href="#bank" data-tab="bank">Question Bank</a>
-      <a href="#ai" data-tab="ai">AI Mode</a>
+      <a href="#bank" data-tab="bank">Questions</a>
+      <a href="#ai" data-tab="ai">AI Interview</a>
+      <a href="#drill" data-tab="drill">Maths</a>
+      <a href="#firms" data-tab="firms">Firms</a>
+      <a href="#progress" data-tab="progress">Progress</a>
     </nav>
     <a class="btn header-cta" href="#ai">Start practising</a>
   </div>
@@ -31,7 +35,7 @@
   <!-- Landing: heading + one card per topic; each topic is its own page in learn/ -->
   <div id="learn-home">
     <section class="hero">
-      <span class="pill"><span class="dot"></span>Guesstimates are live &middot; more modules on the way</span>
+      <span class="pill"><span class="dot"></span>New &middot; Firm-style AI mocks, maths drills and progress tracking</span>
       <h1>Crack your <span class="accent">consulting case interviews.</span></h1>
       <p class="lead">One place for every part of case prep: learn each case type, practise on real interview questions, drill your mental maths, and rehearse out loud with an AI interviewer that scores you.</p>
       <div class="cta">
@@ -39,17 +43,22 @@
         <a class="btn ghost lg" href="#learn" data-scroll-to="modules">Explore modules</a>
       </div>
       <ul class="stats">
-        <li><b>10</b><span>Prep modules</span></li>
-        <li><b>77</b><span>Guesstimates</span></li>
-        <li><b>77</b><span>Model interviews</span></li>
-        <li><b>Voice</b><span>Spoken mock interviews</span></li>
+        <li><b>77</b><span>Guesstimates with model interviews</span></li>
+        <li><b>15</b><span>Firm playbooks</span></li>
+        <li><b>6</b><span>Adaptive maths drills</span></li>
+        <li><b>Voice</b><span>AI interviewer that talks back</span></li>
       </ul>
+    </section>
+
+    <section class="logo-wall" aria-label="Firms covered">
+      <p>Questions and playbooks for interviews at</p>
+      <div class="logos" id="logo-wall"></div>
     </section>
 
     <div class="section-head" id="modules">
       <p class="kicker">Modules</p>
       <h2>Everything you need, case type by case type</h2>
-      <p>Start with guesstimates today. The other modules open as they&rsquo;re ready.</p>
+      <p>Guesstimates, maths drills, firm prep and progress tracking are live today. The other case types are on the way.</p>
     </div>
 
     <h3 class="mod-group">Case types</h3>
@@ -133,41 +142,64 @@
 
     <h3 class="mod-group">Skill builders</h3>
     <ol class="mods">
-      <li class="mod is-soon">
+      <li class="mod is-live">
         <div class="mod-row">
           <span class="mod-n">08</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v6M4 7h6M14 7h6M5 15l4 4M9 15l-4 4M14 16h6M14 19h6"/></svg></span>
           <div class="mod-text">
-            <h3>Mental Maths Driller <span class="badge soon">Coming soon</span></h3>
-            <p>Timed drills for the arithmetic interviews actually test: percentages, large-number multiplication, division and growth rates.</p>
-            <ul class="mod-tags"><li>Timed rounds</li><li>Percentages &amp; ratios</li><li>Big-number maths</li><li>Accuracy tracking</li></ul>
+            <h3>Mental Maths Driller <span class="badge live">Live</span></h3>
+            <p>Timed, adaptive drills for the arithmetic interviews actually test, in lakh and crore as well as millions. Difficulty rises as you get faster.</p>
+            <ul class="mod-tags"><li>6 skills</li><li>Adaptive levels</li><li>Sprint &amp; sets</li><li>Lakh / crore units</li><li>Method tips</li></ul>
           </div>
+          <div class="mod-cta"><a class="btn" href="#drill">Start a drill</a></div>
         </div>
       </li>
     </ol>
 
     <h3 class="mod-group">Your prep</h3>
     <ol class="mods">
-      <li class="mod is-soon">
+      <li class="mod is-live">
         <div class="mod-row">
           <span class="mod-n">09</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M2 21h20M8 8h3M8 12h3M8 16h3"/></svg></span>
           <div class="mod-text">
-            <h3>Firm-Specific Prep <span class="badge soon">Coming soon</span></h3>
-            <p>Pick your target firm and get a complete prep strategy: its interview format, case style, what it screens for and a week-by-week plan.</p>
-            <ul class="mod-tags firms"><li>McKinsey</li><li>BCG</li><li>Bain</li><li>Kearney</li><li>Oliver Wyman</li><li>Accenture Strategy</li><li>+ more</li></ul>
+            <h3>Firm-Specific Prep <span class="badge live">Live</span></h3>
+            <p>Pick your target firm: its interview format, what it screens for, a week-by-week plan built around your interview date, and AI mocks run in that firm&rsquo;s style.</p>
+            <ul class="mod-tags"><li>15 firms</li><li>Personal prep plan</li><li>Firm-style AI mocks</li></ul>
+            <div class="mod-logos" id="mod-logos"></div>
           </div>
+          <div class="mod-cta"><a class="btn" href="#firms">Choose your firm</a></div>
         </div>
       </li>
-      <li class="mod is-soon">
+      <li class="mod is-live">
         <div class="mod-row">
           <span class="mod-n">10</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9h-9z"/></svg></span>
           <div class="mod-text">
-            <h3>Track Your Progress <span class="badge soon">Coming soon</span></h3>
-            <p>See every case you&rsquo;ve practised, your scores over time and the criteria you need to work on next.</p>
-            <ul class="mod-tags"><li>Score history</li><li>Strengths &amp; gaps</li><li>Streaks</li><li>Readiness check</li></ul>
+            <h3>Track Your Progress <span class="badge live">Live</span></h3>
+            <p>Every mock, drill and model interview in one dashboard: a readiness score, score trends by criterion, an activity streak and what to work on next.</p>
+            <ul class="mod-tags"><li>Readiness score</li><li>Score trends</li><li>Weakest-area coaching</li><li>Private to your browser</li></ul>
           </div>
+          <div class="mod-cta"><a class="btn" href="#progress">Open dashboard</a></div>
         </div>
       </li>
     </ol>
+
+    <div class="section-head">
+      <p class="kicker">Why Breaking Point</p>
+      <h2>Built to beat the usual way of preparing</h2>
+    </div>
+    <div class="compare-table box">
+      <table>
+        <thead><tr><th></th><th>Typical case prep</th><th class="us">Breaking Point</th></tr></thead>
+        <tbody>
+          <tr><th>Mock interviews</th><td>Book a peer or pay a coach per session</td><td class="us">An AI interviewer on demand, by text or voice, that pushes back like a real one</td></tr>
+          <tr><th>Feedback</th><td>Depends on who you practise with</td><td class="us">A consistent scorecard on six criteria, with a model solution path</td></tr>
+          <tr><th>Firm prep</th><td>Generic articles</td><td class="us">Mocks in the firm&rsquo;s own style and a plan built around your interview date</td></tr>
+          <tr><th>Maths practice</th><td>Fixed worksheets</td><td class="us">Adaptive drills in lakh, crore and millions that get harder as you improve</td></tr>
+          <tr><th>India context</th><td>Mostly US and European examples</td><td class="us">Indian questions, firms and a sourced India Numbers Bible</td></tr>
+          <tr><th>Progress</th><td>Hard to tell if you&rsquo;re ready</td><td class="us">A readiness score and a clear next step after every session</td></tr>
+          <tr><th>Cost and privacy</th><td>Subscriptions; your data on their servers</td><td class="us">Free with your own Gemini key; your data stays in your browser</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="section-head">
       <p class="kicker">How it works</p>
@@ -332,8 +364,8 @@
         <a class="side-brand" href="#learn"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg>Breaking Point</a>
         <nav class="side-nav" aria-label="Sections">
           <a href="#learn">Home</a>
-          <a href="#bank">Question Bank</a>
-          <a href="#ai" aria-current="page">AI Mode</a>
+          <a href="#bank">Questions</a>
+          <a href="#ai" aria-current="page">AI Interview</a>
         </nav>
       </div>
       <div class="picker-head">
@@ -346,6 +378,9 @@
       <div class="side-foot">
         <div class="row"><button class="btn ghost" id="pick-random" type="button">Surprise me</button></div>
         <div class="row"><span class="ok-dot" aria-hidden="true"></span> Gemini connected</div>
+        <label class="model-pick">Interviewer
+          <select id="firm-style"></select>
+        </label>
         <label class="model-pick">Model
           <input id="model" type="text" list="model-options" spellcheck="false">
           <datalist id="model-options">
@@ -426,6 +461,13 @@
   </section>
 </article>
 
+<!-- ============================================================
+     MATHS DRILLER · FIRM PREP · PROGRESS (rendered by their scripts)
+     ============================================================ -->
+<article id="view-drill" class="view" hidden><div id="drill-root"></div></article>
+<article id="view-firms" class="view" hidden><div id="firms-root"></div></article>
+<article id="view-progress" class="view" hidden><div id="progress-root"></div></article>
+
 </main>
 
 <footer>
@@ -433,19 +475,27 @@
     <span class="foot-brand"><svg class="brand-mark" width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg>Breaking Point <span class="muted" style="font-weight:400">&middot; Consulting Case Prep</span></span>
     <nav class="foot-links" aria-label="Footer">
       <a href="learn/introduction.html">Guesstimates</a>
-      <a href="#bank">Question Bank</a>
-      <a href="#ai">AI Mode</a>
+      <a href="#bank">Questions</a>
+      <a href="#ai">AI Interview</a>
+      <a href="#drill">Maths</a>
+      <a href="#firms">Firms</a>
+      <a href="#progress">Progress</a>
     </nav>
   </div>
 </footer>
 
-<script src="data/questions.js?v=14"></script>
-<script src="data/transcripts-1.js?v=14"></script>
-<script src="data/transcripts-2.js?v=14"></script>
-<script src="data/transcripts-3.js?v=14"></script>
-<script src="data/transcripts-4.js?v=14"></script>
-<script src="js/app.js?v=14"></script>
-<script src="js/bank.js?v=14"></script>
-<script src="js/ai.js?v=14"></script>
+<script src="data/questions.js?v=15"></script>
+<script src="data/transcripts-1.js?v=15"></script>
+<script src="data/transcripts-2.js?v=15"></script>
+<script src="data/transcripts-3.js?v=15"></script>
+<script src="data/transcripts-4.js?v=15"></script>
+<script src="data/firms.js?v=15"></script>
+<script src="js/app.js?v=15"></script>
+<script src="js/bank.js?v=15"></script>
+<script src="js/ai.js?v=15"></script>
+<script src="js/drill.js?v=15"></script>
+<script src="js/firms.js?v=15"></script>
+<script src="js/progress.js?v=15"></script>
+<script src="js/home.js?v=15"></script>
 </body>
 </html>
