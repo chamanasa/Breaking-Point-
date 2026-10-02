@@ -6,7 +6,7 @@ An AI-powered consulting case-prep website, starting with guesstimates.
 - **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm. Each has a one-line hint and a full model interview transcript (clarifying questions, structure, push-back, calculation, sanity check, final answer).
 - **AI Mode**: step-by-step setup for a free Gemini API key, then a full-page chat to practise any question with an AI interviewer, by typing or as a spoken voice interview (the interviewer speaks, listens, and replies by voice; uses the browser's built-in speech features in Chrome, Edge and Safari), ending with a scorecard.
 
-The design follows [EconGraphs](https://www.econgraphs.org), which is built on Tufte CSS: the ET Book serif font, off-white paper (`#fffff8`) and near-black ink (`#111`).
+The design is a clean product style: a white canvas, the Inter typeface, one blue accent (`#2457f5`), soft borders and shadows, and generous spacing. All colours live as tokens at the top of `css/style.css`.
 
 ## Run locally
 
@@ -24,7 +24,7 @@ To deploy with GitHub Pages, go to **Settings → Pages → Deploy from branch**
 index.html          the three tabs; Learn is a landing page linking to learn/
 learn/              one page per Learn topic: introduction, frameworks, pro-tips,
                     worked-example, numbers (each with its own illustrations)
-css/style.css       EconGraphs / Tufte-style theme
+css/style.css       Design system: tokens, components, responsive rules
 data/questions.js   the question bank (edit this to add questions)
 data/transcripts-*.js  model interview for each question, keyed by id
 data/numbers.js     India Numbers Bible tables (value, source, year) and chart data
@@ -32,7 +32,7 @@ js/app.js           tab routing and shared helpers
 js/learn.js         Learn pages: Numbers charts and tabs, step-by-step example
 js/bank.js          filters and question list
 js/ai.js            Gemini interviewer
-fonts/              ET Book (MIT, from tufte-css) and Source Sans 3 (SIL OFL)
+fonts/              Inter variable font (SIL OFL)
 ```
 
 ## Adding questions
@@ -61,4 +61,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=12`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=13`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.

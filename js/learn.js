@@ -13,7 +13,7 @@
   /* ---------- Charts (monochrome SVG, direct labels, hover titles) ---------- */
 
   // Sequential ink tints, dark → light. Text on the first two uses paper colour.
-  const TINTS = ["#111111", "#4a4a45", "#7c7b72", "#a9a89b", "#cfcdbd", "#e6e4d4", "#efeee0", "#f5f4e8"];
+  const TINTS = ["#14286b", "#2457f5", "#4a6cf0", "#b8c8ff", "#d9e3ff", "#edf2ff", "#f3f6ff", "#f7f9ff"];
   const fmt = function (v) { return (Math.round(v * 10) / 10).toLocaleString("en-IN"); };
 
   function hbar(c) {
@@ -26,7 +26,7 @@
       const y = top + i * rowH;
       const w = Math.max(2, (r[1] / max) * plotW);
       svg += '<text x="' + (labelW - 10) + '" y="' + (y + barH - 3) + '" class="end">' + esc(r[0]) + "</text>" +
-        '<rect class="hit" x="' + labelW + '" y="' + y + '" width="' + w.toFixed(1) + '" height="' + barH + '" rx="2" fill="#111"><title>' +
+        '<rect class="hit" x="' + labelW + '" y="' + y + '" width="' + w.toFixed(1) + '" height="' + barH + '" rx="2" fill="#14286b"><title>' +
         esc(r[0] + ": " + fmt(r[1]) + (c.unit || "")) + "</title></rect>" +
         '<text x="' + (labelW + w + 8).toFixed(1) + '" y="' + (y + barH - 3) + '" class="sm">' + fmt(r[1]) + esc(c.unit || "") + "</text>";
     });
@@ -50,14 +50,14 @@
     });
     svg += "</svg>";
     const legend = '<ul class="legend">' + c.rows.map(function (r, i) {
-      return '<li><i style="background:' + TINTS[Math.min(i, TINTS.length - 1)] + ';outline:1px solid #cfcdbd"></i>' + esc(r[0]) + " <b>" + fmt(r[1]) + "%</b></li>";
+      return '<li><i style="background:' + TINTS[Math.min(i, TINTS.length - 1)] + ';outline:1px solid #d9e3ff"></i>' + esc(r[0]) + " <b>" + fmt(r[1]) + "%</b></li>";
     }).join("") + "</ul>";
     return svg + legend;
   }
 
   function pair(c) {
     const W = 640, labelW = 120, groupH = 58, barH = 16, top = 4, plotW = W - labelW - 110;
-    const fills = ["#111111", "#a9a89b"];
+    const fills = ["#14286b", "#b8c8ff"];
     const H = top + c.rows.length * groupH;
     let svg = '<svg class="ill" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(c.title) + '">';
     c.rows.forEach(function (r, i) {

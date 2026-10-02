@@ -4,7 +4,7 @@
  * reloads the page under a new URL so the browser fetches it fresh.
  * Bump BUILD here and the number in version.txt together on every release. */
 (function () {
-  var BUILD = "12";
+  var BUILD = "13";
   var script = document.currentScript;
   var base = script ? script.src.replace(/js\/update\.js.*$/, "") : "";
   try {
