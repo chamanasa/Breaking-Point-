@@ -2,7 +2,8 @@
 
 An AI-powered consulting case-prep website, starting with guesstimates.
 
-- **Learn**: an introduction and the five-step method, framework cards (what it is, when to use it, a worked example), pro tips, an interactive worked example you reveal step by step, and the India Numbers Bible (demographic, economic and miscellaneous figures, each with source and year).
+- **Home**: a hub listing every prep module as a full-width row: Guesstimates (live), Market Entry, Profitability, Pricing, Growth, M&A and Due Diligence, Unconventional Cases, Mental Maths Driller, Firm-Specific Prep and Track Your Progress. Modules that aren't built yet show a "Coming soon" badge; to launch one, swap its `mod is-soon` row in `index.html` for an `is-live` row with links.
+- **Guesstimate guides**: an introduction and the five-step method, framework cards (what it is, when to use it, a worked example), pro tips, an interactive worked example you reveal step by step, and the India Numbers Bible (demographic, economic and miscellaneous figures, each with source and year).
 - **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm. Each has a one-line hint and a full model interview transcript (clarifying questions, structure, push-back, calculation, sanity check, final answer).
 - **AI Mode**: step-by-step setup for a free Gemini API key, then a full-page chat to practise any question with an AI interviewer, by typing or as a spoken voice interview (the interviewer speaks, listens, and replies by voice; uses the browser's built-in speech features in Chrome, Edge and Safari), ending with a scorecard.
 
@@ -21,7 +22,7 @@ To deploy with GitHub Pages, go to **Settings → Pages → Deploy from branch**
 ## Project layout
 
 ```
-index.html          the three tabs; Learn is a landing page linking to learn/
+index.html          the three tabs; Home is the module hub, linking to learn/
 learn/              one page per Learn topic: introduction, frameworks, pro-tips,
                     worked-example, numbers (each with its own illustrations)
 css/style.css       Design system: tokens, components, responsive rules
@@ -61,4 +62,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=13`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=14`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.

@@ -125,6 +125,15 @@
   window.addEventListener("resize", syncHeader);
   document.addEventListener("DOMContentLoaded", syncHeader);
 
+  // In-page jumps (e.g. "Explore modules") scroll without touching the hash router.
+  document.addEventListener("click", function (e) {
+    const a = e.target.closest("[data-scroll-to]");
+    const target = a && document.getElementById(a.dataset.scrollTo);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
   window.addEventListener("hashchange", render);
   document.addEventListener("DOMContentLoaded", render);
 })();
