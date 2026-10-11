@@ -14,6 +14,7 @@
   const GUEST_KEY = "bp.guest";
   const RETURN_KEY = "bp.returnTo";
   const RESEND_SECS = 60;
+  const GOOGLE_G = App.GOOGLE_G;
 
   const client = configured
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
@@ -233,21 +234,39 @@
       .catch(function () { return true; });   // can't tell: try anyway
   }
 
-  el.social.addEventListener("click", function (e) {
-    const b = e.target.closest("[data-provider]");
-    if (!b) return;
-    if (!client) return notConnected(el.msg);
+  // Extra parameters per provider. Google: always show the account chooser, so
+  // after signing out people can pick any account instead of being signed
+  // straight back into the last one.
+  const PROVIDER_PARAMS = { google: { prompt: "select_account" } };
+
+  // Send the visitor to the provider's sign-in page. `btn` shows the spinner and
+  // `msgNode` shows any problem; both can be anywhere on the page.
+  function startOAuth(provider, btn, msgNode) {
+    if (!client) { if (msgNode) notConnected(msgNode); return; }
     sessionStorageSet(RETURN_KEY, location.hash || "");
-    busy(b, true, "Redirecting…");
-    providerEnabled(b.dataset.provider).then(function (on) {
-      if (!on) { busy(b, false); say(el.msg, friendly({ message: "provider is not enabled" }), "warn"); return; }
+    if (btn) busy(btn, true, "Redirecting…");
+    providerEnabled(provider).then(function (on) {
+      if (!on) { if (btn) busy(btn, false); if (msgNode) say(msgNode, friendly({ message: "provider is not enabled" }), "warn"); return; }
       return client.auth.signInWithOAuth({
-        provider: b.dataset.provider,
-        options: { redirectTo: location.origin + location.pathname }
+        provider: provider,
+        options: { redirectTo: location.origin + location.pathname, queryParams: PROVIDER_PARAMS[provider] }
       }).then(function (res) {
-        if (res.error) { busy(b, false); say(el.msg, friendly(res.error), "err"); }
+        if (res.error) { if (btn) busy(btn, false); if (msgNode) say(msgNode, friendly(res.error), "err"); }
       });
     });
+  }
+  App.signInWith = startOAuth;
+
+  el.social.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-provider]");
+    if (b) startOAuth(b.dataset.provider, b, el.msg);
+  });
+
+  // Coming back with the browser's Back button from the provider's page restores this
+  // page as it was, spinner and all: put every button back to normal.
+  window.addEventListener("pageshow", function (e) {
+    if (!e.persisted) return;
+    document.querySelectorAll("button").forEach(function (b) { if (b._html != null) busy(b, false); });
   });
 
   /* ---------- Email + one-time code ---------- */
@@ -381,6 +400,11 @@
     const face = user.avatar
       ? '<img src="' + esc(user.avatar) + '" alt="" referrerpolicy="no-referrer">'
       : "<span>" + esc(initials(user.name)) + "</span>";
+    if (user.guest) {
+      // Guests get a plain "Sign in" button that goes straight to Google's account chooser.
+      el.userSlot.innerHTML = '<button class="btn ghost header-signin" type="button" id="acct-signin">' + GOOGLE_G + "Sign in</button>";
+      return;
+    }
     el.userSlot.innerHTML =
       '<div class="acct"><button class="acct-btn" type="button" id="acct-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Account">' + face + "</button>" +
       '<div class="acct-menu" id="acct-menu" role="menu" hidden>' +
@@ -388,7 +412,7 @@
         '<a role="menuitem" href="#progress">Your progress</a>' +
         '<a role="menuitem" href="#firms">Firm prep plans</a>' +
         '<a role="menuitem" href="#admin" id="acct-admin" hidden>Admin: users &amp; visitors</a>' +
-        '<button role="menuitem" type="button" id="acct-out">' + (user.guest ? "Sign in or create account" : "Sign out") + "</button>" +
+        '<button role="menuitem" type="button" id="acct-out">Sign out</button>' +
       "</div></div>";
     if (client && !user.guest) {
       client.rpc("is_admin").then(function (res) {
@@ -400,6 +424,13 @@
   }
 
   document.addEventListener("click", function (e) {
+    // Any "Continue with Google" / "Sign in" button outside the sign-in screen.
+    const g = e.target.closest("#acct-signin, [data-google-signin]");
+    if (g) {
+      const msg = g.closest("[data-signin-card]") && g.closest("[data-signin-card]").querySelector(".auth-msg");
+      startOAuth("google", g, msg || null);
+      return;
+    }
     const btn = document.getElementById("acct-btn");
     const menu = document.getElementById("acct-menu");
     if (!btn || !menu) return;

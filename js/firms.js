@@ -106,8 +106,11 @@
 
   function planHtml(f) {
     if (!App.signedIn()) {
-      return '<section class="box plan" id="plan"><div class="plan-locked"><h2>Your ' + esc(f.short) + ' prep plan</h2>' +
-        '<button class="btn" type="button" id="plan-signin">Sign in to build your prep plan</button></div></section>';
+      return '<section class="plan" id="plan">' + App.signInCard({
+        compact: true,
+        title: "Sign in to build your " + f.short + " prep plan",
+        text: "Get a week-by-week plan for your interview date and tick tasks off as you go. It is saved to your account."
+      }) + "</section>";
     }
     const saved = loadPlan(f.id);
     const today = new Date().toISOString().slice(0, 10);
@@ -184,7 +187,6 @@
   root.addEventListener("click", function (e) {
     const m = e.target.closest("[data-mock]");
     if (m) { startMock(m.dataset.mock, m.dataset.q); return; }
-    if (e.target.closest("#plan-signin")) { if (App.showSignIn) App.showSignIn(); return; }
     if (e.target.id === "plan-reset") {
       const f = current();
       if (f && window.confirm("Reset your " + f.short + " plan and its ticked tasks?")) { savePlan(f.id, null); renderFirm(f); }

@@ -150,10 +150,28 @@
     return recs.slice(0, 3);
   }
 
+  // Signed-out view: the page header, a faded preview of the dashboard, and a sign-in card.
+  function lockedView() {
+    const bars = [62, 48, 74, 55, 81, 67].map(function (h) { return '<i style="height:' + h + '%"></i>'; }).join("");
+    return '<div class="page-head"><p class="kicker">Your prep</p><h1>Track Your Progress</h1>' +
+      '<p class="subtitle">Every mock interview, maths drill and prep plan in one place, with what to work on next.</p></div>' +
+      '<div class="locked-wrap">' +
+        '<div class="locked-preview" aria-hidden="true">' +
+          '<div class="lp-kpis"><span></span><span></span><span></span><span></span></div>' +
+          '<div class="lp-row"><div class="lp-chart">' + bars + '</div><div class="lp-list"><b></b><b></b><b></b><b></b><b></b></div></div>' +
+        "</div>" +
+        '<div class="locked-overlay">' + App.signInCard({
+          title: "Sign in to view your progress",
+          text: "Your progress is saved to your account, so it is there on every device you use.",
+          points: ["Readiness score and interview score trends", "Your weakest areas and what to practise next", "Maths accuracy by skill and your activity streak"]
+        }) + "</div>" +
+      "</div>";
+  }
+
   function render() {
     // Progress is for signed-in users only: guests see just a sign-in button.
     if (!App.signedIn()) {
-      root.innerHTML = '<div class="progress-locked"><button class="btn lg" type="button" id="pg-signin">Sign in to see your progress</button></div>';
+      root.innerHTML = lockedView();
       return;
     }
     if (App.dataError) {
@@ -240,10 +258,6 @@
   root.addEventListener("mouseleave", function () { tip.hidden = true; });
 
   root.addEventListener("click", function (e) {
-    if (e.target.closest("#pg-signin")) {
-      if (App.showSignIn) App.showSignIn();
-      return;
-    }
     if (e.target.id === "pg-export") {
       const d = App.data();
       const data = { exported: new Date().toISOString(), activity: d.activity, drillLevels: d.drillLevels, plans: d.plans };
