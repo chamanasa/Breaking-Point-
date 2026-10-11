@@ -130,10 +130,11 @@
 
   /* ---------- Social sign-in ---------- */
 
-  // Hide any provider switched off in config; drop the "or" divider if none remain.
+  // Once connected, show only providers switched on in config (preview mode shows all);
+  // drop the "or" divider if none remain.
   const providers = cfg.providers || {};
   el.social.querySelectorAll("[data-provider]").forEach(function (b) {
-    if (providers[b.dataset.provider] === false) b.hidden = true;
+    if (configured && providers[b.dataset.provider] !== true) b.hidden = true;
   });
   if (!el.social.querySelector("[data-provider]:not([hidden])")) {
     el.social.hidden = true;
@@ -291,7 +292,7 @@
         '<div class="acct-who"><b>' + esc(user.name) + "</b>" + (user.email ? "<span>" + esc(user.email) + "</span>" : "<span>Not signed in</span>") + "</div>" +
         '<a role="menuitem" href="#progress">Your progress</a>' +
         '<a role="menuitem" href="#firms">Firm prep plans</a>' +
-        '<a role="menuitem" href="#admin" id="acct-admin" hidden>Admin: users</a>' +
+        '<a role="menuitem" href="#admin" id="acct-admin" hidden>Admin: users &amp; visitors</a>' +
         '<button role="menuitem" type="button" id="acct-out">' + (user.guest ? "Sign in or create account" : "Sign out") + "</button>" +
       "</div></div>";
     if (client && !user.guest) {

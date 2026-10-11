@@ -2,7 +2,7 @@
 
 An AI-powered consulting case-prep website, starting with guesstimates.
 
-- **Sign in**: the site opens on a sign-in page offering Google, Facebook, or email with a 6-digit code (Supabase Auth). Admins can see every user at `#admin`. Setup steps are in [AUTH_SETUP.md](AUTH_SETUP.md); until Supabase keys are added to `js/config.js`, the page runs in preview mode with a guest option.
+- **Sign in**: the site opens on a sign-in page offering Google, Facebook, or email with a 6-digit code (Supabase Auth). Admins see every sign-up and visitor at `#admin` (Users and Visitors tabs: daily visitors, page views, top pages, referrers, devices, which visitors signed up, CSV export). Setup steps are in [AUTH_SETUP.md](AUTH_SETUP.md); until Supabase keys are added to `js/config.js`, the page runs in preview mode with a guest option.
 - **Home**: a hub listing every prep module as a full-width row: Guesstimates (live), Market Entry, Profitability, Pricing, Growth, M&A and Due Diligence, Unconventional Cases, Mental Maths Driller, Firm-Specific Prep and Track Your Progress. Modules that aren't built yet show a "Coming soon" badge; to launch one, swap its `mod is-soon` row in `index.html` for an `is-live` row with links.
 - **Mental Maths Driller** (`#drill`): six consulting maths skills (multiplication, division, percentages, growth and CAGR, Indian units, breakeven and margins) in sprint, set-of-10 or untimed mode. Each skill's level (1–3) adapts to your speed and accuracy; answers accept shorthand such as `4.2k`, `3l` or `12cr`.
 - **Firm-Specific Prep** (`#firms`): profiles for 15 firms (interview format, what they assess, how to stand out), a week-by-week prep plan built from your interview date and weekly hours, the firm's questions from the bank, and AI mock interviews run in that firm's style. Firm data lives in `data/firms.js`; logos are brand-colour marks drawn from it, and adding `logo: "img/firms/<file>.svg"` to a firm swaps in an official logo file.
@@ -41,6 +41,7 @@ js/config.js        Supabase keys and sign-in options (see AUTH_SETUP.md)
 js/auth.js          sign-in page, email codes, account menu
 js/admin.js         users list for admins (#admin)
 js/gate.js          sends signed-out visitors from learn/ pages to sign-in
+js/track.js         records page views for the admin Visitors tab (no IPs, honours Do Not Track)
 js/vendor/          Supabase client library (MIT)
 js/drill.js, js/firms.js, js/progress.js, js/home.js   maths, firm prep, progress, home extras
 data/firms.js       firm profiles and logo colours
@@ -74,4 +75,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=16`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=17`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
