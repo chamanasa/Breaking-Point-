@@ -77,16 +77,17 @@ drop policy if exists "Own profile or admin" on public.profiles;
 create policy "Own profile or admin" on public.profiles
   for select using (auth.uid() = id or public.is_admin());
 
+-- Profiles are read-only from the browser (no update policy): only sign-ups and
+-- sign-ins change them, through the trigger above.
 drop policy if exists "Update own name" on public.profiles;
-create policy "Update own name" on public.profiles
-  for update using (auth.uid() = id) with check (auth.uid() = id);
+grant select on public.profiles to authenticated;
 
 -- The admins table is never readable from the browser; is_admin() checks it server-side.
+-- Only signed-in users may call is_admin(); nobody may call sync_profile() directly
+-- (the sign-up trigger still runs it).
+revoke execute on function public.is_admin() from public, anon;
 grant execute on function public.is_admin() to authenticated;
-
--- Users may change only their display name, nothing else on their row.
-revoke update on public.profiles from authenticated, anon;
-grant update (full_name) on public.profiles to authenticated;
+revoke execute on function public.sync_profile() from public, anon, authenticated;
 
 -- 5. Visitors: one row per page view, signed in or not.
 --    The browser keeps a random visitor id (no IP address, no cookies).

@@ -12,10 +12,12 @@
  *   connected, then false.
  */
 window.BP_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://vbeitzvmzjhpwkbrbdtv.supabase.co",
+  supabaseAnonKey: "sb_publishable_WswSPoGP-1u6xUpdH6RHWg_jwpMpbmK",
   providers: { google: false, facebook: false },
   otpLength: 6,
-  allowGuest: null,
+  // Temporarily true while the code email and Google sign-in are being set up;
+  // set to null (sign-in required) once both work.
+  allowGuest: true,
   trackVisits: true
 };
