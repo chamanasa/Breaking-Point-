@@ -151,6 +151,11 @@
   }
 
   function render() {
+    // Progress is for signed-in users only: guests see just a sign-in button.
+    if (!App.user || App.user.guest) {
+      root.innerHTML = '<div class="progress-locked"><button class="btn lg" type="button" id="pg-signin">Sign in to see your progress</button></div>';
+      return;
+    }
     const list = App.activity();
     const m = metrics(list);
     const head = '<div class="page-head"><p class="kicker">Your prep</p><h1>Track Your Progress</h1>' +
@@ -228,6 +233,10 @@
   root.addEventListener("mouseleave", function () { tip.hidden = true; });
 
   root.addEventListener("click", function (e) {
+    if (e.target.closest("#pg-signin")) {
+      if (App.showSignIn) App.showSignIn();
+      return;
+    }
     if (e.target.id === "pg-export") {
       const data = { exported: new Date().toISOString(), activity: App.activity(), storage: {} };
       try {
@@ -256,8 +265,12 @@
     }).catch(function () { window.alert("That file isn't a Breaking Point backup."); });
   });
 
+  let onProgress = false;
   App.onRoute(function (route) {
     tip.hidden = true;
-    if (route.tab === "progress") render();
+    onProgress = route.tab === "progress";
+    if (onProgress) render();
   });
+  // Re-draw once sign-in finishes (or a session is restored on page load).
+  document.addEventListener("bp:user", function () { if (onProgress) render(); });
 })();

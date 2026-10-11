@@ -1177,3 +1177,6 @@ body.auth-open { overflow: hidden; }
 .legal h3 { font-size: 1rem; margin: 1.4rem 0 0.3rem; }
 .legal-links { margin-top: 2.5rem; font-size: 0.92rem; }
 .auth-legal a { color: var(--text-2); text-decoration: underline; }
+
+/* Progress tab for signed-out visitors: just the sign-in button, centred */
+.progress-locked { min-height: 55vh; display: flex; align-items: center; justify-content: center; }

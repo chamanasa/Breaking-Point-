@@ -360,6 +360,15 @@
   }
   App.signOut = signOut;
   App.supabase = client;
+  // Open the sign-in screen from inside the app (e.g. a guest on the Progress tab).
+  // The current page is kept, so people land back on it after signing in.
+  App.showSignIn = function () {
+    App.storageSet(GUEST_KEY, null);
+    user = null;
+    App.user = null;
+    setMode("signin");
+    showAuth();
+  };
 
   /* ---------- Start ---------- */
 
