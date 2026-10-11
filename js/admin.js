@@ -194,17 +194,30 @@
     return out;
   }
 
+  // This page doesn't exist for anyone but admins: nothing is shown while
+  // checking, and everyone else is sent to the home page.
+  let adminFor = null; // id of the signed-in user confirmed as an admin
+  function leave() {
+    root.innerHTML = "";
+    if (location.hash.indexOf("#admin") === 0) location.replace("#learn");
+  }
+
   async function load() {
     const sb = App.supabase;
     state.error = null;
-    if (!sb) { state.error = ["Accounts aren't connected yet", "Add your Supabase keys to js/config.js and run supabase/schema.sql. AUTH_SETUP.md walks through it."]; return paint(); }
-    if (!App.user || App.user.guest) { state.error = ["Sign in first", "Sign in with an admin account to see users and visitors."]; return paint(); }
-    paint();
-    const admin = await sb.rpc("is_admin");
-    if (!admin || admin.data !== true) {
-      state.error = ["You don't have access", "Only emails listed in the admins table can see this page. In Supabase: Table Editor → admins → Insert row → your email."];
-      return paint();
+    if (!App.user) { root.innerHTML = ""; return; }   // sign-in still being restored; bp:user calls load again
+    if (!sb || !App.signedIn()) return leave();
+    const uid = App.user.id;
+    if (adminFor !== uid) {
+      root.innerHTML = "";
+      let admin = null;
+      try { admin = await sb.rpc("is_admin"); } catch (e) { admin = null; }
+      if (!App.user || App.user.id !== uid) return;   // account changed while checking
+      if (!admin || admin.data !== true) return leave();
+      adminFor = uid;
     }
+    if (!onAdmin) return;
+    paint();
     try {
       const results = await Promise.all([fetchAllProfiles(sb), sb.rpc("admin_visitor_stats", { num_days: state.days, tz: zone() })]);
       state.users = results[0];
@@ -280,10 +293,17 @@
     tip.hidden = true;
     const was = onAdmin;
     onAdmin = route.tab === "admin";
-    if (!onAdmin) return;
+    if (!onAdmin) { root.innerHTML = ""; return; }
     const tab = route.arg === "visitors" ? "visitors" : "users";
     if (tab !== state.tab) { state.tab = tab; state.query = ""; }
-    if (!was || (!state.users && !state.error)) load(); else paint();
+    // Switching between the Users and Visitors tabs reuses what's loaded; anything else re-checks.
+    if (was && App.user && adminFor === App.user.id && (state.users || state.error)) paint(); else load();
   });
-  document.addEventListener("bp:user", function () { if (onAdmin) load(); });
+  // A different account (or signing out) never sees the previous admin's data.
+  document.addEventListener("bp:user", function () {
+    adminFor = null;
+    state.users = null; state.stats = null; state.error = null; state.query = "";
+    root.innerHTML = "";
+    if (onAdmin) load();
+  });
 })();
