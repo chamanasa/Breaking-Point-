@@ -1170,3 +1170,10 @@ body.auth-open { overflow: hidden; }
 .dash-grid .box .box-h, .box .box-h { margin: 0 0 0.9rem; }
 
 .auth-social + .auth-msg { margin-top: 0.8rem; }
+
+/* Privacy policy and terms pages */
+.legal { max-width: 46rem; padding: 2.5rem 0 4rem; }
+.legal h2 { font-size: 1.25rem; margin: 2.2rem 0 0.5rem; }
+.legal h3 { font-size: 1rem; margin: 1.4rem 0 0.3rem; }
+.legal-links { margin-top: 2.5rem; font-size: 0.92rem; }
+.auth-legal a { color: var(--text-2); text-decoration: underline; }
