@@ -18,8 +18,8 @@ window.BP_CONFIG = {
   providers: { google: true, facebook: false },
   emailSignIn: false,
   otpLength: 6,
-  // Temporarily true while Google sign-in is being set up in Supabase;
-  // set to null (sign-in required) once it works.
+  // Guests can use the site without signing in, but nothing they do is saved.
+  // Signing out returns to a fresh guest session.
   allowGuest: true,
   trackVisits: true
 };

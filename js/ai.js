@@ -49,7 +49,14 @@
 
   /* ---------- Key, model and page mode ---------- */
 
-  function getKey() { return (App.storageGet(KEY_STORE) || "").trim(); }
+  // The Gemini key and model live on this device only, never in the account:
+  // signed in -> localStorage (wiped on sign-out); guest -> sessionStorage (gone when the tab closes).
+  function sessGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function sessSet(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) { /* ignore */ } }
+  function devGet(k) { return App.signedIn() ? App.storageGet(k) : sessGet(k); }
+  function devSet(k, v) { if (App.signedIn()) App.storageSet(k, v); else sessSet(k, v); }
+
+  function getKey() { return (devGet(KEY_STORE) || "").trim(); }
   function getModel() { return (el.model.value || DEFAULT_MODEL).trim(); }
 
   function setStatus(text, kind) {
@@ -80,7 +87,7 @@
   }
 
   el.key.value = getKey();
-  el.model.value = App.storageGet(MODEL_STORE) || DEFAULT_MODEL;
+  el.model.value = devGet(MODEL_STORE) || DEFAULT_MODEL;
 
   el.keyToggle.addEventListener("click", function () {
     const show = el.key.type === "password";
@@ -95,7 +102,7 @@
     setStatus("Checking your key with Google…");
     try {
       await testKey(key);
-      App.storageSet(KEY_STORE, key);
+      devSet(KEY_STORE, key);
       setStatus("Connected.", "ok");
       changingKey = false;
       paintMode();
@@ -119,22 +126,21 @@
   el.keyCancel.addEventListener("click", function () { changingKey = false; setStatus(""); paintMode(); });
   el.keyClear.addEventListener("click", function () {
     if (!window.confirm("Remove your Gemini key from this browser?")) return;
-    App.storageSet(KEY_STORE, null);
+    devSet(KEY_STORE, null);
     el.key.value = "";
     setStatus("Key removed from this browser.");
     paintMode();
   });
   el.model.addEventListener("change", function () {
-    App.storageSet(MODEL_STORE, el.model.value.trim() || null);
+    devSet(MODEL_STORE, el.model.value.trim() || null);
   });
 
   /* ---------- Interviewer style (standard or a specific firm's format) ---------- */
 
-  const STYLE_STORE = "bp.firmStyle";
   el.firmStyle.innerHTML = '<option value="">Standard</option>' + App.firms.map(function (f) {
     return '<option value="' + esc(f.id) + '">' + esc(f.short) + " style</option>";
   }).join("");
-  function currentStyle() { return App.findFirm(App.storageGet(STYLE_STORE)); }
+  function currentStyle() { return App.findFirm(App.data().settings.firmStyle); }
   function syncStyle() {
     const f = currentStyle();
     el.firmStyle.value = f ? f.id : "";
@@ -142,7 +148,8 @@
     if (q && (!session || session.question.id === q.id)) el.qMeta.textContent = metaLine(q);
   }
   el.firmStyle.addEventListener("change", function () {
-    App.storageSet(STYLE_STORE, el.firmStyle.value || null);
+    App.data().settings.firmStyle = el.firmStyle.value || null;
+    App.saveData();
     syncStyle();
   });
 
@@ -243,6 +250,19 @@
     if (onAiTab) syncStyle();
     if (onAiTab && route.arg && App.findQuestion(route.arg)) select(route.arg, { scroll: true });
   });
+
+  // Signing in or out changes where the key lives and which interviewer style is saved.
+  document.addEventListener("bp:user", function () {
+    if (App.signedIn() && !App.storageGet(KEY_STORE) && sessGet(KEY_STORE)) {
+      App.storageSet(KEY_STORE, sessGet(KEY_STORE));   // keep a key entered just before signing in
+      sessSet(KEY_STORE, null);
+    }
+    el.key.value = getKey();
+    el.model.value = devGet(MODEL_STORE) || DEFAULT_MODEL;
+    paintMode();
+    syncStyle();
+  });
+  document.addEventListener("bp:data", syncStyle);
 
   /* ---------- Gemini calls ---------- */
 

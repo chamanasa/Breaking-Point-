@@ -56,11 +56,77 @@
   function enter(u) {
     user = u;
     App.user = u;
+    // Guests start empty and nothing they do is saved; signed-in users load their account's data.
+    if (u.guest) App.resetUserData(); else loadUserData(u);
     hideAuth();
     renderUser();
     const back = sessionStorageGet(RETURN_KEY);
     if (back) { sessionStorageSet(RETURN_KEY, null); if (back !== location.hash) location.hash = back; }
     document.dispatchEvent(new CustomEvent("bp:user", { detail: u }));
+  }
+
+  /* ---------- Saving progress to the signed-in user's account ---------- */
+
+  let pending = null;
+  let saveTimer = null;
+
+  function flushSave() {
+    clearTimeout(saveTimer);
+    if (!pending || !client || !user || user.guest) return Promise.resolve();
+    const d = pending;
+    pending = null;
+    return client.from("user_data").upsert({
+      user_id: user.id, activity: d.activity, drill_levels: d.drillLevels,
+      plans: d.plans, settings: d.settings, updated_at: new Date().toISOString()
+    }).then(function (r) {
+      if (r && r.error) { console.warn("Couldn't save progress:", r.error.message); pending = pending || d; }
+    }, function () { pending = pending || d; });
+  }
+  // Changes are batched and saved a moment later, and straight away when the tab is hidden or closed.
+  function queueSave(d) {
+    pending = d;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(flushSave, 800);
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") flushSave(); });
+  window.addEventListener("pagehide", flushSave);
+
+  function loadUserData(u) {
+    App.resetUserData();
+    App.dataError = false;
+    if (!client) return;
+    let request;
+    try {
+      request = client.from("user_data").select("activity, drill_levels, plans, settings").eq("user_id", u.id).maybeSingle();
+    } catch (err) {
+      App.dataError = true;
+      App.setUserData(null, null);
+      return;
+    }
+    request.then(function (r) {
+      if (!user || user.id !== u.id) return; // signed out meanwhile
+      if (r.error) {
+        // Don't register a saver: saving an empty copy now would overwrite what's stored.
+        App.dataError = true;
+        App.setUserData(null, null);
+        return;
+      }
+      const row = r.data;
+      App.setUserData(row ? { activity: row.activity, drillLevels: row.drill_levels, plans: row.plans, settings: row.settings } : null, queueSave);
+    }, function () {
+      if (!user || user.id !== u.id) return;
+      App.dataError = true;
+      App.setUserData(null, null);
+    });
+  }
+
+  // The Gemini key is a credential, so it is never saved to the account: signed-in
+  // users keep it on this device, and it is wiped from the browser on sign-out.
+  function forgetDeviceData() {
+    ["bp.geminiKey", "bp.geminiModel"].forEach(function (k) {
+      App.storageSet(k, null);
+      sessionStorageSet(k, null);
+    });
   }
 
   function fromSupabase(su) {
@@ -353,10 +419,19 @@
 
   function signOut() {
     App.storageSet(GUEST_KEY, null);
+    // Save anything not yet saved, then clear this user's data from the page and browser.
+    const done = flushSave();
     user = null;
     App.user = null;
-    if (client) client.auth.signOut().finally(function () { setMode("signin"); showAuth(); });
-    else { setMode("signin"); showAuth(); }
+    App.resetUserData();
+    forgetDeviceData();
+    // Signed out -> back to a fresh guest session where guests are allowed, otherwise the sign-in screen.
+    const finish = function () {
+      if (allowGuest) { App.storageSet(GUEST_KEY, "1"); enter({ id: "guest", guest: true, name: "Guest", email: "", provider: "guest", avatar: "" }); }
+      else { setMode("signin"); showAuth(); }
+    };
+    if (client) done.then(function () { return client.auth.signOut(); }).then(finish, finish);
+    else finish();
   }
   App.signOut = signOut;
   App.supabase = client;
@@ -376,11 +451,14 @@
   if (client) {
     client.auth.onAuthStateChange(function (event, session) {
       if (session && session.user) { if (!user || user.id !== session.user.id) enter(fromSupabase(session.user)); }
-      else if (event === "SIGNED_OUT") { user = null; showAuth(); }
+      else if (event === "SIGNED_OUT") {
+        // e.g. signed out in another tab
+        if (user && !user.guest) { user = null; App.user = null; App.resetUserData(); forgetDeviceData(); showAuth(); }
+      }
     });
     client.auth.getSession().then(function (res) {
       const s = res && res.data && res.data.session;
-      if (s && s.user) enter(fromSupabase(s.user));
+      if (s && s.user) { if (!user || user.id !== s.user.id) enter(fromSupabase(s.user)); }
       else if (allowGuest && App.storageGet(GUEST_KEY) === "1") enter({ id: "guest", guest: true, name: "Guest", email: "", provider: "guest", avatar: "" });
       else showAuth();
     }, function () { showAuth(); });

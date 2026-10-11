@@ -33,7 +33,7 @@ begin
     coalesce(new.raw_user_meta_data ->> 'full_name', new.raw_user_meta_data ->> 'name'),
     coalesce(new.raw_user_meta_data ->> 'avatar_url', new.raw_user_meta_data ->> 'picture'),
     coalesce(new.raw_app_meta_data ->> 'provider', 'email'),
-    new.created_at,
+    coalesce(new.created_at, now()),
     new.last_sign_in_at
   )
   on conflict (id) do update set
@@ -75,7 +75,7 @@ alter table public.admins enable row level security;
 
 drop policy if exists "Own profile or admin" on public.profiles;
 create policy "Own profile or admin" on public.profiles
-  for select using (auth.uid() = id or public.is_admin());
+  for select to authenticated using (auth.uid() = id or public.is_admin());
 
 -- Profiles are read-only from the browser (no update policy): only sign-ups and
 -- sign-ins change them, through the trigger above.
@@ -115,7 +115,7 @@ create policy "Anyone can record a visit" on public.visits
 
 drop policy if exists "Admins read visits" on public.visits;
 create policy "Admins read visits" on public.visits
-  for select using (public.is_admin());
+  for select to authenticated using (public.is_admin());
 
 grant insert (visitor_id, user_id, path, referrer, device, timezone, language) on public.visits to anon, authenticated;
 grant select on public.visits to authenticated;
@@ -193,3 +193,29 @@ $$;
 
 revoke execute on function public.admin_visitor_stats(int, text) from public, anon;
 grant execute on function public.admin_visitor_stats(int, text) to authenticated;
+
+-- 7. Each signed-in user's saved progress: practice history, drill levels,
+--    firm prep plans and preferences. One row per user; only they can read or write it.
+--    Guests save nothing.
+create table if not exists public.user_data (
+  user_id      uuid primary key default auth.uid() references auth.users (id) on delete cascade,
+  activity     jsonb not null default '[]'::jsonb,
+  drill_levels jsonb not null default '{}'::jsonb,
+  plans        jsonb not null default '{}'::jsonb,
+  settings     jsonb not null default '{}'::jsonb,
+  updated_at   timestamptz not null default now(),
+  constraint user_data_size check (pg_column_size(activity) + pg_column_size(plans) < 2000000)
+);
+alter table public.user_data enable row level security;
+
+drop policy if exists "Read own data" on public.user_data;
+create policy "Read own data" on public.user_data
+  for select to authenticated using (auth.uid() = user_id);
+drop policy if exists "Create own data" on public.user_data;
+create policy "Create own data" on public.user_data
+  for insert to authenticated with check (auth.uid() = user_id);
+drop policy if exists "Update own data" on public.user_data;
+create policy "Update own data" on public.user_data
+  for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+grant select, insert, update on public.user_data to authenticated;

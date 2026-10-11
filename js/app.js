@@ -112,20 +112,51 @@
     lastTab = route.tab;
   }
 
-  /* ---------- Activity log (feeds the Progress dashboard) ----------
-   * Everything stays in this browser's localStorage under bp.activity:
-   * { kind: "interview" | "drill" | "read", at: <ms>, ...details } */
-  const ACTIVITY_KEY = "bp.activity";
-  function activity() {
-    try {
-      const list = JSON.parse(storageGet(ACTIVITY_KEY) || "[]");
-      return Array.isArray(list) ? list : [];
-    } catch (e) { return []; }
-  }
+  /* ---------- User data (progress, drill levels, plans, preferences) ----------
+   * Signed-in users: kept in memory and saved to their account (Supabase
+   * user_data table) by js/auth.js through the saver it registers.
+   * Guests: kept in memory only and never saved; gone on reload or sign-out.
+   * Nothing here is stored in the browser.
+   *   activity: [{ kind: "interview" | "drill" | "read", at: <ms>, ...details }] */
+  function blankData() { return { activity: [], drillLevels: {}, plans: {}, settings: {} }; }
+  let userData = blankData();
+  let saver = null;      // function(data) registered while a real user is signed in
+  let dataReady = false; // true once a signed-in user's saved data has loaded
+
+  // Older versions kept progress in the browser; remove it so nothing carries over.
+  try {
+    Object.keys(localStorage).forEach(function (k) {
+      if (/^bp\.(activity|drillLevels|plan\.|firmStyle)/.test(k)) localStorage.removeItem(k);
+    });
+  } catch (e) { /* storage blocked */ }
+
+  function signedIn() { return !!(window.App && App.user && !App.user.guest); }
+  function activity() { return userData.activity; }
+  function saveData() { if (saver && signedIn()) saver(userData); }
   function log(kind, data) {
-    const list = activity();
-    list.push(Object.assign({ kind: kind, at: Date.now() }, data));
-    storageSet(ACTIVITY_KEY, JSON.stringify(list.slice(-2000)));
+    if (!signedIn()) return; // guests: nothing is saved
+    userData.activity.push(Object.assign({ kind: kind, at: Date.now() }, data));
+    if (userData.activity.length > 2000) userData.activity = userData.activity.slice(-2000);
+    saveData();
+  }
+  function setUserData(saved, saveFn) {
+    const d = blankData();
+    if (saved) {
+      if (Array.isArray(saved.activity)) d.activity = saved.activity;
+      ["drillLevels", "plans", "settings"].forEach(function (k) {
+        if (saved[k] && typeof saved[k] === "object") d[k] = saved[k];
+      });
+    }
+    userData = d;
+    saver = saveFn || null;
+    dataReady = true;
+    document.dispatchEvent(new CustomEvent("bp:data"));
+  }
+  function resetUserData() {
+    userData = blankData();
+    saver = null;
+    dataReady = false;
+    document.dispatchEvent(new CustomEvent("bp:data"));
   }
 
   /* ---------- Firm logos ----------
@@ -162,6 +193,12 @@
     onRoute: function (fn) { listeners.push(fn); },
     log: log,
     activity: activity,
+    data: function () { return userData; },
+    saveData: saveData,
+    setUserData: setUserData,
+    resetUserData: resetUserData,
+    signedIn: signedIn,
+    dataReady: function () { return dataReady; },
     firms: FIRMS,
     findFirm: findFirm,
     firmLogo: firmLogo,

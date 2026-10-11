@@ -6,8 +6,6 @@
   const root = document.getElementById("firms-root");
   if (!root) return;
 
-  const PLAN_KEY = "bp.plan.";
-  const STYLE_KEY = "bp.firmStyle";
   const DAY = 86400000;
 
   function questionsFor(f) {
@@ -95,12 +93,22 @@
     });
   }
 
+  // Plans are saved to the signed-in user's account (App.data().plans).
   function loadPlan(id) {
-    try { return JSON.parse(App.storageGet(PLAN_KEY + id) || "null"); } catch (e) { return null; }
+    const p = App.data().plans[id];
+    return p ? JSON.parse(JSON.stringify(p)) : null;
   }
-  function savePlan(id, plan) { App.storageSet(PLAN_KEY + id, plan ? JSON.stringify(plan) : null); }
+  function savePlan(id, plan) {
+    const plans = App.data().plans;
+    if (plan) plans[id] = plan; else delete plans[id];
+    App.saveData();
+  }
 
   function planHtml(f) {
+    if (!App.signedIn()) {
+      return '<section class="box plan" id="plan"><div class="plan-locked"><h2>Your ' + esc(f.short) + ' prep plan</h2>' +
+        '<button class="btn" type="button" id="plan-signin">Sign in to build your prep plan</button></div></section>';
+    }
     const saved = loadPlan(f.id);
     const today = new Date().toISOString().slice(0, 10);
     const def = saved ? saved.date : new Date(Date.now() + 28 * DAY).toISOString().slice(0, 10);
@@ -160,7 +168,8 @@
   function startMock(firmId, qid, replace) {
     const f = App.findFirm(firmId);
     if (!f) return;
-    App.storageSet(STYLE_KEY, f.id);
+    App.data().settings.firmStyle = f.id;   // read by the AI interviewer
+    App.saveData();
     let q = qid ? App.findQuestion(qid) : null;
     if (!q) {
       const pool = questionsFor(f);
@@ -175,6 +184,7 @@
   root.addEventListener("click", function (e) {
     const m = e.target.closest("[data-mock]");
     if (m) { startMock(m.dataset.mock, m.dataset.q); return; }
+    if (e.target.closest("#plan-signin")) { if (App.showSignIn) App.showSignIn(); return; }
     if (e.target.id === "plan-reset") {
       const f = current();
       if (f && window.confirm("Reset your " + f.short + " plan and its ticked tasks?")) { savePlan(f.id, null); renderFirm(f); }
@@ -208,8 +218,21 @@
   let currentId = null;
   function current() { return App.findFirm(currentId); }
 
+  // A firm page shows the user's saved plan: redraw it when they sign in/out or their data loads.
+  let onFirms = false;
+  function redrawPlan() {
+    const f = current();
+    if (!onFirms || !f) return;
+    const y = window.scrollY;
+    renderFirm(f);
+    window.scrollTo(0, y);
+  }
+  document.addEventListener("bp:user", redrawPlan);
+  document.addEventListener("bp:data", redrawPlan);
+
   App.onRoute(function (route) {
-    if (route.tab !== "firms") return;
+    onFirms = route.tab === "firms";
+    if (!onFirms) return;
     const parts = (route.arg || "").split("/");
     const f = App.findFirm(parts[0]);
     // "#firms/<id>/mock" is used by plan tasks to launch a mock in that style.

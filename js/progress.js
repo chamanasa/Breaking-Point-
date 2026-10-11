@@ -152,14 +152,22 @@
 
   function render() {
     // Progress is for signed-in users only: guests see just a sign-in button.
-    if (!App.user || App.user.guest) {
+    if (!App.signedIn()) {
       root.innerHTML = '<div class="progress-locked"><button class="btn lg" type="button" id="pg-signin">Sign in to see your progress</button></div>';
+      return;
+    }
+    if (App.dataError) {
+      root.innerHTML = '<div class="progress-locked"><p class="muted">Couldn&rsquo;t load your progress. Check your connection and reload the page.</p></div>';
+      return;
+    }
+    if (!App.dataReady()) {
+      root.innerHTML = '<div class="progress-locked"><p class="muted">Loading your progress&hellip;</p></div>';
       return;
     }
     const list = App.activity();
     const m = metrics(list);
     const head = '<div class="page-head"><p class="kicker">Your prep</p><h1>Track Your Progress</h1>' +
-      '<p class="subtitle">Every mock interview, maths drill and model interview you read, in one place, with what to work on next. Your data stays in this browser.</p></div>';
+      '<p class="subtitle">Every mock interview, maths drill and model interview you&rsquo;ve done, in one place, with what to work on next.</p></div>';
 
     if (!list.length) {
       root.innerHTML = head +
@@ -209,9 +217,8 @@
   }
 
   function dataControls() {
-    return '<div class="data-controls"><span class="muted">Your data is stored only in this browser.</span>' +
-      '<button class="linkish" type="button" id="pg-export">Export backup</button>' +
-      '<label class="linkish" for="pg-import">Import backup</label><input type="file" id="pg-import" accept="application/json" hidden>' +
+    return '<div class="data-controls"><span class="muted">Saved to your account, on every device you sign in on.</span>' +
+      '<button class="linkish" type="button" id="pg-export">Download a copy</button>' +
       '<button class="linkish danger" type="button" id="pg-reset">Reset progress</button></div>';
   }
 
@@ -238,31 +245,20 @@
       return;
     }
     if (e.target.id === "pg-export") {
-      const data = { exported: new Date().toISOString(), activity: App.activity(), storage: {} };
-      try {
-        Object.keys(localStorage).forEach(function (k) { if (/^bp\.(drillLevels|plan\.)/.test(k)) data.storage[k] = localStorage.getItem(k); });
-      } catch (err) { /* ignore */ }
+      const d = App.data();
+      const data = { exported: new Date().toISOString(), activity: d.activity, drillLevels: d.drillLevels, plans: d.plans };
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], { type: "application/json" }));
       a.download = "breaking-point-progress.json";
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
     } else if (e.target.id === "pg-reset") {
-      if (window.confirm("Delete all tracked interviews, drills and reading history from this browser?")) {
-        App.storageSet("bp.activity", null);
+      if (window.confirm("Delete all your tracked interviews, drills and reading history? This can't be undone.")) {
+        App.data().activity = [];
+        App.saveData();
         render();
       }
     }
-  });
-  root.addEventListener("change", function (e) {
-    if (e.target.id !== "pg-import" || !e.target.files[0]) return;
-    e.target.files[0].text().then(function (txt) {
-      const data = JSON.parse(txt);
-      if (!Array.isArray(data.activity)) throw new Error("bad file");
-      App.storageSet("bp.activity", JSON.stringify(data.activity));
-      Object.keys(data.storage || {}).forEach(function (k) { if (/^bp\./.test(k)) App.storageSet(k, data.storage[k]); });
-      render();
-    }).catch(function () { window.alert("That file isn't a Breaking Point backup."); });
   });
 
   let onProgress = false;
@@ -271,6 +267,7 @@
     onProgress = route.tab === "progress";
     if (onProgress) render();
   });
-  // Re-draw once sign-in finishes (or a session is restored on page load).
+  // Re-draw when someone signs in or out, and once their saved progress has loaded.
   document.addEventListener("bp:user", function () { if (onProgress) render(); });
+  document.addEventListener("bp:data", function () { if (onProgress) render(); });
 })();

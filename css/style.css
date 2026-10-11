@@ -1180,3 +1180,5 @@ body.auth-open { overflow: hidden; }
 
 /* Progress tab for signed-out visitors: just the sign-in button, centred */
 .progress-locked { min-height: 55vh; display: flex; align-items: center; justify-content: center; }
+.plan-locked { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.plan-locked h2 { margin: 0; }

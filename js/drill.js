@@ -8,7 +8,6 @@
   const root = document.getElementById("drill-root");
   if (!root) return;
 
-  const LEVEL_KEY = "bp.drillLevels";
   const fmt = function (n, dp) {
     return Number(n).toLocaleString("en-IN", { maximumFractionDigits: dp == null ? 2 : dp });
   };
@@ -158,10 +157,14 @@
 
   /* ---------- Adaptive levels ---------- */
 
-  let levels = {};
-  try { levels = JSON.parse(App.storageGet(LEVEL_KEY) || "{}") || {}; } catch (e) { levels = {}; }
+  // Levels live in the user's data: saved to their account when signed in,
+  // kept only for this visit for guests.
+  const levels = new Proxy({}, {
+    get: function (_, k) { return App.data().drillLevels[k]; },
+    set: function (_, k, v) { App.data().drillLevels[k] = v; return true; }
+  });
   const levelOf = function (id) { return Math.max(1, Math.min(3, levels[id] || 1)); };
-  const saveLevels = function () { App.storageSet(LEVEL_KEY, JSON.stringify(levels)); };
+  const saveLevels = function () { App.saveData(); };
 
   /* ---------- State & rendering ---------- */
 
@@ -372,11 +375,15 @@
     submit(document.getElementById("d-input").value);
   });
 
+  let onDrill = false;
   App.onRoute(function (route) {
-    if (route.tab !== "drill") { if (run) { clearInterval(timer); run = null; } return; }
+    onDrill = route.tab === "drill";
+    if (!onDrill) { if (run) { clearInterval(timer); run = null; } return; }
     if (route.arg && (CAT[route.arg] || route.arg === "mixed")) choice.cat = route.arg;
     if (!run) renderHome();
   });
+  // Levels and accuracy come from the user's data, which loads after sign-in.
+  document.addEventListener("bp:data", function () { if (onDrill && !run) renderHome(); });
 
   // Exposed for tests.
   window.Drill = { parseAnswer: parseAnswer, isCorrect: isCorrect, cats: CATS, current: function () { return run && run.q; } };
