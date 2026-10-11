@@ -77,8 +77,18 @@
 
   /* ---------- Steps and messages ---------- */
 
+  // Google-only mode (emailSignIn: false): one "Continue with Google" button, no
+  // email form, no codes. The first Google sign-in creates the account.
+  const emailOn = cfg.emailSignIn !== false;
+
   function setMode(m) {
     mode = m;
+    if (!emailOn) {
+      el.title.textContent = "Welcome to Breaking Point";
+      el.sub.textContent = "Sign in with your Google account to continue. New here? The same button creates your account.";
+      say(el.msg, "");
+      return;
+    }
     const up = m === "signup";
     el.title.textContent = up ? "Create your account" : "Welcome back";
     el.sub.textContent = up ? "Free to use. Save your progress and pick up on any device." : "Sign in to continue your case prep.";
@@ -110,8 +120,9 @@
 
   function busy(btn, on, label) {
     btn.disabled = on;
-    if (on) { btn.dataset.label = btn.textContent; btn.innerHTML = '<span class="spin" aria-hidden="true"></span>' + esc(label || "Please wait"); }
-    else if (btn.dataset.label) btn.textContent = btn.dataset.label;
+    // Keep the button's own markup (e.g. the Google logo) to restore afterwards.
+    if (on) { btn._html = btn.innerHTML; btn.innerHTML = '<span class="spin" aria-hidden="true"></span>' + esc(label || "Please wait"); }
+    else if (btn._html != null) { btn.innerHTML = btn._html; btn._html = null; }
   }
 
   function notConnected(node) {
@@ -123,7 +134,7 @@
     if (/signups not allowed|user not found/i.test(m)) return "There's no account with this email yet. Create one instead?";
     if (/rate limit|too many|security purposes/i.test(m)) return "Too many attempts. Wait a minute, then try again.";
     if (/expired|invalid/i.test(m) && /token|otp|code/i.test(m)) return "That code is wrong or has expired. Check the latest email, or resend.";
-    if (/provider is not enabled|unsupported provider/i.test(m)) return "That sign-in option isn't switched on yet. Use email for now.";
+    if (/provider is not enabled|unsupported provider/i.test(m)) return "That sign-in option isn't switched on yet." + (emailOn ? " Use email for now." : allowGuest ? " You can continue as a guest for now." : " Please try again later.");
     if (/fetch|network/i.test(m)) return "Couldn't reach the sign-in service. Check your connection.";
     return m || "Something went wrong. Please try again.";
   }
@@ -140,6 +151,21 @@
     el.social.hidden = true;
     el.social.nextElementSibling.hidden = true;
   }
+  if (!emailOn) {
+    el.form.hidden = true;
+    el.social.nextElementSibling.hidden = true;   // the "or" divider
+    el.switchBtn.parentNode.hidden = true;        // "New to Breaking Point? Create an account"
+    el.social.after(el.msg);                      // keep messages visible without the form
+  }
+
+  // Ask Supabase which providers are switched on, so a button that isn't set up yet
+  // shows a message instead of sending people to an error page.
+  function providerEnabled(name) {
+    return fetch(cfg.supabaseUrl.replace(/\/$/, "") + "/auth/v1/settings", { headers: { apikey: cfg.supabaseAnonKey } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (s) { return !(s && s.external && s.external[name] === false); })
+      .catch(function () { return true; });   // can't tell: try anyway
+  }
 
   el.social.addEventListener("click", function (e) {
     const b = e.target.closest("[data-provider]");
@@ -147,11 +173,14 @@
     if (!client) return notConnected(el.msg);
     sessionStorageSet(RETURN_KEY, location.hash || "");
     busy(b, true, "Redirecting…");
-    client.auth.signInWithOAuth({
-      provider: b.dataset.provider,
-      options: { redirectTo: location.origin + location.pathname }
-    }).then(function (res) {
-      if (res.error) { busy(b, false); say(el.msg, friendly(res.error), "err"); }
+    providerEnabled(b.dataset.provider).then(function (on) {
+      if (!on) { busy(b, false); say(el.msg, friendly({ message: "provider is not enabled" }), "warn"); return; }
+      return client.auth.signInWithOAuth({
+        provider: b.dataset.provider,
+        options: { redirectTo: location.origin + location.pathname }
+      }).then(function (res) {
+        if (res.error) { busy(b, false); say(el.msg, friendly(res.error), "err"); }
+      });
     });
   });
 

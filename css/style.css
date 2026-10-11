@@ -1168,3 +1168,5 @@ body.auth-open { overflow: hidden; }
 }
 
 .dash-grid .box .box-h, .box .box-h { margin: 0 0 0.9rem; }
+
+.auth-social + .auth-msg { margin-top: 0.8rem; }

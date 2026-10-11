@@ -43,6 +43,11 @@ Your site address (**SITE_URL**) is `https://chamanasa.github.io/Breaking-Point-
 - **Site URL:** `https://chamanasa.github.io/Breaking-Point-/`
 - **Redirect URLs:** add `https://chamanasa.github.io/Breaking-Point-/**`
 
+> **This site is currently set to Google-only sign-in** (`emailSignIn: false` in
+> `js/config.js`): the sign-in page shows just "Continue with Google", so steps 4
+> and 6 aren't needed. Set `emailSignIn: true` and do them if you ever want email
+> codes as well.
+
 ### 4. Make the email send a 6-digit code
 1. **Authentication → Sign In / Providers → Email**: check it's **enabled**,
    and that **Email OTP length** is **6**.
