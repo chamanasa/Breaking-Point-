@@ -138,7 +138,7 @@
       "<p>Set your interview date and weekly hours; the plan adapts to the time you have. Tick tasks off as you go.</p></div>" +
       '<form class="plan-form" id="plan-form"><div class="field"><label for="plan-date">Interview date</label><input type="date" id="plan-date" min="' + today + '" value="' + def + '"></div>' +
       '<div class="field"><label for="plan-hours">Hours per week</label><select id="plan-hours">' + [5, 10, 15].map(function (h) { return '<option value="' + h + '"' + (h === hours ? " selected" : "") + ">" + h + " hours</option>"; }).join("") + "</select></div>" +
-      '<button class="btn" type="submit">' + (saved ? "Update plan" : "Build my plan") + "</button>" + (saved ? '<button class="linkish" type="button" id="plan-reset">Reset</button>' : "") + "</form></div>" + body + "</section>";
+      '<button class="btn" type="submit">' + (saved ? "Update plan" : "Build my plan") + "</button>" + (saved ? '<button class="btn ghost" type="button" id="plan-reset">Reset plan</button>' : "") + "</form></div>" + body + "</section>";
   }
 
   /* ---------- Profile ---------- */
@@ -166,6 +166,13 @@
       }).join("") + "</ul></section>" : "") +
       '<p class="note firm-note">Formats vary by office and year; confirm the current process on ' + esc(f.short) + "&rsquo;s careers page.</p>";
     if (focus === "questions") { const s = document.getElementById("firm-questions"); if (s) s.scrollIntoView({ block: "start" }); }
+    // Resetting throws away ticked tasks, so it takes a press-and-hold.
+    const reset = document.getElementById("plan-reset");
+    if (reset) App.holdToConfirm(reset, function () {
+      savePlan(f.id, null);
+      renderFirm(f);
+      App.toast("Your " + f.short + " plan was reset");
+    }, "Press and hold to reset your " + f.short + " plan");
   }
 
   function startMock(firmId, qid, replace) {
@@ -187,10 +194,6 @@
   root.addEventListener("click", function (e) {
     const m = e.target.closest("[data-mock]");
     if (m) { startMock(m.dataset.mock, m.dataset.q); return; }
-    if (e.target.id === "plan-reset") {
-      const f = current();
-      if (f && window.confirm("Reset your " + f.short + " plan and its ticked tasks?")) { savePlan(f.id, null); renderFirm(f); }
-    }
   });
   root.addEventListener("submit", function (e) {
     if (e.target.id !== "plan-form") return;
@@ -201,6 +204,7 @@
     const prev = loadPlan(f.id) || {};
     savePlan(f.id, { date: date, hours: Number(document.getElementById("plan-hours").value), done: prev.done || {} });
     renderFirm(f);
+    App.toast(prev.date ? "Plan updated" : "Your " + f.short + " plan is ready");
     document.getElementById("plan").scrollIntoView({ block: "start" });
   });
   root.addEventListener("change", function (e) {

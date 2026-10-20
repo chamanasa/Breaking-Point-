@@ -158,6 +158,8 @@
     rd.prev.dataset.id = n.prev ? n.prev.id : "";
     rd.next.dataset.id = n.next ? n.next.id : "";
     rd.practise.href = "#ai/" + encodeURIComponent(id);
+    clearTimeout(closing);
+    rd.root.removeAttribute("data-closing");
     rd.root.hidden = false;
     document.body.classList.add("reader-open");
     const last = App.activity().slice(-1)[0];
@@ -170,19 +172,34 @@
     });
   }
 
+  // Closing by pointer plays a short exit, faster than the entrance. Closing
+  // from the keyboard (Escape) or by a drag that already moved it away is instant.
+  let animateClose = false;
+  let closing = null;
   function closeReader() {
     if (!openId && rd.root.hidden) return;
     openId = null;
-    rd.root.hidden = true;
-    document.body.classList.remove("reader-open");
-    if (returnFocus && document.contains(returnFocus)) returnFocus.focus({ preventScroll: true });
+    const finish = function () {
+      rd.root.hidden = true;
+      rd.root.removeAttribute("data-closing");
+      document.body.classList.remove("reader-open");
+      if (returnFocus && document.contains(returnFocus)) returnFocus.focus({ preventScroll: true });
+    };
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (animateClose && !rd.root.hidden) {
+      rd.root.setAttribute("data-closing", "");
+      closing = setTimeout(finish, reduce ? 150 : 220);
+    } else finish();
+    animateClose = false;
   }
 
   function leaveReader() { location.hash = "bank"; }
 
   rd.root.addEventListener("click", function (e) {
-    if (e.target.closest("[data-close]")) leaveReader();
+    if (e.target.closest("[data-close]")) { animateClose = true; leaveReader(); }
   });
+  // On phones the reader is a sheet: drag its header down to dismiss.
+  if (App.sheetDrag) App.sheetDrag(rd.root.querySelector(".reader-panel"), rd.root.querySelector(".reader-head"), leaveReader);
   rd.prev.addEventListener("click", function () { if (rd.prev.dataset.id) location.hash = "bank/" + rd.prev.dataset.id; });
   rd.next.addEventListener("click", function () { if (rd.next.dataset.id) location.hash = "bank/" + rd.next.dataset.id; });
   document.addEventListener("keydown", function (e) {

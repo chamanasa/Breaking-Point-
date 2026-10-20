@@ -63,6 +63,8 @@
     renderUser();
     const back = sessionStorageGet(RETURN_KEY);
     if (back) { sessionStorageSet(RETURN_KEY, null); if (back !== location.hash) location.hash = back; }
+    // Back from Google: confirm who they are signed in as.
+    if (back && !u.guest && App.toast) App.toast("Signed in as " + (u.name || u.email));
     document.dispatchEvent(new CustomEvent("bp:user", { detail: u }));
   }
 
@@ -390,8 +392,23 @@
 
   /* ---------- Header account menu ---------- */
 
+  // First letters of the first and last words, taken as whole characters so a
+  // name that starts with an accent or an emoji isn't cut in half.
   function initials(n) {
-    return String(n || "?").split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase();
+    const words = String(n || "").trim().split(/[\s@._-]+/).filter(Boolean);
+    if (!words.length) return "?";
+    const first = function (w) { return Array.from(w)[0] || ""; };
+    const pick = words.length > 1 ? [words[0], words[words.length - 1]] : [words[0]];
+    return pick.map(first).join("").toUpperCase();
+  }
+
+  // The menu leaves faster than it arrives, along the same path.
+  function closeMenu(menu) {
+    if (!menu || menu.hidden || menu.hasAttribute("data-closing")) return;
+    menu.setAttribute("data-closing", "");
+    const btn = document.getElementById("acct-btn");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+    setTimeout(function () { menu.hidden = true; menu.removeAttribute("data-closing"); }, 120);
   }
 
   function renderUser() {
@@ -408,7 +425,7 @@
     el.userSlot.innerHTML =
       '<div class="acct"><button class="acct-btn" type="button" id="acct-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Account">' + face + "</button>" +
       '<div class="acct-menu" id="acct-menu" role="menu" hidden>' +
-        '<div class="acct-who"><b>' + esc(user.name) + "</b>" + (user.email ? "<span>" + esc(user.email) + "</span>" : "<span>Not signed in</span>") + "</div>" +
+        '<div class="acct-who"><b>' + esc(user.name) + "</b>" + (user.email ? '<span title="' + esc(user.email) + '">' + esc(user.email) + "</span>" : "<span>Not signed in</span>") + "</div>" +
         '<a role="menuitem" href="#progress">Your progress</a>' +
         '<a role="menuitem" href="#firms">Firm prep plans</a>' +
         '<a role="menuitem" href="#admin" id="acct-admin" hidden>Admin: users &amp; visitors</a>' +
@@ -435,17 +452,20 @@
     const menu = document.getElementById("acct-menu");
     if (!btn || !menu) return;
     if (btn.contains(e.target)) {
-      const open = menu.hidden;
-      menu.hidden = !open;
-      btn.setAttribute("aria-expanded", String(open));
+      if (menu.hidden || menu.hasAttribute("data-closing")) {
+        menu.removeAttribute("data-closing");
+        menu.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      } else closeMenu(menu);
       return;
     }
-    if (e.target.id === "acct-out") { signOut(); }
-    if (!menu.contains(e.target) || e.target.closest("a")) { menu.hidden = true; btn.setAttribute("aria-expanded", "false"); }
+    if (e.target.id === "acct-out") { menu.hidden = true; signOut(); return; }
+    if (!menu.contains(e.target) || e.target.closest("a")) closeMenu(menu);
   });
   document.addEventListener("keydown", function (e) {
     const menu = document.getElementById("acct-menu");
-    if (e.key === "Escape" && menu && !menu.hidden) { menu.hidden = true; document.getElementById("acct-btn").focus(); }
+    // Keyboard: close at once, no animation.
+    if (e.key === "Escape" && menu && !menu.hidden) { menu.hidden = true; document.getElementById("acct-btn").setAttribute("aria-expanded", "false"); document.getElementById("acct-btn").focus(); }
   });
 
   function signOut() {
@@ -458,7 +478,11 @@
     forgetDeviceData();
     // Signed out -> back to a fresh guest session where guests are allowed, otherwise the sign-in screen.
     const finish = function () {
-      if (allowGuest) { App.storageSet(GUEST_KEY, "1"); enter({ id: "guest", guest: true, name: "Guest", email: "", provider: "guest", avatar: "" }); }
+      if (allowGuest) {
+        App.storageSet(GUEST_KEY, "1");
+        enter({ id: "guest", guest: true, name: "Guest", email: "", provider: "guest", avatar: "" });
+        if (App.toast) App.toast("Signed out. You're browsing as a guest.", { type: "info" });
+      }
       else { setMode("signin"); showAuth(); }
     };
     if (client) done.then(function () { return client.auth.signOut(); }).then(finish, finish);

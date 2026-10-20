@@ -242,7 +242,7 @@
     const pct = run.mode === "sprint" ? Math.max(0, (run.endsAt - Date.now()) / 120000) * 100 : run.mode === "set" ? done / 10 * 100 : 0;
     root.innerHTML =
       '<div class="drill-run">' +
-        '<div class="d-bar"><div class="d-bar-fill" id="d-fill" style="width:' + pct.toFixed(1) + '%"></div></div>' +
+        '<div class="d-bar"><div class="d-bar-fill" id="d-fill" style="transform:scaleX(' + (pct / 100).toFixed(3) + ')"></div></div>' +
         '<div class="d-top"><span class="d-cat">' + esc(c.label) + levelDots(q.level) + "</span>" +
           '<span class="d-score"><b>' + run.correct + "</b> correct" + (run.streak > 1 ? ' · <span class="d-streak">' + run.streak + " streak</span>" : "") + "</span>" + meter + "</div>" +
         '<p class="d-q">' + esc(q.text) + "</p>" +
@@ -310,7 +310,7 @@
         const fill = document.getElementById("d-fill");
         const secs = Math.ceil(left / 1000);
         if (t) t.textContent = Math.floor(secs / 60) + ":" + String(secs % 60).padStart(2, "0");
-        if (fill) fill.style.width = (left / 120000 * 100).toFixed(1) + "%";
+        if (fill) fill.style.transform = "scaleX(" + (left / 120000).toFixed(3) + ")";
         if (left <= 0) finish();
       }, 250);
     }

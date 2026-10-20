@@ -275,22 +275,24 @@
 
   const tip = document.createElement("div");
   tip.className = "tooltip";
-  tip.hidden = true;
+  (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true);
   document.body.appendChild(tip);
   root.addEventListener("mouseover", function (e) {
     const t = e.target.closest("[data-tip]");
-    if (!t) { tip.hidden = true; return; }
+    if (!t) { (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true); return; }
     tip.textContent = t.getAttribute("data-tip");
+    // The first tooltip eases in; moving to a neighbour shows it instantly.
+    tip.toggleAttribute("data-instant", !tip.hidden || Date.now() - (tip.hiddenAt || 0) < 300);
     tip.hidden = false;
     const r = t.getBoundingClientRect();
     tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 8, Math.max(8, r.left + r.width / 2 - tip.offsetWidth / 2)) + "px";
     tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px";
   });
-  root.addEventListener("mouseleave", function () { tip.hidden = true; });
+  root.addEventListener("mouseleave", function () { (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true); });
 
   let onAdmin = false;
   App.onRoute(function (route) {
-    tip.hidden = true;
+    (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true);
     const was = onAdmin;
     onAdmin = route.tab === "admin";
     if (!onAdmin) { root.innerHTML = ""; return; }

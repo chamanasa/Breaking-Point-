@@ -106,6 +106,7 @@
       setStatus("Connected.", "ok");
       changingKey = false;
       paintMode();
+      App.toast("Gemini connected");
     } catch (err) {
       setStatus("Google didn't accept this key: " + err.message, "err");
     } finally {
@@ -130,6 +131,7 @@
     el.key.value = "";
     setStatus("Key removed from this browser.");
     paintMode();
+    App.toast("Key removed from this browser", { type: "info" });
   });
   el.model.addEventListener("change", function () {
     devSet(MODEL_STORE, el.model.value.trim() || null);
@@ -238,6 +240,8 @@
     e.stopPropagation();
     setDrawer(true);
   });
+  // On phones the question list is a drawer: swipe it left to close.
+  if (App.sheetDrag) App.sheetDrag(el.pickerPanel, el.pickerPanel, function () { setDrawer(false); }, { axis: "x", sign: -1 });
   // Tapping the dimmed area beside the drawer closes it.
   el.chatShell.addEventListener("click", function (e) {
     if (el.chatShell.classList.contains("show-picker") && !el.pickerPanel.contains(e.target)) setDrawer(false);

@@ -168,7 +168,7 @@
       "</div>";
   }
 
-  function render() {
+  function draw() {
     // Progress is for signed-in users only: guests see just a sign-in button.
     if (!App.signedIn()) {
       root.innerHTML = lockedView();
@@ -234,28 +234,43 @@
       dataControls();
   }
 
+  // Reset is destructive and can't be undone, so it asks for a press-and-hold
+  // rather than a click and a dialog.
+  function render() {
+    draw();
+    const reset = document.getElementById("pg-reset");
+    if (reset) App.holdToConfirm(reset, function () {
+      App.data().activity = [];
+      App.saveData();
+      render();
+      App.toast("Progress reset");
+    }, "Press and hold to reset all your progress");
+  }
+
   function dataControls() {
     return '<div class="data-controls"><span class="muted">Saved to your account, on every device you sign in on.</span>' +
       '<button class="linkish" type="button" id="pg-export">Download a copy</button>' +
-      '<button class="linkish danger" type="button" id="pg-reset">Reset progress</button></div>';
+      '<button class="btn ghost sm" type="button" id="pg-reset">Reset progress</button></div>';
   }
 
   /* ---------- Tooltip, data controls ---------- */
 
   const tip = document.createElement("div");
   tip.className = "tooltip";
-  tip.hidden = true;
+  (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true);
   document.body.appendChild(tip);
   root.addEventListener("mouseover", function (e) {
     const t = e.target.closest("[data-tip]");
-    if (!t) { tip.hidden = true; return; }
+    if (!t) { (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true); return; }
     tip.textContent = t.getAttribute("data-tip");
+    // The first tooltip eases in; moving to a neighbour shows it instantly.
+    tip.toggleAttribute("data-instant", !tip.hidden || Date.now() - (tip.hiddenAt || 0) < 300);
     tip.hidden = false;
     const r = t.getBoundingClientRect();
     tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 8, Math.max(8, r.left + r.width / 2 - tip.offsetWidth / 2)) + "px";
     tip.style.top = (r.top - tip.offsetHeight - 8 < 0 ? r.bottom + 8 : r.top - tip.offsetHeight - 8) + "px";
   });
-  root.addEventListener("mouseleave", function () { tip.hidden = true; });
+  root.addEventListener("mouseleave", function () { (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true); });
 
   root.addEventListener("click", function (e) {
     if (e.target.id === "pg-export") {
@@ -266,18 +281,13 @@
       a.download = "breaking-point-progress.json";
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-    } else if (e.target.id === "pg-reset") {
-      if (window.confirm("Delete all your tracked interviews, drills and reading history? This can't be undone.")) {
-        App.data().activity = [];
-        App.saveData();
-        render();
-      }
+      App.toast("Downloaded a copy of your progress", { type: "info" });
     }
   });
 
   let onProgress = false;
   App.onRoute(function (route) {
-    tip.hidden = true;
+    (tip.hiddenAt = tip.hidden ? tip.hiddenAt : Date.now(), tip.hidden = true);
     onProgress = route.tab === "progress";
     if (onProgress) render();
   });
