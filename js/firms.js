@@ -29,7 +29,7 @@
     const global = App.firms.filter(function (f) { return f.group === "global"; });
     const india = App.firms.filter(function (f) { return f.group === "india"; });
     root.innerHTML =
-      '<div class="page-head"><h1>Firm-Specific Prep</h1>' +
+      '<div class="page-head"><h1>Firm prep</h1>' +
       '<p class="subtitle">Pick your target firm for its interview format, what it screens for, a prep plan built around your interview date, and mock interviews run in that firm&rsquo;s style.</p></div>' +
       '<h3 class="mod-group">Global strategy firms</h3><ul class="firm-grid">' + global.map(card).join("") + "</ul>" +
       '<h3 class="mod-group">India-focused and specialist firms</h3><ul class="firm-grid">' + india.map(card).join("") + "</ul>" +

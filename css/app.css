@@ -164,11 +164,16 @@ svg.ill { width: 100%; height: auto; display: block; overflow: visible; }
 /* ---------- Question bank ---------- */
 
 .filters {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem 1.2rem; align-items: end;
+  display: grid; grid-template-columns: minmax(0, 2fr) auto minmax(0, 1fr); gap: 1rem 1.2rem; align-items: end;
   padding: 1.2rem; margin: 1.5rem 0 1rem; background: var(--raised); box-shadow: var(--shadow); border-radius: var(--r);
 }
-.filters .field.search { grid-column: span 2; }
-.filters .field.diff-field { grid-column: span 2; }
+.more-filters { grid-column: 1 / -1; }
+.more-filters summary { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; list-style: none; font-size: 0.875rem; font-weight: 500; color: var(--text-2); }
+.more-filters summary::-webkit-details-marker { display: none; }
+.more-filters summary::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform 200ms var(--ease-out); }
+.more-filters[open] summary::after { transform: translateY(1px) rotate(-135deg); }
+@media (hover: hover) and (pointer: fine) { .more-filters summary:hover { color: var(--text); } }
+.more-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem 1.2rem; margin-top: 0.9rem; }
 .result-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.92rem; color: var(--text-3); margin: 1rem 0 0.8rem; }
 .qlist { list-style: none; padding: 0; margin: 0; max-width: none; display: grid; gap: 0.5rem; }
 .qitem {
@@ -251,17 +256,12 @@ body.reader-open { overflow: hidden; }
 /* ---------- AI mode: full-page chat ---------- */
 
 body.ai-full { overflow: hidden; }
-body.ai-full .site-foot, body.ai-full .site-header { display: none; }
+body.ai-full .site-foot { display: none; }
 body.ai-full #view-ai > h1, body.ai-full #view-ai > .subtitle { display: none; }
-.chat-shell { position: fixed; inset: 0; z-index: 5; height: 100vh; height: 100dvh; display: grid; grid-template-columns: 300px minmax(0, 1fr); background: var(--bg); }
+/* The interview fills the window under the site header, so the menu never changes */
+.chat-shell { position: fixed; inset: var(--header-h) 0 0 0; z-index: 5; display: grid; grid-template-columns: 300px minmax(0, 1fr); background: var(--bg); }
 
 .picker-panel { border-right: 1px solid var(--line); background: var(--raised); display: flex; flex-direction: column; min-height: 0; }
-.side-top { padding: 1rem 1rem 0.8rem; border-bottom: 1px solid var(--line); }
-.side-brand { display: inline-flex; align-items: center; gap: 0.55rem; font: 600 1rem/1 var(--font); letter-spacing: -0.02em; color: var(--text); margin-bottom: 0.8rem; }
-.side-nav { display: flex; gap: 0.25rem; }
-.side-nav a { flex: 1; text-align: center; font-weight: 500; font-size: 0.86rem; color: var(--text-2); padding: 0.4rem 0.3rem; border-radius: var(--r-sm); white-space: nowrap; transition: background-color var(--t-hover) ease, color var(--t-hover) ease; }
-.side-nav a[aria-current="page"] { background: var(--text); color: var(--bg); }
-@media (hover: hover) and (pointer: fine) { .side-nav a:not([aria-current]):hover { background: var(--surface); color: var(--text); } }
 .picker-head { padding: 1rem 1rem 0.8rem; border-bottom: 1px solid var(--line); }
 .picker-head h2 { font-size: 1rem; margin: 0 0 0.6rem; }
 .picker-head .chips { margin-top: 0.6rem; }
@@ -729,7 +729,8 @@ body.auth-open { overflow: hidden; }
   .learn-cards, .tips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .setup-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .chat-shell { grid-template-columns: 260px minmax(0, 1fr); }
-  .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .filters .field.search { grid-column: 1 / -1; }
   .kpis, .kpis:has(.kpi-ring) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kpis li.kpi-ring { grid-column: 1 / -1; }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -742,6 +743,7 @@ body.auth-open { overflow: hidden; }
   .learn-cards, .tips, .duo, .fw-grid, .compare, .nest, .sc-cols, .sc-compare, .setup-steps { grid-template-columns: minmax(0, 1fr); }
   .filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 1rem; }
   .filters .field.search, .filters .field.diff-field { grid-column: 1 / -1; }
+  .more-grid { grid-template-columns: minmax(0, 1fr); }
   .qitem { grid-template-columns: minmax(0, 1fr); padding: 1rem; }
   .qitem .qid { padding: 0; }
   .qitem .qmeta, .qitem details { grid-column: 1; }
@@ -818,7 +820,6 @@ body.auth-open { overflow: hidden; }
   .d-form input { max-width: none; }
   .d-top { padding: 0.8rem 1rem; font-size: 0.86rem; flex-wrap: wrap; }
   .d-q { margin-top: 1.8rem; }
-  .side-nav a { font-size: 0.82rem; }
   .auth { grid-template-columns: minmax(0, 1fr); }
   .auth-side { display: none; }
   .auth-main { justify-content: flex-start; padding: 5.5rem 1.25rem 2rem; }
@@ -849,8 +850,11 @@ body.auth-open { overflow: hidden; }
 
 /* Full-screen chat on phones: keep controls clear of the notch and home bar */
 @media (max-width: 820px) {
+  /* On phones the interview is a focused full-screen view with a back arrow */
+  body.ai-full .site-header { display: none; }
+  .chat-shell { inset: 0; }
   .chat-head { padding-top: calc(0.45rem + env(safe-area-inset-top)); }
-  .side-top { padding-top: calc(1rem + env(safe-area-inset-top)); }
+  .picker-head { padding-top: calc(1rem + env(safe-area-inset-top)); }
   .reader-panel { padding-bottom: env(safe-area-inset-bottom); }
 }
 .reader-body, .pick-list, .messages, .acct-menu { overscroll-behavior: contain; }

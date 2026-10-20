@@ -11,7 +11,7 @@ An AI-powered consulting case-prep website, starting with guesstimates.
 - **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm. Each has a one-line hint and a full model interview transcript (clarifying questions, structure, push-back, calculation, sanity check, final answer).
 - **AI Mode**: step-by-step setup for a free Gemini API key, then a full-page chat to practise any question with an AI interviewer, by typing or as a spoken voice interview (the interviewer speaks, listens, and replies by voice; uses the browser's built-in speech features in Chrome, Edge and Safari), ending with a scorecard.
 
-The design follows Emil Kowalski's design-engineering principles and Apple's fluid-interface guidelines: a neutral light and dark theme (it follows the system setting), the Geist typeface with tighter tracking as type grows, depth from soft see-through shadows rather than borders, and a frosted header that content scrolls under. The brand colour (oxblood) marks the logo, the data and key moments; primary buttons are ink. The home page opens on a working demo with four tabs: a taxi estimate you can adjust, an interviewer pushing back, a scorecard and a maths question you can answer. Motion is purposeful and quick: buttons give on press, menus grow from what opened them, the reader is a sheet you can drag down on phones, destructive resets ask you to press and hold, and toasts confirm what happened. Everything respects reduced motion (gentler, not none). All colours, shadows, curves and durations live as tokens at the top of `css/style.css`.
+The design follows Emil Kowalski's design-engineering principles and Apple's fluid-interface guidelines: a neutral light and dark theme (it follows the system setting), the Geist typeface with tighter tracking as type grows, depth from soft see-through shadows rather than borders, and a frosted header that content scrolls under. The brand colour (oxblood) marks the logo, the data and key moments; primary buttons are ink. The site follows one path, in the same order in the menu, on the home page and in the footer: Learn (the guides) → Questions (77 guesstimates with model answers) → Mock interview (the AI interviewer) → Progress, with Maths drills and Firm prep as supporting tools. The home page is just four parts: a headline with one live question to try, the four steps of that path, the two supporting tools, and a short FAQ. Motion is purposeful and quick: buttons give on press, menus grow from what opened them, the reader is a sheet you can drag down on phones, destructive resets ask you to press and hold, and toasts confirm what happened. Everything respects reduced motion (gentler, not none). All colours, shadows, curves and durations live as tokens at the top of `css/style.css`.
 
 ## Run locally
 
@@ -26,7 +26,7 @@ To deploy with GitHub Pages, go to **Settings → Pages → Deploy from branch**
 ## Project layout
 
 ```
-index.html          the three tabs; Home is the module hub, linking to learn/
+index.html          the app: home, questions, mock interview, maths, firms, progress
 learn/              one page per Learn topic: introduction, frameworks, pro-tips,
                     worked-example, numbers (each with its own illustrations)
 css/style.css       Design system: tokens (light/dark), buttons, header, footer, toasts, home page
@@ -77,4 +77,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=25`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=26`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.

@@ -153,7 +153,7 @@
   // Signed-out view: the page header, a faded preview of the dashboard, and a sign-in card.
   function lockedView() {
     const bars = [62, 48, 74, 55, 81, 67].map(function (h) { return '<i style="height:' + h + '%"></i>'; }).join("");
-    return '<div class="page-head"><h1>Track Your Progress</h1>' +
+    return '<div class="page-head"><h1>Progress</h1>' +
       '<p class="subtitle">Every mock interview, maths drill and prep plan in one place, with what to work on next.</p></div>' +
       '<div class="locked-wrap">' +
         '<div class="locked-preview" aria-hidden="true">' +
@@ -184,7 +184,7 @@
     }
     const list = App.activity();
     const m = metrics(list);
-    const head = '<div class="page-head"><h1>Track Your Progress</h1>' +
+    const head = '<div class="page-head"><h1>Progress</h1>' +
       '<p class="subtitle">Every mock interview, maths drill and model interview you&rsquo;ve done, in one place, with what to work on next.</p></div>';
 
     if (!list.length) {

@@ -198,7 +198,7 @@
         '<span class="dcat-ex">' + esc(example) + "</span></button>";
     };
     root.innerHTML =
-      '<div class="page-head"><h1>Mental Maths Driller</h1>' +
+      '<div class="page-head"><h1>Maths drills</h1>' +
       '<p class="subtitle">The arithmetic consulting interviews actually test, in Indian and global units. Difficulty adapts to you: answer fast and right to level up.</p></div>' +
       '<div class="drill-setup">' +
         '<h2 class="step-h"><span>1</span>Pick a skill</h2>' +
