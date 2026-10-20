@@ -198,7 +198,7 @@
         '<span class="dcat-ex">' + esc(example) + "</span></button>";
     };
     root.innerHTML =
-      '<div class="page-head"><p class="kicker">Skill builder</p><h1>Mental Maths Driller</h1>' +
+      '<div class="page-head"><h1>Mental Maths Driller</h1>' +
       '<p class="subtitle">The arithmetic consulting interviews actually test, in Indian and global units. Difficulty adapts to you: answer fast and right to level up.</p></div>' +
       '<div class="drill-setup">' +
         '<h2 class="step-h"><span>1</span>Pick a skill</h2>' +
@@ -336,7 +336,7 @@
     const misses = r.items.filter(function (it) { return !it.ok; });
     const weakest = Object.keys(byCat).sort(function (a, b) { return byCat[a].ok / byCat[a].n - byCat[b].ok / byCat[b].n; })[0];
     root.innerHTML =
-      '<div class="page-head"><p class="kicker">Drill complete</p><h1>' + (acc >= 85 ? "Sharp work." : acc >= 60 ? "Solid round." : "Good reps. Keep going.") + "</h1></div>" +
+      '<div class="page-head"><h1>' + (acc >= 85 ? "Sharp work." : acc >= 60 ? "Solid round." : "Good reps. Keep going.") + "</h1></div>" +
       '<ul class="kpis">' +
         '<li><span>Accuracy</span><b>' + acc + "%</b><small>" + r.correct + " of " + n + " correct</small></li>" +
         "<li><span>Average time</span><b>" + avg.toFixed(1) + "s</b><small>per question</small></li>" +

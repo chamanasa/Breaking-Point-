@@ -11,7 +11,7 @@ An AI-powered consulting case-prep website, starting with guesstimates.
 - **Question Bank**: 77 guesstimates asked in consulting interviews, filterable by difficulty, industry, type, approach and firm. Each has a one-line hint and a full model interview transcript (clarifying questions, structure, push-back, calculation, sanity check, final answer).
 - **AI Mode**: step-by-step setup for a free Gemini API key, then a full-page chat to practise any question with an AI interviewer, by typing or as a spoken voice interview (the interviewer speaks, listens, and replies by voice; uses the browser's built-in speech features in Chrome, Edge and Safari), ending with a scorecard.
 
-The design is a clean product style: a white canvas, the Inter typeface, one blue accent (`#2457f5`), soft borders and shadows, and generous spacing. All colours live as tokens at the top of `css/style.css`.
+The design sets oxblood ink (`#7d0c14`) on grey paper (`#e2e2e2`), with Barlow Condensed for display type and Barlow for text. The home page is built as a series of short statements, each with its evidence: the headline is split by a live frame (a taxi estimate you can adjust, a mock interview, a scorecard and a maths drill) that steps through as you scroll. App screens are a quiet ledger: ink chrome, thin panel lines, oxblood for the main action and the main data. On phones the sections sit in a bottom tab bar. All colours, type sizes and motion curves live as tokens at the top of `css/style.css`.
 
 ## Run locally
 
@@ -29,7 +29,8 @@ To deploy with GitHub Pages, go to **Settings → Pages → Deploy from branch**
 index.html          the three tabs; Home is the module hub, linking to learn/
 learn/              one page per Learn topic: introduction, frameworks, pro-tips,
                     worked-example, numbers (each with its own illustrations)
-css/style.css       Design system: tokens, components, responsive rules
+css/style.css       Design system: tokens, buttons, header, footer, home page, motion
+css/app.css         App screens: questions, reader, AI interview, drills, firms, progress, sign-in, admin, guides
 data/questions.js   the question bank (edit this to add questions)
 data/transcripts-*.js  model interview for each question, keyed by id
 data/numbers.js     India Numbers Bible tables (value, source, year) and chart data
@@ -43,10 +44,11 @@ js/admin.js         users list for admins (#admin)
 js/gate.js          sends signed-out visitors from learn/ pages to sign-in
 js/track.js         records page views for the admin Visitors tab (no IPs, honours Do Not Track)
 js/vendor/          Supabase client library (MIT)
-js/drill.js, js/firms.js, js/progress.js, js/home.js   maths, firm prep, progress, home extras
+js/drill.js, js/firms.js, js/progress.js, js/home.js   maths, firm prep, progress, the live taxi estimate
+js/motion.js        home page motion: the scrolling reel, entrances, counting figures
 data/firms.js       firm profiles and logo colours
 supabase/schema.sql users table, admin list and access rules (run once in Supabase)
-fonts/              Inter variable font (SIL OFL)
+fonts/              Barlow and Barlow Condensed (SIL OFL)
 ```
 
 ## Adding questions
@@ -75,4 +77,4 @@ Each user pastes their own Gemini API key, which they can create at <https://ais
 
 ## Publishing updates
 
-`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=23`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.
+`index.html` and the pages in `learn/` load CSS and JS with a version tag (`?v=24`). Increase the number whenever you change those files, so browsers fetch the new versions instead of cached ones. Also bump `BUILD` in `js/update.js` and the number in `version.txt` to the same value: returning visitors with an old cached page are then reloaded onto the new release automatically.

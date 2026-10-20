@@ -761,7 +761,7 @@
     voice.active = true;
     el.composer.hidden = true;
     el.voiceBar.hidden = false;
-    try { synth.speak(new SpeechSynthesisUtterance("")); } catch (e) { /* iOS: unlock speech on this tap */ }
+    try { synth.speak(new SpeechSynthesisUtterance("")); } catch (e) { /* iOS: speech only starts after a tap, so prime it here */ }
     if (!session || session.feedback || session.question.id !== selectedId) {
       setVoiceState("thinking", "Starting the interview…");
       startInterview(true);

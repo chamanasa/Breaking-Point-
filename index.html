@@ -6,305 +6,224 @@
   <title>Breaking Point · Consulting Case Prep</title>
   <meta name="description" content="Learn, practise and rehearse consulting guesstimates, with an AI interviewer powered by your own Gemini API key.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=23">
-  <script>document.documentElement.classList.add("auth-pending");</script>
-  <script src="js/update.js?v=23"></script>
-  <script src="js/config.js?v=23"></script>
-  <script src="js/track.js?v=23"></script>
+  <link rel="stylesheet" href="css/style.css?v=24">
+  <link rel="stylesheet" href="css/app.css?v=24">
+  <script>document.documentElement.classList.add("auth-pending", "js");</script>
+  <script src="js/update.js?v=24"></script>
+  <script src="js/config.js?v=24"></script>
+  <script src="js/track.js?v=24"></script>
 </head>
 <body>
 
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="#learn" aria-label="Breaking Point home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg><span class="brand-name">Breaking Point</span></a>
+    <a class="brand" href="#learn" aria-label="Breaking Point home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="4" fill="#7d0c14"/><path d="M6.5 22l6-6 4.5 4.5 8.5-9.5" fill="none" stroke="#e2e2e2" stroke-width="2.8"/></svg><span class="brand-name">Breaking Point</span></a>
     <nav class="tabs" aria-label="Sections">
       <a href="#learn" data-tab="learn">Home</a>
-      <a href="#bank" data-tab="bank">Questions</a>
-      <a href="#ai" data-tab="ai">AI Interview</a>
-      <a href="#drill" data-tab="drill">Maths</a>
-      <a href="#firms" data-tab="firms">Firms</a>
-      <a href="#progress" data-tab="progress">Progress</a>
+      <a href="#bank" data-tab="bank"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg>Questions</a>
+      <a href="#ai" data-tab="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>Interview</a>
+      <a href="#drill" data-tab="drill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h6M8 4v6M14 7h5M5 15l5 5M10 15l-5 5M14 16h5M14 19h5"/></svg>Maths</a>
+      <a href="#firms" data-tab="firms"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M2 21h20M8 8h3M8 12h3M8 16h3"/></svg>Firms</a>
+      <a href="#progress" data-tab="progress"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-8M11 20V5M17 20v-5M3 20h18"/></svg>Progress</a>
     </nav>
-    <a class="btn header-cta" href="#ai">Start practising</a>
+    <a class="btn header-cta" href="#ai">Start a mock interview</a>
     <div class="user-slot" id="user-slot"></div>
   </div>
 </header>
 
-<!-- ============================================================
-     SIGN IN / CREATE ACCOUNT (shown before the app; see js/auth.js)
-     ============================================================ -->
-<section class="auth" id="auth" hidden aria-labelledby="auth-title">
-  <div class="auth-main">
-    <a class="auth-brand" href="#learn"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg>Breaking Point</a>
-    <div class="auth-card">
-      <div id="auth-start">
-        <h1 id="auth-title">Welcome back</h1>
-        <p class="auth-sub" id="auth-sub">Sign in to continue your case prep.</p>
-        <p class="auth-msg warn" id="auth-preview">Preview mode: accounts aren&rsquo;t connected on this site yet.</p>
-        <div class="auth-social" id="auth-social">
-          <button class="social-btn" type="button" data-provider="google">
-            <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            Continue with Google
-          </button>
-          <button class="social-btn" type="button" data-provider="facebook">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
-            Continue with Facebook
-          </button>
-        </div>
-        <div class="auth-or"><span>or</span></div>
-        <form class="auth-form" id="auth-form" novalidate>
-          <div class="field" id="auth-name-row" hidden>
-            <label for="auth-name">Full name</label>
-            <input id="auth-name" type="text" autocomplete="name" placeholder="Aditi Sharma">
-          </div>
-          <div class="field">
-            <label for="auth-email">Email</label>
-            <input id="auth-email" type="email" autocomplete="email" placeholder="you@college.edu" required>
-          </div>
-          <button class="btn lg auth-submit" type="submit" id="auth-submit">Continue with email</button>
-          <p class="auth-msg" id="auth-msg" hidden></p>
-        </form>
-        <p class="auth-switch"><span id="auth-switch-text">New to Breaking Point?</span> <button class="linkish" type="button" id="auth-switch">Create an account</button></p>
-      </div>
 
-      <div id="auth-code" hidden>
-        <button class="back-link linkish" type="button" id="auth-back">&larr; Use a different email</button>
-        <h1>Check your email</h1>
-        <p class="auth-sub">We sent a verification code to <b id="auth-code-to"></b>. It expires in an hour.</p>
-        <div class="otp" id="auth-otp" role="group" aria-label="Verification code"></div>
-        <button class="btn lg auth-submit" type="button" id="auth-verify">Verify and continue</button>
-        <p class="auth-msg" id="auth-code-msg" hidden></p>
-        <p class="auth-switch"><button class="linkish" type="button" id="auth-resend" disabled>Resend code</button></p>
-      </div>
-    </div>
-    <p class="auth-legal">By continuing you agree to our <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.</p>
-    <button class="linkish auth-guest" type="button" id="auth-guest" hidden>Continue as a guest &rarr;</button>
-  </div>
-
-  <aside class="auth-side" aria-hidden="true">
-    <div class="auth-side-inner">
-      <p class="auth-quote">&ldquo;Estimate the number of credit cards in India.&rdquo;</p>
-      <div class="demo-chat">
-        <div class="demo-msg i"><span>Interviewer</span>Before any numbers, how would you structure this?</div>
-        <div class="demo-msg c"><span>You</span>Split adults by income band, then cards per holder in each band, and cross-check against bank issuance.</div>
-        <div class="demo-msg i"><span>Interviewer</span>Good. Why income rather than age?</div>
-      </div>
-      <div class="demo-score">
-        <div class="demo-score-top"><b>7.8</b><span>/ 10</span><em>On track</em></div>
-        <ul>
-          <li><span>Structure</span><i class="p4"></i></li>
-          <li><span>Assumptions</span><i class="p3"></i></li>
-          <li><span>Maths</span><i class="p5"></i></li>
-          <li><span>Sanity check</span><i class="p3"></i></li>
-        </ul>
-      </div>
-      <ul class="auth-points">
-        <li>An AI interviewer that pushes back, by text or voice</li>
-        <li>77 guesstimates with full model interviews</li>
-        <li>Prep plans for McKinsey, BCG, Bain and 12 more firms</li>
-      </ul>
-    </div>
-  </aside>
-</section>
-
-<main class="wrap">
+<main>
 
 <!-- ============================================================
      TAB 1 — LEARN
      ============================================================ -->
-<article id="view-learn" class="view">
-  <!-- Landing: heading + one card per topic; each topic is its own page in learn/ -->
+<article id="view-learn" class="view home">
   <div id="learn-home">
-    <section class="hero2">
-      <div class="hero2-copy">
-        <p class="eyebrow">Consulting case prep</p>
-        <h1>Practise the case interview until it feels routine.</h1>
-        <p class="lead">Real interview questions, a model answer for every one, and an AI interviewer that questions your structure, challenges your assumptions and scores you on six criteria.</p>
-        <div class="cta">
-          <a class="btn lg" href="#ai">Start a mock interview</a>
-          <a class="btn ghost lg" href="#bank">Browse 77 questions</a>
-        </div>
-        <div class="hero2-firms">
-          <div class="logos-inline" id="logo-wall"></div>
-          <span>Prep for McKinsey, BCG, Bain and 12 more firms</span>
-        </div>
-      </div>
-      <div class="hero2-demo" aria-hidden="true">
-        <div class="demo-window">
-          <div class="demo-bar"><span class="dots"><i></i><i></i><i></i></span><b>Mock interview &middot; Swiggy orders in Delhi</b><span class="demo-timer">08:42</span></div>
-          <div class="demo-body">
-            <div class="demo-msg i"><span>Interviewer</span>How many orders does Swiggy deliver in Delhi on a typical day?</div>
-            <div class="demo-msg c"><span>You</span>I&rsquo;ll size it from the demand side: online-ordering households, times orders per week, times Swiggy&rsquo;s share. Then I&rsquo;ll sanity-check against restaurant capacity.</div>
-            <div class="demo-msg i"><span>Interviewer</span>What share of Delhi households order online at all? Justify it.</div>
-            <div class="demo-typing"><i></i><i></i><i></i></div>
+
+    <!-- Hero: the sentence split by a frame. The frame is a reel of working
+         fragments; it advances as the page scrolls while the halves hold. -->
+    <section class="hero" id="hero" aria-labelledby="hero-h">
+      <div class="hero-stage">
+        <h1 class="hero-title" id="hero-h"><span class="h-a">Crack the</span> <span class="h-b">case interview</span></h1>
+
+        <div class="reel-window">
+          <div class="reel" id="reel">
+            <div class="frame is-on" data-ui data-step="0">
+              <div class="frame-bar"><span>Live estimate</span><span>From question G077</span></div>
+              <div class="frame-body">
+                <form class="est" id="est" aria-label="Estimate the taxis in Mumbai" onsubmit="return false">
+                  <p class="est-q">How many kaali-peeli taxis does Mumbai have?</p>
+                  <div class="est-chain">
+                    <div class="est-row"><span>1.3 crore people, 1.4 trips a day each</span><b>1.8 crore trips</b></div>
+                    <label class="est-row" for="est-share"><span>Share taken by kaali-peeli</span><b id="est-share-v">2.5%</b><input id="est-share" type="range" min="1" max="6" step="0.5" value="2.5"></label>
+                    <label class="est-row" for="est-tpt"><span>Trips one taxi does a day</span><b id="est-tpt-v">15</b><input id="est-tpt" type="range" min="8" max="25" step="1" value="15"></label>
+                  </div>
+                  <output class="est-out" id="est-out" for="est-share est-tpt" aria-live="polite"><span class="lbl">Taxis Mumbai needs</span><span class="est-num" id="est-num">30,000</span><span class="ma" id="est-ma">Model answer: 30,000 to 40,000</span></output>
+                </form>
+              </div>
+            </div>
+            <div class="frame" data-ui data-step="1">
+              <div class="frame-bar"><span>Mock interview: Swiggy orders in Delhi</span><span>08:42</span></div>
+              <div class="frame-body chatlet">
+                <p><span class="who">Interviewer</span>How many orders does Swiggy deliver in Delhi on a typical day?</p>
+                <p class="me"><span class="who">You</span>Households that order online, times orders a week, times Swiggy&rsquo;s share.</p>
+                <p class="push"><span class="who">Interviewer</span>Why households rather than people? Justify it.</p>
+              </div>
+            </div>
+            <div class="frame" data-ui data-step="2">
+              <div class="frame-bar"><span>Scorecard</span><span>After 14 minutes</span></div>
+              <div class="frame-body">
+                <div class="scorelet">
+                  <p class="scorelet-n">7.7<small>out of 10, on track</small></p>
+                  <ul>
+                    <li><span>Clarification</span><i style="--v:4"></i><b>4</b></li>
+                    <li><span>Structure</span><i style="--v:5"></i><b>5</b></li>
+                    <li><span>Assumptions</span><i style="--v:4"></i><b>4</b></li>
+                    <li><span>Maths</span><i style="--v:4"></i><b>4</b></li>
+                    <li><span>Sanity check</span><i style="--v:3"></i><b>3</b></li>
+                    <li><span>Communication</span><i style="--v:3"></i><b>3</b></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="frame" data-ui data-step="3">
+              <div class="frame-bar"><span>Maths drill: units</span><span>Level 3</span></div>
+              <div class="frame-body drilllet">
+                <p class="drilllet-q">45 crore = ? million</p>
+                <p class="drilllet-a"><span>450</span></p>
+                <p class="drilllet-ok">Correct in 3.1 seconds</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="demo-score floating">
-          <div class="demo-score-top"><b>8.2</b><span>/ 10</span><em>Strong</em></div>
-          <ul>
-            <li><span>Clarification</span><i class="p4"></i></li>
-            <li><span>Structure</span><i class="p5"></i></li>
-            <li><span>Maths</span><i class="p4"></i></li>
-            <li><span>Sanity check</span><i class="p3"></i></li>
+
+        <p class="reel-count" id="reel-count" aria-hidden="true">1 of 4</p>
+
+        <div class="hero-foot">
+          <p>Real guesstimates from consulting interviews in India, a model answer for each, and an AI interviewer that pushes back. Free.</p>
+          <div class="hero-acts">
+            <a class="btn lg" href="#ai">Start a mock interview</a>
+            <a class="arrow-link" href="#bank">Browse the 77 questions</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase: the question bank, with a model interview laid over the type -->
+    <section class="home-sec show" aria-labelledby="show-h">
+      <h2 class="show-h" id="show-h"><span class="l1">77 real</span><span class="l2">guesstimates</span></h2>
+      <figure class="show-obj frame" data-ui data-reveal>
+        <div class="frame-bar"><span>Model interview: taxis in Mumbai</span><span>G077</span></div>
+        <div class="frame-body">
+          <ol class="tx">
+            <li class="is-i"><span class="spk">Interviewer</span><span>Estimate the number of taxis in Mumbai.</span></li>
+            <li class="is-c"><span class="spk">Candidate</span><span>The black-and-yellow kaali-peeli taxis, not app cabs or autos?</span></li>
+            <li class="is-i"><span class="spk">Interviewer</span><span>Kaali-peeli only.</span></li>
+            <li class="is-c"><span class="spk">Candidate</span><span>Daily trips in Mumbai, times the taxi share, divided by trips per taxi per day. Then a peak-hour check.</span></li>
+            <li class="is-i"><span class="spk">Interviewer</span><span>Does peak change anything?</span></li>
+          </ol>
+        </div>
+      </figure>
+      <div class="g12">
+        <div class="show-facts" data-reveal>
+          <p>Each one was asked in a consulting interview in India, at firms such as McKinsey, BCG, Bain, Kearney and Redseer.</p>
+          <p>Every question comes with a full model interview, line by line, so you can see how a strong candidate clarifies, structures and checks the number.</p>
+          <a class="arrow-link" href="#bank">Browse the questions <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- List: everything on the site, live and coming -->
+    <section class="home-sec mods-sec" id="modules" aria-labelledby="mods-h">
+      <h2 class="sec-h" id="mods-h"><span class="ind">Everything you</span>can practise here</h2>
+      <div class="g12 mods-body">
+        <div class="guides" data-reveal>
+          <h3>New to guesstimates? Start with the method.</h3>
+          <p>Five short guides take you from the first question to a full answer.</p>
+          <ul class="guide-links">
+            <li><a href="learn/introduction.html">Introduction</a></li>
+            <li><a href="learn/frameworks.html">Frameworks</a></li>
+            <li><a href="learn/pro-tips.html">Pro tips</a></li>
+            <li><a href="learn/worked-example.html">Worked example</a></li>
+            <li><a href="learn/numbers.html">India Numbers Bible</a></li>
           </ul>
         </div>
+        <p class="tbl-word" aria-hidden="true">Modules</p>
+        <ul class="mod-table" data-reveal-rows aria-label="Modules">
+          <li><a class="mod-row2" href="learn/introduction.html"><span class="k">Case</span><span class="n">Guesstimates</span><span class="v">Live <span aria-hidden="true">&rarr;</span></span></a></li>
+          <li><div class="mod-row2"><span class="k">Case</span><span class="n">Market entry</span><span class="v">Coming soon</span></div></li>
+          <li><div class="mod-row2"><span class="k">Case</span><span class="n">Profitability</span><span class="v">Coming soon</span></div></li>
+          <li><div class="mod-row2"><span class="k">Case</span><span class="n">Pricing</span><span class="v">Coming soon</span></div></li>
+          <li><div class="mod-row2"><span class="k">Case</span><span class="n">Growth</span><span class="v">Coming soon</span></div></li>
+          <li><div class="mod-row2"><span class="k">Case</span><span class="n">M&amp;A and due diligence</span><span class="v">Coming soon</span></div></li>
+          <li><div class="mod-row2"><span class="k">Case</span><span class="n">Unconventional cases</span><span class="v">Coming soon</span></div></li>
+          <li class="grp"><a class="mod-row2" href="#drill"><span class="k">Skill</span><span class="n">Mental maths drills</span><span class="v">Live <span aria-hidden="true">&rarr;</span></span></a></li>
+          <li><a class="mod-row2" href="#ai"><span class="k">Skill</span><span class="n">AI interviewer, text or voice</span><span class="v">Live <span aria-hidden="true">&rarr;</span></span></a></li>
+          <li class="grp"><a class="mod-row2" href="#firms"><span class="k">Your prep</span><span class="n">Firm prep plans</span><span class="v">Live <span aria-hidden="true">&rarr;</span></span></a></li>
+          <li><a class="mod-row2" href="#progress"><span class="k">Your prep</span><span class="n">Progress tracking</span><span class="v">Live <span aria-hidden="true">&rarr;</span></span></a></li>
+        </ul>
       </div>
     </section>
 
-    <div class="section-head" id="modules">
-      <h2>What&rsquo;s inside</h2>
-      <p>Guesstimates, maths drills, firm prep and progress tracking are live today. The other case types are on the way.</p>
-    </div>
-
-    <h3 class="mod-group">Case types</h3>
-    <ol class="mods">
-      <li class="mod is-live">
-        <div class="mod-row">
-          <span class="mod-n">01</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11.5h.01M12 11.5h.01M16 11.5h.01M8 15h.01M12 15h.01M16 15v3M8 18h.01M12 18h.01"/></svg></span>
-          <div class="mod-text">
-            <h3>Guesstimates <span class="badge live">Live</span></h3>
-            <p>Size anything, from refrigerators sold in India to taxis in Mumbai. Learn the method, read model interviews, then practise with the AI interviewer.</p>
-            <ul class="mod-tags"><li>5 guides</li><li>77 questions</li><li>77 model interviews</li><li>AI interviewer</li><li>Voice mode</li></ul>
-          </div>
-          <div class="mod-cta">
-            <a class="btn" href="learn/introduction.html">Start learning</a>
-            <a class="btn ghost" href="#bank">Question bank</a>
-          </div>
+    <!-- Features: one paragraph with picture words -->
+    <section class="home-sec feat" aria-labelledby="feat-h">
+      <h2 class="sr-only" id="feat-h">What you can do</h2>
+      <p class="feat-p" data-reveal>Practise out loud with an interviewer <span class="slot slot-orb" data-ui aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="3" height="8" rx="1"/><rect x="8.2" y="4" width="3" height="16" rx="1"/><rect x="13.4" y="6" width="3" height="12" rx="1"/><rect x="18.6" y="9" width="3" height="6" rx="1"/></svg></span> that pushes back, drill your maths <span class="slot slot-math" data-ui aria-hidden="true">45&nbsp;Cr&nbsp;=&nbsp;<b>450&nbsp;Mn</b></span> in lakh and crore, and follow a plan <span class="slot slot-plan" data-ui aria-hidden="true">Week&nbsp;3 <i></i></span> built for your firm.</p>
+      <div class="g12 feat-foot">
+        <div data-reveal>
+          <p>Every mock ends with a scorecard on six criteria. Sign in with Google and your scores, drill levels and plans are saved to your account.</p>
+          <a class="arrow-link" href="#drill">Try a maths drill <span aria-hidden="true">&rarr;</span></a>
         </div>
-        <nav class="mod-guides" aria-label="Guesstimate guides"><a href="learn/introduction.html"><span>1</span>Introduction</a><a href="learn/frameworks.html"><span>2</span>Frameworks &amp; Approach</a><a href="learn/pro-tips.html"><span>3</span>Pro Tips</a><a href="learn/worked-example.html"><span>4</span>Worked Example</a><a href="learn/numbers.html"><span>5</span>India Numbers Bible</a><a href="#ai" class="ai-link">Practise with AI &rarr;</a></nav>
-      </li>
-      <li class="mod is-soon">
-        <div class="mod-row">
-          <span class="mod-n">02</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h11M10 8l4 4-4 4"/><path d="M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/></svg></span>
-          <div class="mod-text">
-            <h3>Market Entry <span class="badge soon">Coming soon</span></h3>
-            <p>Should a company enter a new market, country or segment? Size the opportunity, read the competition and make a go or no-go call.</p>
-            <ul class="mod-tags"><li>Entry framework</li><li>Build, buy or partner</li><li>Case library</li><li>AI interviewer</li></ul>
-          </div>
-        </div>
-      </li>
-      <li class="mod is-soon">
-        <div class="mod-row">
-          <span class="mod-n">03</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M2 20h20"/></svg></span>
-          <div class="mod-text">
-            <h3>Profitability <span class="badge soon">Coming soon</span></h3>
-            <p>Find out why profits fell by breaking the problem into revenue and costs, then drill down to the root cause.</p>
-            <ul class="mod-tags"><li>Profit tree</li><li>Revenue vs cost drivers</li><li>Case library</li><li>AI interviewer</li></ul>
-          </div>
-        </div>
-      </li>
-      <li class="mod is-soon">
-        <div class="mod-row">
-          <span class="mod-n">04</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span>
-          <div class="mod-text">
-            <h3>Pricing <span class="badge soon">Coming soon</span></h3>
-            <p>Price a new product or rethink an existing one using cost-based, competitor-based and value-based approaches.</p>
-            <ul class="mod-tags"><li>Three pricing lenses</li><li>Willingness to pay</li><li>Case library</li><li>AI interviewer</li></ul>
-          </div>
-        </div>
-      </li>
-      <li class="mod is-soon">
-        <div class="mod-row">
-          <span class="mod-n">05</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span>
-          <div class="mod-text">
-            <h3>Growth <span class="badge soon">Coming soon</span></h3>
-            <p>Grow revenue organically or inorganically: new customers, new products, new channels and new geographies.</p>
-            <ul class="mod-tags"><li>Growth levers</li><li>Ansoff matrix</li><li>Case library</li><li>AI interviewer</li></ul>
-          </div>
-        </div>
-      </li>
-      <li class="mod is-soon">
-        <div class="mod-row">
-          <span class="mod-n">06</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg></span>
-          <div class="mod-text">
-            <h3>M&amp;A and Due Diligence <span class="badge soon">Coming soon</span></h3>
-            <p>Evaluate an acquisition from market attractiveness and target fit to synergies, valuation and deal risks.</p>
-            <ul class="mod-tags"><li>Deal framework</li><li>Synergies</li><li>Commercial due diligence</li><li>AI interviewer</li></ul>
-          </div>
-        </div>
-      </li>
-      <li class="mod is-soon">
-        <div class="mod-row">
-          <span class="mod-n">07</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg></span>
-          <div class="mod-text">
-            <h3>Unconventional Cases <span class="badge soon">Coming soon</span></h3>
-            <p>Public sector, social impact, operations and the open-ended problems that don&rsquo;t fit a standard framework.</p>
-            <ul class="mod-tags"><li>First-principles structuring</li><li>Creative brainstorming</li><li>Case library</li><li>AI interviewer</li></ul>
-          </div>
-        </div>
-      </li>
-    </ol>
-
-    <h3 class="mod-group">Skill builders</h3>
-    <ol class="mods">
-      <li class="mod is-live">
-        <div class="mod-row">
-          <span class="mod-n">08</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v6M4 7h6M14 7h6M5 15l4 4M9 15l-4 4M14 16h6M14 19h6"/></svg></span>
-          <div class="mod-text">
-            <h3>Mental Maths Driller <span class="badge live">Live</span></h3>
-            <p>Timed, adaptive drills for the arithmetic interviews actually test, in lakh and crore as well as millions. Difficulty rises as you get faster.</p>
-            <ul class="mod-tags"><li>6 skills</li><li>Adaptive levels</li><li>Sprint &amp; sets</li><li>Lakh / crore units</li><li>Method tips</li></ul>
-          </div>
-          <div class="mod-cta"><a class="btn" href="#drill">Start a drill</a></div>
-        </div>
-      </li>
-    </ol>
-
-    <h3 class="mod-group">Your prep</h3>
-    <ol class="mods">
-      <li class="mod is-live">
-        <div class="mod-row">
-          <span class="mod-n">09</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M2 21h20M8 8h3M8 12h3M8 16h3"/></svg></span>
-          <div class="mod-text">
-            <h3>Firm-Specific Prep <span class="badge live">Live</span></h3>
-            <p>Pick your target firm: its interview format, what it screens for, a week-by-week plan built around your interview date, and AI mocks run in that firm&rsquo;s style.</p>
-            <ul class="mod-tags"><li>15 firms</li><li>Personal prep plan</li><li>Firm-style AI mocks</li></ul>
-            <div class="mod-logos" id="mod-logos"></div>
-          </div>
-          <div class="mod-cta"><a class="btn" href="#firms">Choose your firm</a></div>
-        </div>
-      </li>
-      <li class="mod is-live">
-        <div class="mod-row">
-          <span class="mod-n">10</span><span class="mod-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9h-9z"/></svg></span>
-          <div class="mod-text">
-            <h3>Track Your Progress <span class="badge live">Live</span></h3>
-            <p>Every mock, drill and model interview in one dashboard: a readiness score, score trends by criterion, an activity streak and what to work on next.</p>
-            <ul class="mod-tags"><li>Readiness score</li><li>Score trends</li><li>Weakest-area coaching</li><li>Private to your browser</li></ul>
-          </div>
-          <div class="mod-cta"><a class="btn" href="#progress">Open dashboard</a></div>
-        </div>
-      </li>
-    </ol>
-
-    <div class="section-head">
-      <h2>How it compares</h2>
-      <p>What preparing usually looks like, and what changes here.</p>
-    </div>
-    <div class="compare-table box">
-      <table>
-        <thead><tr><th></th><th>Typical case prep</th><th class="us">Breaking Point</th></tr></thead>
-        <tbody>
-          <tr><th>Mock interviews</th><td>Book a peer or pay a coach per session</td><td class="us">An AI interviewer on demand, by text or voice, that pushes back like a real one</td></tr>
-          <tr><th>Feedback</th><td>Depends on who you practise with</td><td class="us">A consistent scorecard on six criteria, with a model solution path</td></tr>
-          <tr><th>Firm prep</th><td>Generic articles</td><td class="us">Mocks in the firm&rsquo;s own style and a plan built around your interview date</td></tr>
-          <tr><th>Maths practice</th><td>Fixed worksheets</td><td class="us">Adaptive drills in lakh, crore and millions that get harder as you improve</td></tr>
-          <tr><th>India context</th><td>Mostly US and European examples</td><td class="us">Indian questions, firms and a sourced India Numbers Bible</td></tr>
-          <tr><th>Progress</th><td>Hard to tell if you&rsquo;re ready</td><td class="us">A readiness score and a clear next step after every session</td></tr>
-          <tr><th>Cost and privacy</th><td>Subscriptions; your data on their servers</td><td class="us">Free with your own Gemini key; your data stays in your browser</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <section class="cta-band">
-      <div>
-        <h2>Ready for a mock interview?</h2>
-        <p>Bring a free Gemini API key and start in two minutes.</p>
       </div>
-      <a class="btn lg" href="#ai">Start practising</a>
+    </section>
+
+    <!-- Stats: a ledger aligned on the decimal -->
+    <section class="home-sec ledger-sec" aria-labelledby="ledger-h">
+      <div class="g12 ledger">
+        <h2 class="ledger-h" id="ledger-h" data-reveal><span class="soft">What you are</span><span>working with</span></h2>
+        <ul class="ledger-rows" data-reveal-rows>
+          <li><span class="lw" data-count>77</span><span class="ld"></span><span class="lc">guesstimates, each with a full model interview</span></li>
+          <li><span class="lw" data-count>15</span><span class="ld"></span><span class="lc">firm playbooks, with mocks in each firm&rsquo;s style</span></li>
+          <li><span class="lw" data-count>6</span><span class="ld"></span><span class="lc">criteria the interviewer scores, each out of 5</span></li>
+          <li><span class="lw" data-count>140</span><span class="ld"></span><span class="lc">crore people in India, where most market sizes start</span></li>
+          <li><span class="lw">1</span><span class="ld">.4</span><span class="lc">trips a day for each person in Mumbai, in the taxi answer</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="home-sec faq" aria-labelledby="faq-h">
+      <h2 class="sec-h faq-h" id="faq-h">Common questions</h2>
+      <div class="g12 faq-list">
+        <div>
+          <details>
+            <summary>Is it free?</summary>
+            <p>Yes. Everything here is free. The AI interviewer runs on your own free Gemini API key from Google AI Studio, so there is no subscription and nothing to pay.</p>
+          </details>
+          <details>
+            <summary>How does the AI interviewer work?</summary>
+            <p>It plays the interviewer for the question you pick: it asks you to clarify and structure, pushes back on your assumptions and scores you on six criteria when you finish. Your answers go straight from your browser to Google.</p>
+          </details>
+          <details>
+            <summary>Do I need an account?</summary>
+            <p>No. You can use everything as a guest, but nothing is saved. Sign in with Google to keep your progress, drill levels and firm plans on any device.</p>
+          </details>
+          <details>
+            <summary>Can I practise out loud?</summary>
+            <p>Yes. Tap the waveform in an interview and talk: the interviewer listens, answers aloud and keeps the conversation going until you finish. Voice works best in Chrome.</p>
+          </details>
+          <details>
+            <summary>Which firms are covered?</summary>
+            <p>Fifteen, from McKinsey, BCG and Bain to Kearney, Redseer and Indus Insights. Each has its interview format, what it screens for, a plan built around your interview date and mocks in its style.</p>
+          </details>
+          <details>
+            <summary>What about market entry, profitability and other cases?</summary>
+            <p>They are on the way: market entry, profitability, pricing, growth, M&amp;A and due diligence, and unconventional cases. Guesstimates, maths drills, firm prep and progress tracking are live today.</p>
+          </details>
+        </div>
+      </div>
     </section>
   </div>
-
 </article>
 
 <!-- ============================================================
@@ -354,7 +273,7 @@
     <div class="reader-panel" role="dialog" aria-modal="true" aria-labelledby="reader-title">
       <header class="reader-head">
         <div class="reader-titles">
-          <p class="reader-kicker" id="reader-kicker"></p>
+          <p class="reader-crumb" id="reader-kicker"></p>
           <h2 id="reader-title"></h2>
           <p class="reader-meta" id="reader-meta"></p>
         </div>
@@ -431,7 +350,7 @@
   <section class="chat-shell" id="ai-chat" hidden aria-label="Practice interview">
     <aside class="picker-panel" id="picker-panel" aria-label="Pick a guesstimate">
       <div class="side-top">
-        <a class="side-brand" href="#learn"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg>Breaking Point</a>
+        <a class="side-brand" href="#learn"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="4" fill="#7d0c14"/><path d="M6.5 22l6-6 4.5 4.5 8.5-9.5" fill="none" stroke="#e2e2e2" stroke-width="2.8"/></svg>Breaking Point</a>
         <nav class="side-nav" aria-label="Sections">
           <a href="#learn">Home</a>
           <a href="#bank">Questions</a>
@@ -541,37 +460,121 @@
 
 </main>
 
-<footer>
-  <div class="wrap">
-    <span class="foot-brand"><svg class="brand-mark" width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2457f5"/><path d="M7.5 21.5l5.5-5.5 4 4 7.5-9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24.5" cy="11" r="2.3" fill="#fff"/></svg>Breaking Point <span class="muted" style="font-weight:400">&middot; Consulting Case Prep</span></span>
-    <nav class="foot-links" aria-label="Footer">
-      <a href="learn/introduction.html">Guesstimates</a>
-      <a href="#bank">Questions</a>
-      <a href="#ai">AI Interview</a>
-      <a href="#drill">Maths</a>
-      <a href="#firms">Firms</a>
-      <a href="#progress">Progress</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-    </nav>
+<!-- ============================================================
+     SIGN IN / CREATE ACCOUNT (shown before the app; see js/auth.js)
+     ============================================================ -->
+<section class="auth" id="auth" hidden aria-labelledby="auth-title">
+  <div class="auth-main">
+    <a class="auth-brand" href="#learn"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="4" fill="#7d0c14"/><path d="M6.5 22l6-6 4.5 4.5 8.5-9.5" fill="none" stroke="#e2e2e2" stroke-width="2.8"/></svg>Breaking Point</a>
+    <div class="auth-card">
+      <div id="auth-start">
+        <h1 id="auth-title">Welcome back</h1>
+        <p class="auth-sub" id="auth-sub">Sign in to continue your case prep.</p>
+        <p class="auth-msg warn" id="auth-preview">Preview mode: accounts aren&rsquo;t connected on this site yet.</p>
+        <div class="auth-social" id="auth-social">
+          <button class="social-btn" type="button" data-provider="google">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Continue with Google
+          </button>
+          <button class="social-btn" type="button" data-provider="facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+            Continue with Facebook
+          </button>
+        </div>
+        <div class="auth-or"><span>or</span></div>
+        <form class="auth-form" id="auth-form" novalidate>
+          <div class="field" id="auth-name-row" hidden>
+            <label for="auth-name">Full name</label>
+            <input id="auth-name" type="text" autocomplete="name" placeholder="Aditi Sharma">
+          </div>
+          <div class="field">
+            <label for="auth-email">Email</label>
+            <input id="auth-email" type="email" autocomplete="email" placeholder="you@college.edu" required>
+          </div>
+          <button class="btn lg auth-submit" type="submit" id="auth-submit">Continue with email</button>
+          <p class="auth-msg" id="auth-msg" hidden></p>
+        </form>
+        <p class="auth-switch"><span id="auth-switch-text">New to Breaking Point?</span> <button class="linkish" type="button" id="auth-switch">Create an account</button></p>
+      </div>
+
+      <div id="auth-code" hidden>
+        <button class="back-link linkish" type="button" id="auth-back">&larr; Use a different email</button>
+        <h1>Check your email</h1>
+        <p class="auth-sub">We sent a verification code to <b id="auth-code-to"></b>. It expires in an hour.</p>
+        <div class="otp" id="auth-otp" role="group" aria-label="Verification code"></div>
+        <button class="btn lg auth-submit" type="button" id="auth-verify">Verify and continue</button>
+        <p class="auth-msg" id="auth-code-msg" hidden></p>
+        <p class="auth-switch"><button class="linkish" type="button" id="auth-resend" disabled>Resend code</button></p>
+      </div>
+    </div>
+    <p class="auth-legal">By continuing you agree to our <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+    <button class="linkish auth-guest" type="button" id="auth-guest" hidden>Continue as a guest &rarr;</button>
   </div>
+
+  <aside class="auth-side" aria-hidden="true">
+    <div class="auth-side-inner">
+      <p class="auth-quote">Crack the<br>case interview</p>
+      <div class="demo-chat">
+        <div class="demo-msg i"><span>Interviewer</span>Before any numbers, how would you structure this?</div>
+        <div class="demo-msg c"><span>You</span>Split adults by income band, then cards per holder in each band, and cross-check against bank issuance.</div>
+        <div class="demo-msg i"><span>Interviewer</span>Good. Why income rather than age?</div>
+      </div>
+      <div class="demo-score">
+        <div class="demo-score-top"><b>7.8</b><span>/ 10</span><em>On track</em></div>
+        <ul>
+          <li><span>Structure</span><i class="p4"></i></li>
+          <li><span>Assumptions</span><i class="p3"></i></li>
+          <li><span>Maths</span><i class="p5"></i></li>
+          <li><span>Sanity check</span><i class="p3"></i></li>
+        </ul>
+      </div>
+      <ul class="auth-points">
+        <li>An AI interviewer that pushes back, by text or voice</li>
+        <li>77 guesstimates with full model interviews</li>
+        <li>Prep plans for McKinsey, BCG, Bain and 12 more firms</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-invite">
+      <h2 class="foot-h">Crack it<br>out loud</h2>
+      <a class="btn" href="#ai">Start a mock interview</a>
+    </div>
+    <ul class="foot-links" aria-label="Footer">
+      <li><a href="#bank">Questions</a></li>
+      <li><a href="learn/introduction.html">Guides</a></li>
+      <li><a href="#ai">Interview</a></li>
+      <li><a href="#drill">Maths</a></li>
+      <li><a href="#firms">Firms</a></li>
+      <li><a href="#progress">Progress</a></li>
+    </ul>
+    <div class="foot-legal">
+      <p>Breaking Point. Free Consulting Case Prep.</p>
+      <nav aria-label="Legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav>
+    </div>
+  </div>
+  <p class="foot-mark" aria-hidden="true">Breaking Point</p>
 </footer>
 
-<script src="data/questions.js?v=23"></script>
-<script src="data/transcripts-1.js?v=23"></script>
-<script src="data/transcripts-2.js?v=23"></script>
-<script src="data/transcripts-3.js?v=23"></script>
-<script src="data/transcripts-4.js?v=23"></script>
-<script src="data/firms.js?v=23"></script>
-<script src="js/app.js?v=23"></script>
-<script src="js/bank.js?v=23"></script>
-<script src="js/ai.js?v=23"></script>
-<script src="js/drill.js?v=23"></script>
-<script src="js/firms.js?v=23"></script>
-<script src="js/progress.js?v=23"></script>
-<script src="js/home.js?v=23"></script>
-<script src="js/vendor/supabase.js?v=23"></script>
-<script src="js/auth.js?v=23"></script>
-<script src="js/admin.js?v=23"></script>
+<script src="data/questions.js?v=24"></script>
+<script src="data/transcripts-1.js?v=24"></script>
+<script src="data/transcripts-2.js?v=24"></script>
+<script src="data/transcripts-3.js?v=24"></script>
+<script src="data/transcripts-4.js?v=24"></script>
+<script src="data/firms.js?v=24"></script>
+<script src="js/app.js?v=24"></script>
+<script src="js/bank.js?v=24"></script>
+<script src="js/ai.js?v=24"></script>
+<script src="js/drill.js?v=24"></script>
+<script src="js/firms.js?v=24"></script>
+<script src="js/progress.js?v=24"></script>
+<script src="js/home.js?v=24"></script>
+<script src="js/motion.js?v=24"></script>
+<script src="js/vendor/supabase.js?v=24"></script>
+<script src="js/auth.js?v=24"></script>
+<script src="js/admin.js?v=24"></script>
 </body>
 </html>

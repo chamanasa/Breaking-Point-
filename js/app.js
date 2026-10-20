@@ -98,6 +98,7 @@
     TABS.forEach(function (t) {
       document.getElementById("view-" + t).hidden = t !== route.tab;
     });
+    document.body.dataset.tab = route.tab; // lets the stylesheet dress the home page differently
     document.querySelectorAll(".tabs a").forEach(function (a) {
       if (a.dataset.tab === route.tab) {
         a.setAttribute("aria-current", "page");

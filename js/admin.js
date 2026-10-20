@@ -48,7 +48,7 @@
   function shell(body) {
     const noTrack = App.storageGet("bp.noTrack") === "1";
     root.innerHTML =
-      '<div class="page-head admin-head"><div><p class="kicker">Admin</p><h1>' + (state.tab === "users" ? "Users" : "Visitors") + "</h1>" +
+      '<div class="page-head admin-head"><div><h1>' + (state.tab === "users" ? "Users" : "Visitors") + "</h1>" +
         '<p class="subtitle">' + (state.tab === "users"
           ? "Everyone who has created an account. Also in Supabase under Authentication → Users."
           : "Everyone who opens the site, signed in or not. Counted with a random id per browser; no IP addresses are stored.") + "</p></div>" +
